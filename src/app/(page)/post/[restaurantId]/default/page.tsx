@@ -19,11 +19,11 @@ import { upvoteService } from 'src/app/service/upvote/upvote.service'
 import { replyService } from 'src/app/service/reply/reply.service'
 import Star from 'src/app/components/Star'
 import { tag } from 'src/app/api/tag/tag.api';
-import { Modal } from 'react-bootstrap';
 import PostOptions from 'src/app/components/PostOptions';
 import { fetchNoticeRegister } from "src/app/service/notice/notice.service";
 import { ReportModel } from 'src/app/model/report.model';
 import { fetchReportRegister } from 'src/app/service/report/report.service';
+import { Modal } from 'react-bootstrap';
 
 
 const Default = () => {
@@ -31,7 +31,6 @@ const Default = () => {
     const [restaurant, setRestaurant] = useState<RestaurantModel | null>(null);
     const [images, setImages] = useState<{ [key: number]: string[] }>({});
     const [allImages, setAllImages] = useState<string[]>([]);
-    const [currentImg, setCurrentImg] = useState<string>('');
     const [likedPost, setLikedPosts] = useState<number[]>([]);
     const [likeCount, setLikeCounts] = useState<{ [key: number]: number }>({});
     const [replyToggles, setReplyToggles] = useState<{ [key: number]: boolean }>({});
@@ -42,7 +41,8 @@ const Default = () => {
     const [allAverage, setAllAverage] = useState<number>(0);
     const [tags, setTags] = useState<string[]>([]);
     const [top5Tags, setTop5Tags] = useState<string[]>([]);
-    const [modal, setModal] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [currentImg, setCurrentImg] = useState<string>('');
     const currentUserId = 7; // 확인용
     const router = useRouter();
     const { restaurantId } = useParams();
@@ -73,7 +73,8 @@ const Default = () => {
             fetchRestaurantDetails(Number(restaurantId));
             fetchTopTags(Number(restaurantId));
         }
-    }, [restaurantId]);
+        console.log("Modal open state changed: ", isOpen); // 확인용
+    }, [restaurantId, isOpen]);
 
     const fetchPosts = async (restaurantId: number) => {
         try {
@@ -127,11 +128,12 @@ const Default = () => {
     // 이미지 modal 
     const openModal = (imageURL: string) => {
         setCurrentImg(imageURL);
-        setModal(true);
+        setIsOpen(true);
+        console.log("Modal open state:", isOpen); // 확인용
     }
 
     const closeModal = () => {
-        setModal(false);
+        setIsOpen(false);
     }
 
     const handleDelete = async (postId: number) => {
@@ -382,27 +384,21 @@ const Default = () => {
                                                 src={imageURL} alt={`Restaurant Image ${index + 1}`}
                                                 width={400} height={400}
                                                 className='w-[120px] aspect-square object-cover rounded-lg'
-                                                onClick={() => openModal(imageURL)}
+                                                onClick={() => {
+                                                    console.log("Image Clicked: ", imageURL); //확인용
+                                                    openModal(imageURL)
+                                                }}
                                             />
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
                                 <Modal
-                                    isOpen={modal}
-                                    onRequestClose={closeModal}
-                                    className="modal-quickview-main"
-                                    overlayClassName="modal-quickview-block"
-                                >
+                                    isOpen={isOpen} onClose={closeModal}>
                                     <div className='relative'>
                                         <Image
                                             src={currentImg} alt="Modal Image"
                                             width={800} height={800}
                                             className='rounded-lg' />
-                                        <button
-                                            className="absolute top-2 right-2 text-white text-cl"
-                                            onClick={closeModal} >
-                                            X
-                                        </button>
                                     </div>
                                 </Modal>
                             </div>
