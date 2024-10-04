@@ -20,6 +20,11 @@ import { replyService } from 'src/app/service/reply/reply.service'
 import Star from 'src/app/components/Star'
 import { tag } from 'src/app/api/tag/tag.api';
 import { Modal } from 'react-bootstrap';
+import PostOptions from 'src/app/components/PostOptions';
+import { fetchNoticeRegister } from "src/app/service/notice/notice.service";
+import { ReportModel } from 'src/app/model/report.model';
+import { fetchReportRegister } from 'src/app/service/report/report.service';
+
 
 const Default = () => {
     const [posts, setPosts] = useState<PostModel[]>([]);
@@ -37,17 +42,28 @@ const Default = () => {
     const [allAverage, setAllAverage] = useState<number>(0);
     const [tags, setTags] = useState<string[]>([]);
     const [top5Tags, setTop5Tags] = useState<string[]>([]);
-    const [rating, setRating] = useState<{ [key: number]: number }>({ 5: 0, 4: 0, 3: 0, 2: 0, 1: 0, }); // 리뷰 갯수
-    const [totalRating, setTotalRating] = useState<number>(0);
     const [modal, setModal] = useState(false);
-    const currentUserId = 1; // 확인용
+    const currentUserId = 7; // 확인용
     const router = useRouter();
     const { restaurantId } = useParams();
     const [selectedReasons, setSelectedReasons] = useState<{ [key: number]: string }>({});
+    const [reportingPostId, setReportingPostId] = useState<number | null>(null);
+    const [reportReason, setReportReason] = useState<string>("");
 
     // 공통 스타일
     const labelStyle = "text-sm font-medium mb-0 mr-1 leading-none align-middle";
     const starContainerStyle = "flex items-center";
+
+    const reportReasons = [
+        "광고글이에요",
+        "해당 식당에서 찍은 사진이 아니에요",
+        "별점과 후기 내용이 일치하지 않아요",
+        "비속어가 포함되어 있어요",
+        "다른 사용자에게 불쾌감을 주는 포스트예요",
+        "공개하면 안되는 개인정보가 포함되어 있어요",
+        "악의적인 포스트를 지속적으로 작성하는 사용자예요",
+        "기타 사유"
+    ];
 
     useEffect(() => {
         if (restaurantId) {
@@ -257,6 +273,45 @@ const Default = () => {
         }
     };
 
+    // 신고하기
+    const postReport = async (postId: number) => {
+        const selectedReason = reportReason;
+
+        if (!selectedReason) {
+            alert("신고 사유를 선택해주세요.");
+            return;
+        }
+
+        const reportModel: ReportModel = {
+            userId: currentUserId,
+            postId: postId,
+            reason: selectedReason
+        };
+
+
+        try {
+            await fetchReportRegister(reportModel);
+            alert('신고가 성공적으로 제출되었습니다.');
+
+        } catch (error) {
+            console.error('신고 중 오류 발생:', error);
+            alert('신고 중 오류가 발생했습니다.');
+        }
+    };
+
+    const handleReportClick = (postId: number) => {
+        setReportingPostId(postId);
+        setReportReason("");
+    };
+
+    const handleReportSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        if (reportingPostId !== null) {
+            await postReport(reportingPostId);
+            setReportingPostId(null);
+        }
+    };
+
 
     return (
         <>
@@ -313,21 +368,19 @@ const Default = () => {
                                     slidesPerView={3}
                                     modules={[Navigation]}
                                     breakpoints={{
-                                        576: {slidesPerView: 4,spaceBetween: 16,},
-                                        640: {slidesPerView: 5,spaceBetween: 16,},
-                                        768: {slidesPerView: 4,spaceBetween: 16,},
-                                        992: {slidesPerView: 5,spaceBetween: 20,},
-                                        1100: {slidesPerView: 5,spaceBetween: 20,},
-                                        1290: {slidesPerView: 7,spaceBetween: 20,},
+                                        576: { slidesPerView: 4, spaceBetween: 16, },
+                                        640: { slidesPerView: 5, spaceBetween: 16, },
+                                        768: { slidesPerView: 4, spaceBetween: 16, },
+                                        992: { slidesPerView: 5, spaceBetween: 20, },
+                                        1100: { slidesPerView: 5, spaceBetween: 20, },
+                                        1290: { slidesPerView: 7, spaceBetween: 20, },
                                     }}
                                 >
                                     {allImages.map((imageURL, index) => (
                                         <SwiperSlide key={index}>
                                             <Image
-                                                src={imageURL}
-                                                width={400}
-                                                height={400}
-                                                alt={`Restaurant Image ${index + 1}`}
+                                                src={imageURL} alt={`Restaurant Image ${index + 1}`}
+                                                width={400} height={400}
                                                 className='w-[120px] aspect-square object-cover rounded-lg'
                                                 onClick={() => openModal(imageURL)}
                                             />
@@ -342,17 +395,13 @@ const Default = () => {
                                 >
                                     <div className='relative'>
                                         <Image
-                                        src={currentImg}
-                                        alt="Modal Image"
-                                        width={800}
-                                        height={800}
-                                        className='rounded-lg'
-                                        />
+                                            src={currentImg} alt="Modal Image"
+                                            width={800} height={800}
+                                            className='rounded-lg' />
                                         <button
-                                        className="absolute top-2 right-2 text-white text-cl"
-                                        onClick={closeModal}
-                                        >
-                                        X
+                                            className="absolute top-2 right-2 text-white text-cl"
+                                            onClick={closeModal} >
+                                            X
                                         </button>
                                     </div>
                                 </Modal>
@@ -393,10 +442,47 @@ const Default = () => {
                                         </div>
                                     </div>
                                     <div className="right lg:w-3/4 w-full lg:pl-[15px]">
-                                        <div className='flex items-center'>
-                                            <Star w="w-4" h="h-4" readonly={true} rate={p.averageRating} />
-                                            <p className='ml-2'>{p.averageRating.toFixed(1)} / 5</p>
+                                        <div className="flex items-center justify-between">
+                                            <div className='flex items-center'>
+                                                <Star w="w-4" h="h-4" readonly={true} rate={p.averageRating} />
+                                                <p className='ml-2'>{p.averageRating.toFixed(1)} / 5</p>
+                                            </div>
+                                            <PostOptions
+                                                postUserId={p.userId ?? 0}
+                                                currentId={currentUserId}
+                                                onEdit={() => { router.push(`/post/${restaurantId}/update/${p.id}`) }}
+                                                onDelete={() => handleDelete(p.id)}
+                                                onReport={() => handleReportClick(p.id)}
+                                            />
                                         </div>
+                                        {reportingPostId === p.id && (
+                                            <div className="mt-4">
+                                                <form onSubmit={handleReportSubmit} className="flex flex-col">
+                                                    <label className="text-gray-700 mb-2">신고 사유를 선택하세요:</label>
+                                                    <select
+                                                        value={reportReason}
+                                                        onChange={(e) => setReportReason(e.target.value)}
+                                                        className="border rounded p-2 mb-4"
+                                                    >
+                                                        <option value="">선택하세요</option>
+                                                        {reportReasons.map((reason, index) => (
+                                                            <option key={index} value={reason}>{reason}</option>
+                                                        ))}
+                                                    </select>
+                                                    <button type="submit" className="bg-blue-500 text-white py-2 px-3 rounded hover:bg-blue-600">
+                                                        신고하기
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setReportingPostId(null)}
+                                                        className="mt-2 bg-transparent hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded"
+                                                    >
+                                                        취소
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        )}
+
                                         <div className="flex items-center space-x-6">
                                             <div className="flex items-center">
                                                 <p className={labelStyle}>맛:</p>
@@ -425,8 +511,7 @@ const Default = () => {
                                                         <li
                                                             key={index}
                                                             style={{ marginLeft: index === 0 ? 0 : "9=8px" }}
-                                                            className="ml-2 rounded-full border border-gray-300 bg-white px-3 py-1 text-gray-600 font-semibold shadow-sm hover:bg-gray-100"
-                                                        >
+                                                            className="ml-2 rounded-full border border-gray-300 bg-white px-3 py-1 text-gray-600 font-semibold shadow-sm hover:bg-gray-100">
                                                             {tag}
                                                         </li>
                                                     ))}
@@ -439,8 +524,7 @@ const Default = () => {
                                             <div className="flex items-center gap-4">
                                                 <button
                                                     onClick={() => handleLike(p.id)}
-                                                    className="like-btn flex items-center gap-1 cursor-pointer"
-                                                >
+                                                    className="like-btn flex items-center gap-1 cursor-pointer">
                                                     <Icon.Heart
                                                         size={18}
                                                         color={likeCount[p.id] > 0 ? "#FF0000" : "#9FA09C"}
@@ -515,16 +599,13 @@ const Default = () => {
                                                             className="border rounded p-2 flex-grow" />
                                                         <button
                                                             type="submit"
-                                                            className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded mr-2"
-
-                                                        >
+                                                            className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded mr-2">
                                                             등록
                                                         </button>
                                                     </form>
                                                 </>
                                             )}
                                         </div>
-
                                     </div>
                                 </div>
                             ))}
