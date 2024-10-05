@@ -22,8 +22,8 @@ import { tag } from 'src/app/api/tag/tag.api';
 import PostOptions from 'src/app/components/PostOptions';
 import { fetchNoticeRegister } from "src/app/service/notice/notice.service";
 import { ReportModel } from 'src/app/model/report.model';
-import { fetchReportRegister } from 'src/app/service/report/report.service';
-import { Modal } from 'react-bootstrap';
+import Modal from 'src/app/components/Modal';
+import { cu } from '@fullcalendar/core/internal-common';
 
 
 const Default = () => {
@@ -73,8 +73,7 @@ const Default = () => {
             fetchRestaurantDetails(Number(restaurantId));
             fetchTopTags(Number(restaurantId));
         }
-        console.log("Modal open state changed: ", isOpen); // 확인용
-    }, [restaurantId, isOpen]);
+    }, [restaurantId]);
 
     const fetchPosts = async (restaurantId: number) => {
         try {
@@ -129,8 +128,7 @@ const Default = () => {
     const openModal = (imageURL: string) => {
         setCurrentImg(imageURL);
         setIsOpen(true);
-        console.log("Modal open state:", isOpen); // 확인용
-    }
+    };
 
     const closeModal = () => {
         setIsOpen(false);
@@ -385,7 +383,6 @@ const Default = () => {
                                                 width={400} height={400}
                                                 className='w-[120px] aspect-square object-cover rounded-lg'
                                                 onClick={() => {
-                                                    console.log("Image Clicked: ", imageURL); //확인용
                                                     openModal(imageURL)
                                                 }}
                                             />
@@ -422,6 +419,7 @@ const Default = () => {
                                                         src={url}
                                                         alt={`이미지 ${index + 1}`}
                                                         className="w-[60px] aspect-square rounded-lg"
+                                                        onClick={() => openModal(url)}
                                                     />
                                                 ))
                                             ) : (
@@ -430,6 +428,14 @@ const Default = () => {
                                                 </div>
                                             )}
                                         </div>
+                                        <Modal isOpen={isOpen} onClose={closeModal}>
+                                            <div className='relative'>
+                                                <Image
+                                                    src={currentImg} alt="Modal Image"
+                                                    width={800} height={800}
+                                                    className='rounded-lg' />
+                                            </div>
+                                        </Modal>
                                         <div className="user mt-3">
                                             <div className="text-title">{p.nickname}</div>
                                             <div className="flex items-center gap-2">
