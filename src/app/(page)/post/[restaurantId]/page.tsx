@@ -1,33 +1,35 @@
-"use client";
-import React, { FormEvent, useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-import Star from "../../../components/Star";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
-import { PostModel } from "src/app/model/post.model";
-import { ReplyModel } from "src/app/model/reply.model";
-import { replyService } from "src/app/service/reply/reply.service";
-import { upvoteService} from "src/app/service/upvote/upvote.service";
-import { imageService } from "src/app/service/image/image.service";
-import { postService } from "src/app/service/post/post.service";
-import { fetchRestaurantService } from "src/app/service/restaurant/restaurant.service";
+'use client'
 
-const reportReasons = [
-    "광고글이에요",
-    "해당 식당에서 찍은 사진이 아니에요",
-    "별점과 후기 내용이 일치하지 않아요",
-    "비속어가 포함되어 있어요",
-    "다른 사용자에게 불쾌감을 주는 포스트예요",
-    "공개하면 안되는 개인정보가 포함되어 있어요",
-    "악의적인 포스트를 지속적으로 작성하는 사용자예요",
-    "기타 사유"
-];
+import React, { FormEvent, use, useEffect, useState } from 'react'
+import Image from 'next/image'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import 'swiper/css/bundle';
+import * as Icon from "@phosphor-icons/react/dist/ssr";
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/thumbs';
+import { useParams, useRouter } from 'next/navigation'
+import { ReplyModel } from 'src/app/model/reply.model'
+import { PostModel } from 'src/app/model/post.model'
+import { postService } from 'src/app/service/post/post.service'
+import { imageService } from 'src/app/service/image/image.service'
+import { fetchRestaurantService, getRestaurantDetails } from 'src/app/service/restaurant/restaurant.service'
+import { upvoteService } from 'src/app/service/upvote/upvote.service'
+import { replyService } from 'src/app/service/reply/reply.service'
+import Star from 'src/app/components/Star'
+import { tag } from 'src/app/api/tag/tag.api';
+import PostOptions from 'src/app/components/PostOptions';
+import { ReportModel } from 'src/app/model/report.model';
+import Modal from 'src/app/components/Modal';
+import { fetchReportRegister } from '@/app/service/report/report.service';
 
-export default function PostList() {
+
+const PostList = () => {
     const [posts, setPosts] = useState<PostModel[]>([]);
     const [restaurant, setRestaurant] = useState<RestaurantModel | null>(null);
     const [images, setImages] = useState<{ [key: number]: string[] }>({});
+    const [allImages, setAllImages] = useState<string[]>([]);
     const [likedPost, setLikedPosts] = useState<number[]>([]);
     const [likeCount, setLikeCounts] = useState<{ [key: number]: number }>({});
     const [replyToggles, setReplyToggles] = useState<{ [key: number]: boolean }>({});
@@ -35,15 +37,37 @@ export default function PostList() {
     const [replyInput, setReplyInput] = useState<{ [key: number]: string }>({});
     const [editReply, setEditReply] = useState<{ [key: number]: boolean }>({});
     const [editInput, setEditInput] = useState<{ [key: number]: string }>({});
-    const currentUserId = 1; // 확인용
+    const [allAverage, setAllAverage] = useState<number>(0);
+    const [tags, setTags] = useState<string[]>([]);
+    const [top5Tags, setTop5Tags] = useState<string[]>([]);
+    const [isOpen, setIsOpen] = useState(false);
+    const [currentImg, setCurrentImg] = useState<string>('');
+    const [sort, setSort] = useState<'date' | 'rating' | 'likes'>('date');
+    const [reportingPostId, setReportingPostId] = useState<number | null>(null);
+    const [reportReason, setReportReason] = useState<string>("");
     const router = useRouter();
     const { restaurantId } = useParams();
-    const [selectedReasons, setSelectedReasons] = useState<{ [key: number]: string }>({});
+    const currentUserId = 11; // 확인용
+
+    // 신고하기
+    const reportReasons = [
+        "광고글이에요",
+        "해당 식당에서 찍은 사진이 아니에요",
+        "별점과 후기 내용이 일치하지 않아요",
+        "비속어가 포함되어 있어요",
+        "다른 사용자에게 불쾌감을 주는 포스트예요",
+        "공개하면 안되는 개인정보가 포함되어 있어요",
+        "악의적인 포스트를 지속적으로 작성하는 사용자예요",
+        "기타 사유"
+    ];
 
     useEffect(() => {
         if (restaurantId) {
             fetchPosts(Number(restaurantId));
             fetchRestaurant();
+            fetchImgByRestaurant(Number(restaurantId));
+            fetchRestaurantDetails(Number(restaurantId));
+            fetchTopTags(Number(restaurantId));
         }
     }, [restaurantId]);
 
@@ -80,13 +104,30 @@ export default function PostList() {
         }
     };
 
-    const fetchImage = async (postId: number) => {
-        const imageURLs = await imageService.getByPostId(postId)
+    const fetchImgByRestaurant = async (restaurantId: number) => {
+        const imageURLs = await imageService.getByRestaurantId(restaurantId);
+        setAllImages(imageURLs);
+    }
 
-        setImages(prevImages => ({
-            ...prevImages,
-            [postId]: imageURLs,
-        }));
+    const fetchRestaurantDetails = async (restaurantId: number) => {
+        const { allAverage, tags } = await getRestaurantDetails(restaurantId);
+        setAllAverage(allAverage);
+        setTags(tags);
+    }
+
+    const fetchTopTags = async (restaurantId: number) => {
+        const top5Tags = await tag.getTop5Tags(restaurantId);
+        setTop5Tags(top5Tags);
+    }
+
+    // 이미지 modal 
+    const openModal = (imageURL: string) => {
+        setCurrentImg(imageURL);
+        setIsOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsOpen(false);
     }
 
     const handleDelete = async (postId: number) => {
@@ -100,6 +141,20 @@ export default function PostList() {
             }
         }
     };
+
+    // 정렬 
+    const sortedPosts = posts.slice().sort((a, b) => {
+        switch (sort) {
+            case 'date':
+                return new Date(b.entryDate).getTime() - new Date(a.entryDate).getTime();
+            case 'rating':
+                return b.averageRating - a.averageRating;
+            case 'likes':
+                return (likeCount[b.id] || 0) - (likeCount[a.id] || 0);
+            default:
+                return 0;
+        }
+    })
 
     // 댓글 버튼 
     const toggleReply = async (id: number) => {
@@ -215,12 +270,6 @@ export default function PostList() {
         return `${year}년 ${month}월 ${day}일`;
     };
 
-    // 좋아요 상태 확인 
-    const checkLikedStatus = async (postId: number) => {
-        const isLiked = await upvoteService.check(postId, currentUserId);
-        return isLiked ? postId : null;
-    };
-
     // 좋아요 & 취소 & count
     const handleLike = async (postId: number) => {
         const result = await upvoteService.toggle(postId, currentUserId, likedPost);
@@ -234,255 +283,355 @@ export default function PostList() {
         }
     };
 
+    // 신고하기
     const postReport = async (postId: number) => {
-        const selectedReason = selectedReasons[postId];
+        const selectedReason = reportReason;
 
         if (!selectedReason) {
             alert("신고 사유를 선택해주세요.");
             return;
         }
 
-        const reportModel = {
+        const reportModel: ReportModel = {
             userId: currentUserId,
             postId: postId,
             reason: selectedReason
         };
 
         try {
-            const response = await fetch('http://localhost:8080/api/report/post', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(reportModel),
-            });
+            await fetchReportRegister(reportModel);
+            alert('신고가 성공적으로 제출되었습니다.');
 
-            if (!response.ok) {
-                throw new Error('신고 실패');
-            }
-
-            const result = await response.json();
-            if (result) {
-                alert('신고가 성공적으로 제출되었습니다.');
-            } else {
-                alert('신고 제출에 실패하였습니다.');
-            }
         } catch (error) {
             console.error('신고 중 오류 발생:', error);
             alert('신고 중 오류가 발생했습니다.');
         }
     };
 
+    const handleReportClick = (postId: number) => {
+        setReportingPostId(postId);
+        setReportReason("");
+    };
+
+    const handleReportSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        if (reportingPostId !== null) {
+            await postReport(reportingPostId);
+            setReportingPostId(null);
+        }
+    };
+
+
     return (
-        <main className="flex min-h-screen flex-col items-center p-6 " style={{ marginTop: '30px' }}>
-            {restaurant && (
-                <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-3 mb-2 items-center h-16">
-                    <h1 className="text-2xl font-bold">{restaurant.name}</h1>
-                </div>
-            )}
+        <>
+            <div className="product-detail default" style={{ marginTop: '30px' }}>
+                <div className="review-block md:py-20 py-10 bg-surface">
+                    <div className="heading flex items-center justify-between flex-wrap gap-4">
+                        <div className="heading4">{`${restaurant?.name}`} Review</div>
+                        <button
+                            className='button-main custom-button'
+                            onClick={() => router.push(`/post/register/${restaurantId}`)}
+                        >
+                            Write Reviews
+                        </button>
+                    </div>
+                    <div className="top-overview flex justify-between py-6 max-md:flex-col gap-y-6">
+                        <div className="rating lg:w-1/4 md:w-[30%] lg:pr-[75px] md:pr-[35px]">
+                            <div className="heading flex items-center justify-center flex-wrap gap-3 gap-y-4">
+                                <div className="text-display">{allAverage.toFixed(1)}</div>
+                                <div className='flex flex-col items-center'>
+                                    <Star w="w-4" h="h-4" readonly={true} rate={allAverage || 0} />
+                                    <div className='text-secondary text-center mt-1'>({posts.length} Ratings)</div>
+                                </div>
+                            </div>
+                            <div className="list-rating mt-3">
+                                {top5Tags.map((tag, index) => {
+                                    const tagCount = [10, 8, 6, 4, 2];
+                                    const totalTag = tagCount.reduce((sum, count) => sum + count, 0);
+                                    const percent = totalTag > 0 ? (tagCount[index] / totalTag) * 100 : 0;
 
-            <div className="w-full max-w-4xl flex justify-end mt-4">
-                <button
-                    className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded mr-2"
-                    onClick={() => router.push(`/post/register/${restaurantId}`)}>
-                    등록하기
-                </button>
-                <button
-                    className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded mr-2"
-                    onClick={() => router.push(`/restaurant/${restaurantId}`)}>
-                    뒤로가기
-                </button><button
-                    className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded"
-                    onClick={() => router.push(`/post/${restaurantId}/default`)}>
-                    CSS
-                </button>
-            </div>
-
-            <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
-                <div className="flex flex-col space-y-4">
-                    {posts.map((p) => (
-                        <div key={p.id} className="flex flex-col md:flex-row border border-[#F46119] rounded-lg p-4 shadow-lg bg-white">
-                            <div className="md:w-full">
-                                <div>
-                                    <div className="flex justify-between items-center mb-2">
-                                        <h2 className="text-xl font-semibold mb-2">닉네임: {p.nickname}</h2>
-
-                                        <button
-                                            onClick={() => {
-                                                handleLike(p.id)
-                                            }}
-                                            className="flex items-center text-black rounded-lg py-2 px-4"
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={likeCount[p.id] > 0 ? solidHeart : regularHeart}
-                                                style={{ color: likeCount[p.id] > 0 ? 'pink' : 'gray' }}
+                                    return ( // JSX 반환을 위해 return 명시
+                                        <div key={index} className="item flex items-center justify-between gap-1.5">
+                                            <div className="flex items-center gap-1">
+                                                <div className="rounded-full border border-gray-300 bg-white px-3 py-1 text-gray-600 font-semibold shadow-sm hover:bg-gray-100 mb-1"
+                                                    style={{ whiteSpace: 'nowrap', display: 'inline-flex' }}>
+                                                    {tag}</div>
+                                            </div>
+                                            <div className="progress bg-line relative w-3/4 h-2">
+                                                <div
+                                                    className="progress-percent absolute bg-yellow h-full left-0 top-0"
+                                                    style={{ width: `${percent}%` }}
+                                                ></div>
+                                            </div>
+                                            <div className="caption1">{percent.toFixed(0)}%</div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                        <div className="list-img lg:w-3/4 md:w-[70%] lg:pl-[15px] md:pl-[15px]">
+                            <div className="heading5">All Image ({allImages.length})</div>
+                            <div className="list md:mt-6 mt-3">
+                                <Swiper
+                                    spaceBetween={16}
+                                    slidesPerView={3}
+                                    modules={[Navigation]}
+                                    breakpoints={{
+                                        576: { slidesPerView: 4, spaceBetween: 16, },
+                                        640: { slidesPerView: 5, spaceBetween: 16, },
+                                        768: { slidesPerView: 4, spaceBetween: 16, },
+                                        992: { slidesPerView: 5, spaceBetween: 20, },
+                                        1100: { slidesPerView: 5, spaceBetween: 20, },
+                                        1290: { slidesPerView: 7, spaceBetween: 20, },
+                                    }}
+                                >
+                                    {allImages.map((imageURL, index) => (
+                                        <SwiperSlide key={index}>
+                                            <Image
+                                                src={imageURL} alt={`Restaurant Image ${index + 1}`}
+                                                width={400} height={400}
+                                                className='w-[120px] aspect-square object-cover rounded-lg'
+                                                onClick={() => {
+                                                    openModal(imageURL)
+                                                }}
                                             />
-                                            <span className="ml-2">{likeCount[p.id] || 0}</span>
-                                        </button>
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>
+                                <Modal
+                                    isOpen={isOpen} onClose={closeModal} closeButton={false}>
+                                    <div className='relative'>
+                                        <Image
+                                            src={currentImg} alt="Modal Image"
+                                            width={800} height={800}
+                                            className='rounded-lg' />
                                     </div>
-                                    <div className="flex space-x-2 mb-2 items-center" style={{ whiteSpace: "nowrap" }}>
-                                        <Star w="w-4" h="h-4" readonly={true} rate={p.averageRating} />
-                                        <p>{p.averageRating.toFixed(1)} / 5</p>
-                                    </div>
-
-                                    <div className="mb-2">
-                                        <p className="text-gray-700">{p.content}</p>
-                                    </div>
-                                    <div className="flex flex-col space-y-2 mb-2">
-                                        <div className="inline-flex space-x-2">
-                                            <p>맛: </p>
-                                            <Star w="w-4" h="h-4" readonly={true} rate={p.taste} />
-                                        </div>
-                                        <div className="inline-flex space-x-2">
-                                            <p>청결: </p>
-                                            <Star w="w-4" h="h-4" readonly={true} rate={p.clean} />
-                                        </div>
-                                        <div className="inline-flex space-x-2">
-                                            <p>서비스: </p>
-                                            <Star w="w-4" h="h-4" readonly={true} rate={p.service} />
-                                        </div>
-                                    </div>
-                                    <div className="mb-4">
-                                        {images[p.id] && images[p.id].length > 0 ? (
-                                            <div className="flex flex-wrap gap-4">
-                                                {images[p.id].map((url, index) => (
+                                </Modal>
+                            </div>
+                            <div className="sorting flex items-center flex-wrap md:gap-5 gap-3 gap-y-3 mt-6">
+                                <div className="text-button">Sort by</div>
+                                <div onClick={() => setSort('date')} className="sorting-button item px-4 py-1 border rounded-full ${sort === 'date' ? 'active' : ''}"
+                                >Newest</div>
+                                <div onClick={() => setSort('rating')} className="sorting-button item px-4 py-1 border rounded-full ${sort === 'rating' ? 'active' : ''}"
+                                >Rating</div>
+                                <div onClick={() => setSort('likes')} className="sorting-button item px-4 py-1 border rounded-full ${sort === 'likes' ? 'active' : ''}"
+                                >Likes</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="list-review">
+                        <>
+                            {sortedPosts.map((p) => (
+                                <div key={p.id} className="item flex max-lg:flex-col gap-y-4 w-full py-6 border-t border-line">
+                                    <div className="left lg:w-1/4 w-full lg:pr-[15px]">
+                                        <div className="list-img-review flex gap-2">
+                                            {images[p.id] && images[p.id].length > 0 ? (
+                                                images[p.id].map((url, index) => (
                                                     <img
                                                         key={index}
                                                         src={url}
                                                         alt={`이미지 ${index + 1}`}
-                                                        className="w-48 h-auto rounded-lg shadow-lg"
+                                                        className="w-[60px] aspect-square rounded-lg"
+                                                        onClick={() => openModal(url)}
                                                     />
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <p>이미지 없음</p>
-                                        )}
-                                    </div>
-                                    <div className="mb-2 flex items-center">
-                                        <h2 className="text-lg font-bold mb-2 flex-shrink-0 self-center">태그:</h2>
-                                        {p.tags && p.tags.length > 0 ? (
-                                            <ul className="flex flex-wrap gap-2 ml-2 items-center">
-                                                {p.tags.map((tag, index) => (
-                                                    <li
-                                                    key={index}
-                                                    className="rounded-full border border-[#F46119] px-3 py-1 text-[#F46119] font-semibold"
-                                                  >
-                                                    {tag}
-                                                  </li>
-                                                ))}
-                                            </ul>
-                                        ) : (
-                                            <p className="ml-2">태그 없음</p>
-                                        )}
-                                    </div>
-                                    <div className="flex justify-between items-center mb-2 text-gray-500">
-                                        <p>{formatDate(
-                                            p.entryDate)}</p>
-                                        <button
-                                            onClick={() => toggleReply(p.id)}
-                                            className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded">
-                                            댓글
-                                        </button>
-                                    </div>
-                                    {replyToggles[p.id] && (
-                                        <>
-                                            <div className="mt-4 w-full">
-                                                {replies[p.id] && replies[p.id].length > 0 ? (
-                                                    <ul>
-                                                        {replies[p.id].map((reply, index) => (
-                                                            <li key={index} className="mb-2 border-b border-gray-200 pb-2">
-                                                                <div className="flex items-center justify-between">
-                                                                    <div className="flex items-center">
-                                                                        <span className="inline-block rounded-full bg-gray-300 px-3 py-1 text-sm font-semibold text-gray-700">
-                                                                            {reply.nickname}
-                                                                        </span>
-                                                                        {editReply[reply.id] ? (
-                                                                            <span className="ml-2" style={{ width: "600px", display: "inline-block", whiteSpace: "nowrap" }}>
-                                                                                <textarea
-                                                                                    name="content"
-                                                                                    id="content"
-                                                                                    value={editInput[reply.id] || reply.content}
-                                                                                    onChange={(e) => replyInputChange(reply.id, e.target.value, false)}
-                                                                                    className="border rounded p-2 w-full"
-                                                                                    style={{ minHeight: "50px", width: "100%" }}
-                                                                                />
-                                                                            </span>
-                                                                        ) : (
-                                                                            <span className="ml-2" style={{ width: "auto", display: "inline-block", whiteSpace: "nowrap" }}>
-                                                                                {reply.content}
-                                                                            </span>
-                                                                        )}
-                                                                    </div>
-                                                                    <div className="flex items-center">
-                                                                        <span className="text-gray-500 mr-4">{formatDate(reply.entryDate)}</span>
-                                                                        {reply.userId === currentUserId && (
-                                                                            <div className="flex space-x-2">
-                                                                                <button
-                                                                                    className="text-xs bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-3 border border-blue-500 hover:border-transparent rounded"
-                                                                                    onClick={() => editReply[reply.id] ? replyEditSave(reply.id, p.id) : replyEditClick(reply.id, reply.content)}
-                                                                                >
-                                                                                    {editReply[reply.id] ? '저장' : '수정'}
-                                                                                </button>
-                                                                                <button
-                                                                                    className="text-xs bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-1 px-3 border border-red-500 hover:border-transparent rounded"
-                                                                                    onClick={() => reply.id && replyDelete(reply.id, p.id)}
-                                                                                >
-                                                                                    삭제
-                                                                                </button>
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                ) : (
-                                                    <p>댓글 없음</p>
-                                                )}
-                                            </div>
-                                            <form onSubmit={(e) => replySubmit(p.id, e)} className="my-4 flex space-x-4">
-                                                <input
-                                                    type="text"
-                                                    placeholder="댓글을 입력하세요."
-                                                    value={replyInput[p.id] || ""}
-                                                    onChange={(e) => replyInputChange(p.id, e.target.value, true)}
-                                                    className="border rounded p-2 flex-grow" />
-                                                <button
-                                                    type="submit"
-                                                    className="bg-blue-500 text-white py-2 px-3 rounded hover:bg-blue-600"
-                                                >
-                                                    등록
-                                                </button>
-                                            </form>
-                                        </>
-                                    )}
-                                    {p.userId === currentUserId && (
-                                        <div className="flex justify-end mt-2">
-                                            <button
-                                                className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded mr-2"
-                                                onClick={() => {
-                                                    router.push(`/post/${restaurantId}/update/${p.id}`);
-                                                }}
-                                            >
-                                                수정
-                                            </button>
-                                            <button
-                                                className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded mr-2"
-                                                onClick={() => {
-                                                    handleDelete(p.id);
-                                                }}
-                                            >
-                                                삭제
-                                            </button>
+                                                ))
+                                            ) : (
+                                                <div className="w-[60px] aspect-square rounded-lg bg-gray-200 flex items-center justify-center">
+                                                    <span className="text-gray-500">No Image</span>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
+                                        <Modal isOpen={isOpen} onClose={closeModal} closeButton={false}>
+                                            <div className='relative'>
+                                                <Image
+                                                    src={currentImg} alt="Modal Image"
+                                                    width={800} height={800}
+                                                    className='rounded-lg' />
+                                            </div>
+                                        </Modal>
+                                        <div className="user mt-3">
+                                            <div className="text-title">{p.nickname}</div>
+                                            <div className="flex items-center gap-2">
+                                                <div className="text-secondary2">{formatDate(p.entryDate)}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="right lg:w-3/4 w-full lg:pl-[15px]">
+                                        <div className="flex items-center justify-between">
+                                            <div className='flex items-center'>
+                                                <Star w="w-4" h="h-4" readonly={true} rate={p.averageRating} />
+                                                <p className='ml-2'>{p.averageRating.toFixed(1)} / 5</p>
+                                            </div>
+                                            <PostOptions
+                                                postUserId={p.userId ?? 0}
+                                                currentId={currentUserId}
+                                                onEdit={() => { router.push(`/post/${restaurantId}/update/${p.id}`) }}
+                                                onDelete={() => handleDelete(p.id)}
+                                                onReport={() => handleReportClick(p.id)}
+                                            />
+                                        </div>
+                                        {reportingPostId === p.id && (
+                                            <div className="mt-4">
+                                                <form onSubmit={handleReportSubmit} className="flex flex-col">
+                                                    <label className="text-gray-700 mb-2">신고 사유를 선택하세요:</label>
+                                                    <select
+                                                        value={reportReason}
+                                                        onChange={(e) => setReportReason(e.target.value)}
+                                                        className="border rounded p-2 mb-4"
+                                                    >
+                                                        <option value="">선택하세요</option>
+                                                        {reportReasons.map((reason, index) => (
+                                                            <option key={index} value={reason}>{reason}</option>
+                                                        ))}
+                                                    </select>
+                                                    <button type="submit" className="bg-blue-500 text-white py-2 px-3 rounded hover:bg-blue-600">
+                                                        신고하기
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setReportingPostId(null)}
+                                                        className="mt-2 bg-transparent hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded"
+                                                    >
+                                                        취소
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        )}
+
+                                        <div className="flex items-center space-x-6">
+                                            <div className="flex items-center">
+                                                <p className="text-sm font-medium mb-0 mr-1 leading-none align-middle">맛:</p>
+                                                <div className="flex items-center">
+                                                    <Star w="w-2" h="h-2" readonly={true} rate={p.taste} />
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <p className="text-sm font-medium mb-0 mr-1 leading-none align-middle">청결:</p>
+                                                <div className="flex items-center">
+                                                    <Star w="w-2" h="h-2" readonly={true} rate={p.clean} />
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <p className="text-sm font-medium mb-0 mr-1 leading-none align-middle">서비스:</p>
+                                                <div className="flex items-center">
+                                                    <Star w="w-2" h="h-2" readonly={true} rate={p.service} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="body1 mt-3">{p.content}</div>
+                                        <div className="mb-4 flex items-center">
+                                            {p.tags && p.tags.length > 0 ? (
+                                                <ul className="flex flex-wrap gap-2 items-center mt-2">
+                                                    {p.tags.map((tag, index) => (
+                                                        <li
+                                                            key={index}
+                                                            style={{ marginLeft: index === 0 ? 0 : "9=8px" }}
+                                                            className="ml-2 rounded-full border border-gray-300 bg-white px-3 py-1 text-gray-600 font-semibold shadow-sm hover:bg-gray-100">
+                                                            {tag}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ) : (
+                                                <p className="ml-2 text-gray-500">태그 없음</p>
+                                            )}
+                                        </div>
+                                        <div className="action mt-1">
+                                            <div className="flex items-center gap-4">
+                                                <button
+                                                    onClick={() => handleLike(p.id)}
+                                                    className="like-btn flex items-center gap-1 cursor-pointer">
+                                                    <Icon.Heart
+                                                        size={18}
+                                                        color={likeCount[p.id] > 0 ? "#FF0000" : "#9FA09C"}
+                                                        weight="fill"
+                                                    />
+                                                    <div className="text-button">{likeCount[p.id] || 0}</div>
+                                                </button>
+                                                <button onClick={() => toggleReply(p.id)} className="reply-btn text-button text-secondary cursor-pointer hover:text-black">Reply</button>
+                                            </div>
+                                            {replyToggles[p.id] && (
+                                                <>
+                                                    <div className="mt-2 w-full">
+                                                        {replies[p.id] && replies[p.id].length > 0 ? (
+                                                            <ul>
+                                                                {replies[p.id].map((reply, index) => (
+                                                                    <li key={index} className="mb-2 border-b border-gray-200 pb-2">
+                                                                        <div className="flex items-center justify-between">
+                                                                            <div className="flex items-center">
+                                                                                <span className="inline-block rounded-full bg-gray-300 px-3 py-1 text-sm font-semibold text-gray-700">
+                                                                                    {reply.nickname}
+                                                                                </span>
+                                                                                {editReply[reply.id] ? (
+                                                                                    <span className="ml-2" style={{ width: "600px", display: "inline-block", whiteSpace: "nowrap" }}>
+                                                                                        <textarea
+                                                                                            name="content"
+                                                                                            id="content"
+                                                                                            value={editInput[reply.id] || reply.content}
+                                                                                            onChange={(e) => replyInputChange(reply.id, e.target.value, false)}
+                                                                                            className="border rounded p-2 w-full"
+                                                                                            style={{ minHeight: "50px", width: "100%" }}
+                                                                                        />
+                                                                                    </span>
+                                                                                ) : (
+                                                                                    <span className="ml-2" style={{ width: "auto", display: "inline-block", whiteSpace: "nowrap" }}>
+                                                                                        {reply.content}
+                                                                                    </span>
+                                                                                )}
+                                                                            </div>
+                                                                            <div className="flex items-center">
+                                                                                <span className="text-gray-500 mr-4">{formatDate(reply.entryDate)}</span>
+                                                                                {reply.userId === currentUserId && (
+                                                                                    <div className="flex space-x-2">
+                                                                                        <button
+                                                                                            className="text-xs bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-3 border border-blue-500 hover:border-transparent rounded"
+                                                                                            onClick={() => editReply[reply.id] ? replyEditSave(reply.id, p.id) : replyEditClick(reply.id, reply.content)}
+                                                                                        >
+                                                                                            {editReply[reply.id] ? '저장' : '수정'}
+                                                                                        </button>
+                                                                                        <button
+                                                                                            className="text-xs bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-1 px-3 border border-red-500 hover:border-transparent rounded"
+                                                                                            onClick={() => reply.id && replyDelete(reply.id, p.id)}
+                                                                                        >
+                                                                                            삭제
+                                                                                        </button>
+                                                                                    </div>
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        ) : (
+                                                            <p>댓글 없음</p>
+                                                        )}
+                                                    </div>
+                                                    <form onSubmit={(e) => replySubmit(p.id, e)} className="my-4 flex space-x-4">
+                                                        <input
+                                                            type="text"
+                                                            placeholder="댓글을 입력하세요."
+                                                            value={replyInput[p.id] || ""}
+                                                            onChange={(e) => replyInputChange(p.id, e.target.value, true)}
+                                                            className="border rounded p-2 flex-grow" />
+                                                        <button
+                                                            type="submit"
+                                                            className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded mr-2">
+                                                            등록
+                                                        </button>
+                                                    </form>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    ))}
+                            ))}
+                        </>
+
+                        <div className="text-button more-review-btn text-center mt-2 underline">View More Comments</div>
+                    </div>
                 </div>
             </div>
-
-        </main>
-    );
+        </>
+    )
 };
+
+export default PostList

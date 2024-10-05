@@ -1,14 +1,13 @@
 // src/app/(page)/restaurant/layout.tsx 또는 src/app/layout.tsx
-
+"use client"
 import React from 'react';
 import Header from 'src/app/components/common/Header';
-import StoreProvider from 'src/app/StoreProvider';
-import { SearchProvider } from './components/SearchContext';
-import { ModalWishlistProvider } from './context/ModalWishlistContext';
-
-import { WishlistProvider } from './context/WishlistContext';
 import ModalWishlist from './modal/ModalWishlist';
 import GlobalProvider from './GlobalProvider';
+
+import '@/styles/styles.scss'
+
+
 
 export default function RootLayout({
   children,

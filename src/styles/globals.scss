@@ -249,6 +249,38 @@ input[type="file"] {
   }
 }
 
+.custom-button{
+  color: #F46119 !important; /* 기본 텍스트 색상 */
+  border: 1px solid #F46119 !important; /* 기본 테두리 색상 */
+  background-color: transparent !important; /* 기본 배경 투명 */
+  
+  &:hover {
+    color: #ffffff !important; /* Hover 시 텍스트 색상 */
+    background-color: #F46119 !important; /* Hover 시 배경색 */
+  }
+}
+
+.sorting-button {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #F46119; /* 기본 텍스트 색상 */
+  border: 1px solid #F46119; /* 기본 테두리 색상 */
+  background-color: transparent; /* 기본 배경 투명 */
+  transition: all ease 0.4s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #F46119; /* Hover 시 배경색 */
+    color: #ffffff; /* Hover 시 텍스트 색상 */
+  }
+
+  &.active {
+    background-color: #F46119; /* 선택된 버튼의 배경색 */
+    color: #ffffff; /* 선택된 버튼의 텍스트 색상 */
+  }
+}
+
 @media (max-width: 1023.99px) {
   .text-sub-display {
     font-size: 16px;

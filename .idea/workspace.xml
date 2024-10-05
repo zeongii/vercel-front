@@ -4,7 +4,93 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49786053-a601-4996-9fe6-17ac685f1975" name="Changes" comment="" />
+    <list default="true" id="49786053-a601-4996-9fe6-17ac685f1975" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/app/(page)/restaurant/page2.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/(page)/user/register/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/(page)/user/userPost/[id]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/receipt/receipt.api.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/api/wishList/wishList.api.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/Product.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/modal/ModalWishlistDetail.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/service/receipt/receipt.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/service/user/user.api.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/service/wishList/wishList.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/babel.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/css/wishModal.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/styles/styles.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.swcrc" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/js/pages/_document.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/next.config.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/postcss.config.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/src/app/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/src/app/fonts/GeistMonoVF.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/src/app/fonts/GeistVF.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/src/app/globals.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/src/app/layout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/src/app/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/tailwind.config.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/my-next-app/yarn.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/js/pages/_document.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/admin/dash/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/admin/dash/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/admin/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/admin/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/admin/showOpinion/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/admin/showOpinion/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/admin/totalCount/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/admin/totalCount/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/chatRoom/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/chatRoom/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/post/[restaurantId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/post/[restaurantId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/receipt/insertReceipt/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/receipt/insertReceipt/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/receipt/receiptRestaurant/[restaurantId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/receipt/receiptRestaurant/[restaurantId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/restaurant/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/restaurant/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/restaurant/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/restaurant/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/user/calendar/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/calendar/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/user/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/user/mypage/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/mypage/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/user/wallet/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/wallet/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/GlobalProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/GlobalProvider.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/admin/admin.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/admin/admin.api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/api.strategy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/api.strategy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/axios.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/axios.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/chat/chat.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/chat/chat.api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/chatRoom/chatRoom.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/chatRoom/chatRoom.api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/notice/notice.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/notice/notice.api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/opinion/opinion.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/opinion/opinion.api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/post/post.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/post/post.api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/request.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/request.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/restaurant/restaurant.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/restaurant/restaurant.api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/user/user.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/user/user.api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/AddHeart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/modal/AddHeart.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/Search.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/Search.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/SearchContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/SearchContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/SideBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/SideBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/common/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/common/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/context/ModalWishlistContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/context/ModalWishlistContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/context/WishlistContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/context/WishlistContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/modal/ModalWishlist.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/modal/ModalWishlist.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/model/chat.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/model/chat.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/model/chatRoom.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/model/chatRoom.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/model/dash.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/model/dash.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/model/user.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/model/user.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/service/admin/admin.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/admin/admin.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/service/chat/chat.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/chat/chat.api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/service/chatRoom/chatRoom.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/chatRoom/chatRoom.api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/service/notice/notice.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/notice/notice.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/service/opinion/opinion.serivce.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/opinion/opinion.serivce.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/service/post/post.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/post/post.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/service/report/report.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/report/report.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/service/restaurant/restaurant.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/restaurant/restaurant.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/css/mypage.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/mypage.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/product.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/product.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,18 +111,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "JEunseo"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;JEunseo&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/nyamnyam-kr/nyamnyam-front.git",
-    "accountId": "1834116f-019d-451b-a5b8-17ef5bf3cd86"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/nyamnyam-kr/nyamnyam-front.git&quot;,
+    &quot;accountId&quot;: &quot;1834116f-019d-451b-a5b8-17ef5bf3cd86&quot;
   }
-}]]></component>
+}</component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -50,24 +136,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "nyamnyam-post",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/bit/Documents/NC13_project/nyamnyam/frontend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "ts.external.directory.path": "C:\\Users\\bitcamp\\team\\release\\nyamnyam-front\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Merging nyamnyam-post&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/bit/Documents/NC13_project/nyamnyam/frontend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\bit\\Documents\\NC13_project\\nyamnyam\\frontend\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\(page)\notice\details\[id]" />
@@ -112,6 +198,8 @@
       <workItem from="1727248575980" duration="3339000" />
       <workItem from="1727760431335" duration="1482000" />
       <workItem from="1727842601005" duration="71000" />
+      <workItem from="1728039836379" duration="732000" />
+      <workItem from="1728099778167" duration="187000" />
     </task>
     <servers />
   </component>

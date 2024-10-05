@@ -1,3 +1,4 @@
+import {notice} from "src/app/api/notice/notice.api";
 import {ReportModel} from "src/app/model/report.model";
 import {report} from "src/app/api/report/report.api";
 
