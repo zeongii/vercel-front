@@ -390,7 +390,7 @@ const Default = () => {
                                     ))}
                                 </Swiper>
                                 <Modal
-                                    isOpen={isOpen} onClose={closeModal}>
+                                    isOpen={isOpen} onClose={closeModal} closeButton={false}>
                                     <div className='relative'>
                                         <Image
                                             src={currentImg} alt="Modal Image"
@@ -428,7 +428,7 @@ const Default = () => {
                                                 </div>
                                             )}
                                         </div>
-                                        <Modal isOpen={isOpen} onClose={closeModal}>
+                                        <Modal isOpen={isOpen} onClose={closeModal} closeButton={false}>
                                             <div className='relative'>
                                                 <Image
                                                     src={currentImg} alt="Modal Image"
