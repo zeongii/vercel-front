@@ -7,10 +7,12 @@ import { PostModel } from "src/app/model/post.model";
 import { postService } from "src/app/service/post/post.service";
 import { tag } from "src/app/api/tag/tag.api";
 import { TagModel } from "src/app/model/tag.model";
+import { restaurant } from '@/app/api/restaurant/restaurant.api';
 
 export default function PostRegister() {
   const router = useRouter();
   const { restaurantId } = useParams();
+  const [restaurantName, setRestaurantName] = useState<RestaurantModel | null>(null);
   const [formData, setFormData] = useState<PostModel>({} as PostModel);
   const [tagsByCategory, setTagsCategory] = useState<{ [key: string]: TagModel[] }>({});
   const [tags, setTags] = useState<string[]>([]);
@@ -22,7 +24,13 @@ export default function PostRegister() {
       restaurantId: Number(restaurantId)
     }));
     fetchTagCategory();
+    fetchRestaurant(Number(restaurantId));
   }, [restaurantId]);
+
+  const fetchRestaurant = async (restaurantId: number) => {
+    const data = await restaurant.fetchRestaurantById(restaurantId);
+    setRestaurantName(data);
+  }
 
   const fetchTagCategory = async () => {
     try {
@@ -87,7 +95,11 @@ export default function PostRegister() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-6" style={{ marginTop: '30px' }}>
-      <div className='heading4 mb-2'>WRITE REVIEW</div>
+      <div className='heading4 mb-2'>
+        <span style={{ color: '#F46119', fontSize: 'inherit', fontWeight: 'inherit' }}>
+          {restaurantName?.name}
+        </span> 리뷰 작성하기
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4 p-6 bg-gray-100 rounded-lg shadow-lg w-full max-w-3xl">
         <div className="border-b-2 pb-4">
           <h2 className="font-bold text-lg mb-2">◦ 항목별 평점</h2>

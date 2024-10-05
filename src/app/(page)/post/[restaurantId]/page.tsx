@@ -1,6 +1,6 @@
 'use client'
 
-import React, { FormEvent, use, useEffect, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -9,7 +9,7 @@ import * as Icon from "@phosphor-icons/react/dist/ssr";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { ReplyModel } from 'src/app/model/reply.model'
 import { PostModel } from 'src/app/model/post.model'
 import { postService } from 'src/app/service/post/post.service'
