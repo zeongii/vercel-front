@@ -5,3 +5,7 @@ export interface PostOptionsProps {
     onDelete: () => void;      
     onReport: () => void;      
   }
+
+  export interface PostListProps{
+    restaurantId: number;
+  }

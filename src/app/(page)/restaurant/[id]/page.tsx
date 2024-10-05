@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchContext } from 'src/app/components/SearchContext';
 import { getRestaurantDetails } from 'src/app/service/restaurant/restaurant.service';
 import Star from '../../../components/Star';
+import PostList from '../../post/[restaurantId]/page';
 
 
 
@@ -119,7 +120,7 @@ export default function Restaurant() {
     };
 
     return (
-        <div className="bg-gray-100 mt-20">
+        <div>
             <div className="container mx-auto px-4 py-4 bg-white shadow-lg rounded-lg">
                 {filteredRestaurants.length > 0 ? (
                     <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
@@ -177,16 +178,8 @@ export default function Restaurant() {
                                         </div>
                                     ) : '등록된 평점이 없습니다'}
                                 </div>
-                                <div className="mb-4">
-                                    <strong className="text-lg">[레스토랑 전체 평점]</strong>
-                                    {allAverage !== null ? (
-                                        <div className="flex items-center">
-                                            <Star w="w-6" h="h-6" readonly={true} rate={allAverage} onChange={() => { }} />
-                                            <p className="ml-2">{allAverage.toFixed(1)} / 5</p>
-                                        </div>
-                                    ) : '등록된 평점이 없습니다.'}
-                                </div>
-                                <strong className="text-lg">메뉴</strong>
+
+                                <strong className="text-lg mt-2">메뉴</strong>
                                 <ul role="list" className="marker:text-sky-400 list-disc pl-5 space-y-3 text-slate-500">
                                     <div className="whitespace-pre-line">
                                         {renderMenu(restaurant.menu)}
@@ -208,33 +201,11 @@ export default function Restaurant() {
                                 </div>
                             </div>
                         </div>
-
-
                     </>
                 )}
 
-                <div className="mb-4">
-                    <h2 className="text-lg font-bold mb-2">[가장 많이 선택된 태그]</h2>
-                    {tags.length > 0 ? (
-                        <ul className="flex flex-wrap gap-2">
-                            {tags.map((tag, index) => (
-                                <li
-                                    key={index}
-                                    className="rounded-full border border-sky-100 bg-sky-50 px-2 py-1 text-sky-700"
-                                >
-                                    {tag}
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>등록된 태그가 없습니다.</p>
-                    )}
-                </div>
-                <div className="text-center">
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition duration-300"
-                            onClick={() => router.push(`/post/${id}`)}>
-                        후기 보기
-                    </button>
+                <div style={{ borderTop: '1px solid #e0e0e0' }} className='my-30'>
+                    <PostList restaurantId={Number(id)} />
                 </div>
             </div>
         </div>

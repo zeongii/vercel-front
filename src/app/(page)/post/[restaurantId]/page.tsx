@@ -23,9 +23,10 @@ import PostOptions from 'src/app/components/PostOptions';
 import { ReportModel } from 'src/app/model/report.model';
 import Modal from 'src/app/components/Modal';
 import { fetchReportRegister } from '@/app/service/report/report.service';
+import { PostListProps } from '@/app/model/props';
 
 
-const PostList = () => {
+const PostList: React.FC<PostListProps> = ({restaurantId}) => {
     const [posts, setPosts] = useState<PostModel[]>([]);
     const [restaurant, setRestaurant] = useState<RestaurantModel | null>(null);
     const [images, setImages] = useState<{ [key: number]: string[] }>({});
@@ -46,7 +47,6 @@ const PostList = () => {
     const [reportingPostId, setReportingPostId] = useState<number | null>(null);
     const [reportReason, setReportReason] = useState<string>("");
     const router = useRouter();
-    const { restaurantId } = useParams();
     const currentUserId = 11; // 확인용
 
     // 신고하기
