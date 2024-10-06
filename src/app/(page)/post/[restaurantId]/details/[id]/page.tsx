@@ -23,9 +23,6 @@ export default function PostDetail() {
       const postId = Array.isArray(id) ? Number(id[0]) : Number(id);
       const {postData, images} = await postService.detailsPostAndImages(postId);
 
-      console.log("Post data with nickname and restaurantId:", postData); // 데이터를 확인
-      console.log("Image data:", images);
-
       setPost(postData); 
       setImages(images);
     }catch(error) {
@@ -128,7 +125,7 @@ export default function PostDetail() {
         <div className="mt-4">
         <button
           className="bg-transparent hover:bg-gray-100 text-gray-700 font-semibold hover:text-black py-2 px-4 border border-gray-500 hover:border-transparent rounded mr-2"
-          onClick={() => router.push(`/post/${restaurantId}`)}
+          onClick={() => router.push(`/restaurant/${restaurantId}`)}
         >
           목록
         </button>

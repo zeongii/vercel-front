@@ -47,7 +47,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
     const [reportingPostId, setReportingPostId] = useState<number | null>(null);
     const [reportReason, setReportReason] = useState<string>("");
     const router = useRouter();
-    const currentUserId = 11; // 확인용
+    const currentUserId = 42; // 확인용
 
     // 신고하기
     const reportReasons = [
@@ -327,7 +327,9 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
             <div className="product-detail default" style={{ marginTop: '30px' }}>
                 <div className="review-block md:py-20 py-10 bg-surface">
                     <div className="heading flex items-center justify-between flex-wrap gap-4">
-                        <div className="heading4">{`${restaurant?.name}`} Review</div>
+                        <div className="heading4">{`${restaurant?.name}`} 
+                            <span style={{ color: '#F46119', fontSize: 'inherit', fontWeight: 'inherit' }} className='ml-2'>Review</span>
+                            </div>
                         <button
                             className='button-main custom-button'
                             onClick={() => router.push(`/post/register/${restaurantId}`)}

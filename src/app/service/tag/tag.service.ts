@@ -41,8 +41,6 @@ const fetchTag = async (): Promise<{ [category: string]: TagModel[] }> => {
         categorizedTags[category] = tagList;
       }
     });
-
-    console.log("Categorized Tags:", categorizedTags);
     return categorizedTags;
   } catch (error) {
     console.error("Error in fetchTagsData:", error);
