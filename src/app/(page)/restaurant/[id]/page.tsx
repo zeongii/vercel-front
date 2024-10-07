@@ -200,7 +200,6 @@ export default function Restaurant() {
                             </div>
                             <div className="w-1/3 h-80 rounded-lg shadow-md mt-0">
                                 <div id="map" className="w-full h-full rounded-lg shadow-md mb-4" ></div>
-
                                 {/* 광고 이미지 추가 */}
                                 <div className="w-1/3 mx-auto mb-4">
                                     <img

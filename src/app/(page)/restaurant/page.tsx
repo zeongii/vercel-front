@@ -15,7 +15,7 @@ export default function Home() {
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [modalRestaurant, setModalRestaurant] = useState<RestaurantModel | null>(null); // 모달에서 보여줄 레스토랑 데이터
+    const [modalRestaurant, setModalRestaurant] = useState<RestaurantModel | null>(null);
 
     useEffect(() => {
 

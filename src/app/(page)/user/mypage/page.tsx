@@ -13,7 +13,6 @@ import {Bar, Doughnut} from "react-chartjs-2";
 import MyCalendar from "src/app/(page)/user/calendar/[id]/page";
 import MyWallet from "src/app/(page)/user/wallet/[id]/page";
 import {fetchPostList} from "src/app/service/post/post.service";
-import {PostModel} from "src/app/model/post.model";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale);
 
@@ -24,7 +23,6 @@ export default function MyPage() {
     const [restaurant, setRestaurant] = useState<RestaurantList[]>([]);
     const [post, setPost] = useState<UserPostModel[]>([]);
     const [activeTab, setActiveTab] = useState<string | undefined>('myPage')
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
 
     useEffect(() => {

@@ -1,10 +1,8 @@
 "use client";
 import React, {useEffect, useState} from "react";
 import {useParams, useRouter} from "next/navigation";
-import instance from "src/app/api/axios";
 import {fetchNoticeOne} from "src/app/service/notice/notice.service";
 import {NoticeModel} from "src/app/model/notice.model";
-
 
 
 export default function ShowNotice() {

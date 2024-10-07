@@ -2,26 +2,21 @@
 import React, {useEffect, useState} from "react";
 import {Bar, Doughnut, Line} from "react-chartjs-2";
 import {
-    Chart as ChartJS,
-    Title,
-    Tooltip,
-    Legend,
-    BarElement,
     ArcElement,
+    BarElement,
     CategoryScale,
+    Chart as ChartJS,
+    Legend,
     LinearScale,
-    PointElement, LineElement
+    LineElement,
+    PointElement,
+    Title,
+    Tooltip
 } from "chart.js"; // ArcElement 추가
 import styles from "src/css/mypage.module.css";
-import axios from "axios";
-import Link from "next/link";
-import {
-    fetchReceiptList,
-    fetchShowArea,
-    fetchShowCount,
-    fetchShowRestaurant
-} from "src/app/service/admin/admin.service";
+import {fetchReceiptList, fetchShowArea, fetchShowRestaurant} from "src/app/service/admin/admin.service";
 import {Area, CountCost, CountItem, RestaurantList} from "src/app/model/dash.model";
+
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale, PointElement, LineElement);
 const DashBoard = () => {
@@ -29,8 +24,6 @@ const DashBoard = () => {
     const [region, setRegion] = useState<Area[]>([]);
     const [restaurant, setRestaurant] = useState<RestaurantList[]>([]);
     const [countRestaurant, setCountRestaurant] = useState<CountCost[]>([]);
-    const [sumList, setSumList] = useState<RestaurantList[]>([]);
-
 
     useEffect(() => {
         const showArea = async () => {
@@ -58,9 +51,7 @@ const DashBoard = () => {
 
 
 
-    const [content, setContent] = useState("");
-    const userId = 1; // Replace this with the actual user ID
-    const currentDate = new Date().toISOString(); // Adjust format if needed
+
 
     const areaData = {
         labels: region.map(item => item.area),
@@ -123,29 +114,6 @@ const DashBoard = () => {
                         </div>
                     </div>
                 </div>
-
-                <div className={styles.col}>
-                    <div className={styles.card}>
-                        <div className={styles.cardHeader}>TOTAL POST USER RANKING</div>
-                        <div className={styles.cardBody}>
-                            <div className={styles.chartContainer}>
-                                <Bar
-                                    data={restaurantData}
-                                    options={{
-                                        responsive: true,
-                                        maintainAspectRatio: false,
-                                        scales: {
-                                            x: {title: {display: true, text: 'Restaurant'}},
-                                            y: {title: {display: true, text: 'Count'}},
-                                        },
-                                        animation: false
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
 
                 <div className={`${styles.col} mb-10`}>
                     <div className={styles.card}>
