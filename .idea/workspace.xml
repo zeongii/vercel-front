@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="49786053-a601-4996-9fe6-17ac685f1975" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/app/(page)/chatRoom/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/chatRoom/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/service/user/fetchClient.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/user/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/common/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/common/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/service/chatRoom/chatRoom.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/chatRoom/chatRoom.api.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +26,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="nyamnyam-ad" />
+        <entry key="$PROJECT_DIR$" value="nyamnyam-user" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -56,7 +60,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "release0.06",
+    "git-widget-placeholder": "nyamnyam-user",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/bit/Documents/NC13_project/nyamnyam/frontend",
@@ -66,7 +70,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "ts.external.directory.path": "C:\\Users\\bitcamp\\team\\release\\nyamnyam-front\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "C:\\Users\\bitcamp\\Documents\\GitHub\\nyamnyam-front\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -76,6 +80,7 @@
       <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\model" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\bitcamp\Documents\GitHub\nyamnyam-front\src\app\components" />
       <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\(page)\user\wallet\[id]" />
       <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\(page)\admin" />
     </key>
