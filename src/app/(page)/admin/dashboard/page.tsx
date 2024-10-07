@@ -14,7 +14,12 @@ import {
     Tooltip
 } from "chart.js"; // ArcElement 추가
 import styles from "src/css/mypage.module.css";
-import {fetchReceiptList, fetchShowArea, fetchShowRestaurant} from "src/app/service/admin/admin.service";
+import {
+    fetchReceiptList,
+    fetchShowArea,
+    fetchShowRestaurant,
+    fetchUpvoteRestaurant
+} from "src/app/service/admin/admin.service";
 import {Area, CountCost, CountItem, RestaurantList} from "src/app/model/dash.model";
 
 
@@ -24,6 +29,7 @@ const DashBoard = () => {
     const [region, setRegion] = useState<Area[]>([]);
     const [restaurant, setRestaurant] = useState<RestaurantList[]>([]);
     const [countRestaurant, setCountRestaurant] = useState<CountCost[]>([]);
+    const [upvoteRestaurant, setUpvoteRestaurant] = useState<RestaurantList[]>([]);
 
     useEffect(() => {
         const showArea = async () => {
@@ -49,6 +55,14 @@ const DashBoard = () => {
         countRestaurant();
     }, []);
 
+    useEffect(() => {
+        const restaurant = async () => {
+            const data = await fetchUpvoteRestaurant();
+            setUpvoteRestaurant(data);
+        };
+        restaurant();
+    }, []);
+
 
 
 
@@ -57,6 +71,16 @@ const DashBoard = () => {
         labels: region.map(item => item.area),
         datasets: [{
             data: region.map(item => item.total),
+            backgroundColor: ["#F46119", "#ed6d2b", "#f37f48", "#ea966d", "#EAB5A0FF"],
+            borderColor: ["#fff", "#fff", "#fff", "#fff", "#fff"],
+            borderWidth: 1,
+        }],
+    };
+
+    const upvoteData = {
+        labels: upvoteRestaurant.map(item => item.restaurantName),
+        datasets: [{
+            data: upvoteRestaurant.map(item => item.total),
             backgroundColor: ["#F46119", "#ed6d2b", "#f37f48", "#ea966d", "#EAB5A0FF"],
             borderColor: ["#fff", "#fff", "#fff", "#fff", "#fff"],
             borderWidth: 1,
@@ -95,11 +119,33 @@ const DashBoard = () => {
             <div className={styles.row}>
                 <div className={styles.col}>
                     <div className={styles.card}>
-                        <div className={styles.cardHeader}>TOTAL POST USER RANKING</div>
+                        <div className={styles.cardHeader}>포스팅이 가장 많은 음식점 랭킹</div>
                         <div className={styles.cardBody}>
                             <div className={styles.chartContainer}>
                                 <Bar
                                     data={restaurantData}
+                                    options={{
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        scales: {
+                                            x: {title: {display: true, text: 'Restaurant'}},
+                                            y: {title: {display: true, text: 'Count'}},
+                                        },
+                                        animation: false
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={styles.col}>
+                    <div className={styles.card}>
+                        <div className={styles.cardHeader}>좋아요를 많이 받은 포스팅의 음식점 랭킹</div>
+                        <div className={styles.cardBody}>
+                            <div className={styles.chartContainer}>
+                                <Bar
+                                    data={upvoteData}
                                     options={{
                                         responsive: true,
                                         maintainAspectRatio: false,
@@ -148,7 +194,7 @@ const DashBoard = () => {
             <div className={styles.row}>
                 <div className={styles.col}>
                     <div className={styles.card}>
-                        <div className={styles.cardHeader}>포스팅 많은 음식점 랭킹</div>
+                        <div className={styles.cardHeader}>월별 영수증 리뷰 사용 횟수</div>
                         <div className={styles.cardBody}>
                             <div className={styles.chartContainer}>
                                 <Line data={lineData} options={{responsive: true}}/>

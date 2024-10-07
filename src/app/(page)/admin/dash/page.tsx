@@ -52,8 +52,8 @@ export default function AdminDash() {
             {
                 label: 'UserRank',
                 data: count.map(item => item.count),
-                backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                borderColor: 'rgba(255, 159, 64, 1)',
+                backgroundColor: 'rgb(253,235,216)',
+                borderColor: 'rgb(253,158,64)',
                 borderWidth: 1,
             }
         ],
@@ -179,7 +179,6 @@ export default function AdminDash() {
                                                         x: {title: {display: true, text: 'Nickname'}},
                                                         y: {title: {display: true, text: 'Count'}},
                                                     }, animation: {
-                                                        duration: 0, // 애니메이션 삭제
                                                     },
                                                 }}
 
@@ -236,13 +235,13 @@ export default function AdminDash() {
                                     <thead className="bg-gray-100 border-b border-gray-300 text-center">
                                     <tr>
                                         <th scope="col"
-                                            className="py-3 text-sm font-bold uppercase text-secondary">userId
+                                            className="py-3 text-sm font-bold uppercase text-secondary">postId
                                         </th>
                                         <th scope="col"
                                             className="py-3 text-sm font-bold uppercase text-secondary">reason
                                         </th>
                                         <th scope="col"
-                                            className="py-3 text-sm font-bold uppercase text-secondary">postId
+                                            className="py-3 text-sm font-bold uppercase text-secondary">postCount
                                         </th>
                                     </tr>
                                     </thead>
@@ -251,7 +250,7 @@ export default function AdminDash() {
                                         <tr key={r.userId}
                                             className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer">
                                             <td className="py-3">
-                                                <strong className="text-title">{r.userId}</strong>
+                                                <strong className="text-title">{r.postId}</strong>
                                             </td>
                                             <td className="py-3">
                                                     <div className="info flex flex-col">

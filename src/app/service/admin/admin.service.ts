@@ -36,3 +36,12 @@ export const fetchReceiptList = async (): Promise<CountCost[]> => {
     return data;
 }
 
+export const fetchUpvoteRestaurant = async (): Promise<RestaurantList[]> => {
+    const data = await admin.upvoteRestaurant();
+    return data;
+}
+
+
+
+
+

@@ -65,7 +65,24 @@ const receiptList = async (): Promise<CountCost[]> => {
 
 }
 
-export const admin = {showCount, showArea, showRankRestaurant,showRestaurant, showRankByAge, receiptList}
+const upvoteRestaurant = async (): Promise<RestaurantList[]> => {
+    try {
+        const resp = await strategy.GET(`${api.admin}/upvoteRestaurant`);
+        return resp.data;
+    } catch (error) {
+        console.error("Failed to fetch user counts");
+        throw new Error("Failed to fetch user counts");
+    }
+
+
+}
+
+
+
+
+
+
+export const admin = {showCount, showArea, showRankRestaurant,showRestaurant, showRankByAge, receiptList, upvoteRestaurant}
 
 
 

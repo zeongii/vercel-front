@@ -109,7 +109,7 @@ export default function MyPage() {
         labels: region.map(item => item.area),
         datasets: [{
             data: region.map(item => item.total),
-            backgroundColor: ["red", "orange", "yellow", "green", "blue"],
+            backgroundColor: ["#fa8307", "#fd8a12", "#eca459", "#ecb780", "#F4CEA4FF"],
             borderColor: ["#fff", "#fff", "#fff", "#fff", "#fff"],
             borderWidth: 1,
         }],
@@ -268,12 +268,13 @@ export default function MyPage() {
                                             {post.map(p => (
                                                 <tr key={p.postId} className="item duration-300 border-b border-line">
                                                     <Link className=" text-sm text-secondary" href={`/restaurant/${p.restaurantId}`}>
-                                                    <th scope="row" className="py-3">
-                                                        <strong className="text-title">{p.name}</strong>
-                                                    </th>
+                                                        <th scope="row" className="py-3">
+                                                            <span
+                                                                className="tag px-4 py-1.5 rounded-full bg-orange-100 text-orange font-semibold text-sm">{p.name}</span>
+                                                        </th>
                                                     </Link>
                                                     <td className="py-3 text-left">
-                                                        <div className="info flex flex-col font-bold">
+                                                        <div className="info flex flex-col font-bold text-sm">
                                                             {p.content}
                                                         </div>
                                                     </td>
