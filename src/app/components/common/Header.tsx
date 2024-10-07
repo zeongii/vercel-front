@@ -5,11 +5,14 @@ import Search from 'src/app/components/Search';
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import { useModalWishlistContext } from 'src/app/context/ModalWishlistContext';
 import { useRouter } from 'next/navigation';
+import nookies from "nookies";
 
 interface User {
   nickname: string;
   username: string;
   role: string;
+  token: string;
+  userId: string; // 추가된 userId 필드
 }
 
 export default function Header() {
@@ -18,24 +21,33 @@ export default function Header() {
   const router = useRouter();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
     const nickname = localStorage.getItem('nickname');
     const role = localStorage.getItem('role');
+    const cookies = nookies.get(); // nookies를 사용하여 쿠키에서 userId 가져오기
+    const userId = cookies.userId; // 쿠키에서 userId 가져오기
 
-    if (username && nickname && role) {
+    if (token && username && nickname && role && userId) {
       const storedUser: User = {
+        token,
         username,
         nickname,
         role,
+        userId,
       };
       setUser(storedUser);
     }
   }, []);
 
   const handleLogout = () => {
+    localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('nickname');
     localStorage.removeItem('role');
+
+    nookies.destroy(null, 'userId', { path: '/' });
+
     setUser(null);
     router.push('/');
   };
