@@ -4,7 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49786053-a601-4996-9fe6-17ac685f1975" name="Changes" comment="" />
+    <list default="true" id="49786053-a601-4996-9fe6-17ac685f1975" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/next.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/restaurant/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/restaurant/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/restaurant/page2.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/restaurant/page2.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/Modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/Modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/Product.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/Product.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/context/WishlistContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/context/WishlistContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/modal/AddHeart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/modal/AddHeart.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -54,7 +66,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "nyamnyam-post",
+    "git-widget-placeholder": "Merging release0.06",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/bit/Documents/NC13_project/nyamnyam/frontend",
