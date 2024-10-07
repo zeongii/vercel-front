@@ -4,17 +4,15 @@ import './globals.css'
 import StoreProvider from './StoreProvider';
 import { SearchProvider, useSearchContext } from './components/SearchContext';
 import { useEffect, useState } from 'react';
-import Header from './components/common/Header';
 import TabFeatures from './(page)/restaurant/page2';
-import { data } from 'jquery';
-import { getRestaurantsByTag } from './service/restaurant/restaurant.service';
+
 
 
 
 const Page = () => {
-    const { searchTerm } = useSearchContext(); // Context에서 검색어 가져오기
+    const { searchTerm } = useSearchContext();
     const [showHome, setShowHome] = useState(false);
- 
+
 
 
     useEffect(() => {
@@ -23,7 +21,7 @@ const Page = () => {
 
     return (
         <StoreProvider>
-            {showHome ? <Home /> : <TabFeatures start={0} limit={5}/>}
+            {showHome ? <Home /> : <TabFeatures start={0} limit={20} />}
         </StoreProvider>
     );
 };

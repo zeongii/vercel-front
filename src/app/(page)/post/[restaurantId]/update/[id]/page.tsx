@@ -19,9 +19,7 @@ export default function PostUpdate() {
   const [formData, setFormData] = useState<PostModel>(initialPost);
 
   useEffect(() => {
-    console.log("useEffect 내부 ID: ", id, "타입: ", typeof id);
     if (typeof id === 'string' && id) {
-      console.log("유효한 ID: ", id);
       loadData(Number(id));
     } else {
       console.error("invalid ID: ", id);
@@ -33,11 +31,8 @@ export default function PostUpdate() {
   },[allTags]);
 
   const loadData = async (id: number) => {
-    console.log("loadData 함수가 호출되었습니다. Id: ", id);
     try {
       const post = await postService.getPostDetails(id);
-      console.log("post 데이터: ", post);
-
       const uniqueTags = Array.isArray(post.tags) ? Array.from(new Set(post.tags)) : [];
 
       setFormData({ ...post, tags: uniqueTags });
@@ -45,7 +40,6 @@ export default function PostUpdate() {
       setPrevImages(post.images || []);
 
       const tagList = await tagService.fetchTag();
-      console.log("TagList: ", tagList)
       setAllTags(tagList);
 
     } catch (error) {
@@ -115,12 +109,11 @@ export default function PostUpdate() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center">
-      <h1 className="text-2xl font-bold mb-6">[게시글 수정]</h1>
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl" encType="multipart/form-data">
-        <div>
-          <h2 className="font-bold">[항목별 평점]</h2>
-        </div>
+    <main className="flex min-h-screen flex-col items-center p-6" style={{ marginTop: '30px' }}>
+      <div className="'heading4 mb-2'">게시글 수정하기</div>
+      <form onSubmit={handleSubmit} className="pace-y-4 p-6 bg-gray-100 rounded-lg shadow-lg w-full max-w-3xl" encType="multipart/form-data">
+        <div className="border-b-2 pb-4">
+          <h2 className="font-bold text-lg mb-2">◦ 항목별 평점</h2>
         <div className="flex items-center mb-4">
           <label className="block font-bold w-24">맛</label>
           <Star
@@ -148,23 +141,28 @@ export default function PostUpdate() {
             onChange={(rating) => handleStar(rating, "service")}
           />
         </div>
-        <div>
-          <h2 className="font-bold">[음식점 키워드]</h2>
+        </div>
+
+        <div className="border-b-2 pb-4">
+          <h2 className="font-bold text-lg mb-2">◦ 음식점 키워드</h2>
           {Object.keys(allTags).length > 0 ? (
             Object.keys(allTags).map(category => (
               <div key={category} className="mb-4">
-                <h3>{category}</h3>
+                <div className="font-semibold mb-2">{category}</div>
+
                 <div className="flex flex-wrap gap-4">
                   {(allTags[category] as TagModel[]).map(t => (
-                    <div key={t.name} className="flex items-center">
+                    <div key={t.name} className="flex items-center mr-2 mb-2">
                       <input
                         type="checkbox"
                         id={t.name}
-                        name={t.name}
+                        name={t.name} value={t.name}
                         checked={tags.includes(t.name)}
                         onChange={() => handleTagSelect(t.name)}
+                        className="absolute opacity-0 peer"
                       />
-                      <label htmlFor={t.name} className="ml-2">{t.name}</label>
+                      <label htmlFor={t.name}  className="peer-checked:bg-[#FDE8D8] peer-checked:text-[#F46119] peer-checked:border-[#F46119] flex items-center justify-center cursor-pointer rounded-full border border-gray-400 bg-white text-gray-600 px-3 py-1 transition duration-200 ease-in-out shadow-sm hover:bg-[#FDE8D8] hover:text-[#F46119]"
+                      style={{ whiteSpace: 'nowrap', display: 'inline-flex' }}>{t.name}</label>
                     </div>
                   ))}
                 </div>
@@ -174,48 +172,51 @@ export default function PostUpdate() {
             <p>태그가 없습니다.</p>
           )}
         </div>
-        <div>
-          <label className="font-bold">[방문후기]</label>
+
+        <div className="mb-4">
+          <label className="font-bold">◦ 방문후기</label>
           <textarea
             id="content"
             name="content"
             value={formData?.content}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="border rounded p-2 w-full mt-2"
             rows={3}
           />
         </div>
 
-        <div>
-          <strong>[이미지]</strong>
+        <div className="mb-4">
+          <label className="font-bold">◦ 이미지</label>
           <div className="flex flex-wrap gap-4">
             {prevImages.length > 0 ? (
               prevImages.map((image, index) => (
-                <div key={index}>
+                <div key={index}  className="flex flex-col items-center">
                   <img
                     src={`http://localhost:8080/uploads/${image.storedFileName}`}
                     alt={`이미지 ${index + 1}`}
-                    style={{ width: '200px', height: 'auto' }}
+                    className="aspect-square object-cover rounded-lg"
                   />
-                  <button type="button" onClick={() => handleDeleteImage(image.id)} className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded mr-2">
+                  <button type="button" onClick={() => handleDeleteImage(image.id)} 
+                  className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded mt-2">
                     삭제
                   </button>
                 </div>
               ))
-            ) : (<p>이미지 없음</p>)}
+            ) : (<p className="text-gray-500">이미지 없음</p>)}
           </div>
         </div>
-        <div>
+
+        <div className="mb-4">
           <input
             type="file"
             multiple
             accept="image/*"
             onChange={uploadImage}
-            className="border rounded p-2 w-full"
+            className="border rounded p-2 w-full mt-2"
           />
         </div>
 
-        <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+        <button type="submit"  className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded">
           수정
         </button>
       </form>
