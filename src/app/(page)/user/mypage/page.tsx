@@ -36,8 +36,7 @@ export default function MyPage() {
 
 
     useEffect(() => {
-        // 쿠키에서 id 가져오기
-        const cookies = nookies.get(null);
+        const cookies = nookies.get();
         const id = cookies.userId;
         console.log(id)
 

@@ -33,7 +33,7 @@ const showRankRestaurant = async (): Promise<RestaurantList[]> => {
     }
 }
 
-const showRestaurant = async (id: string): Promise<RestaurantModel> => {
+const showRestaurant = async (id: number): Promise<RestaurantModel> => {
     try {
         const response = await strategy.GET(`${api.admin}/randomByUserId/${id}`);
         return response.data; // 데이터 반환
@@ -43,7 +43,7 @@ const showRestaurant = async (id: string): Promise<RestaurantModel> => {
     }
 }
 
-const showRankByAge = async (id: string): Promise<RestaurantList[]> => {
+const showRankByAge = async (id: number): Promise<RestaurantList[]> => {
     try {
         const resp = await strategy.GET(`${api.admin}/recommendByAge/${id}`);
         return resp.data;

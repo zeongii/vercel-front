@@ -21,7 +21,7 @@ const Page = () => {
 
     return (
         <StoreProvider>
-            {showHome ? <Home /> : <TabFeatures start={0} limit={20} />}
+            {showHome ? <Home /> : <TabFeatures start={0} limit={8} />}
         </StoreProvider>
     );
 };

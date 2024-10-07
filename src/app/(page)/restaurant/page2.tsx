@@ -1,26 +1,31 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation } from 'swiper/modules';
+import React, {useEffect, useState} from 'react';
+import {Swiper, SwiperSlide} from 'swiper/react';
+import {Autoplay, Navigation} from 'swiper/modules';
 import 'swiper/css/bundle';
-import { getRestaurantsByTag } from '@/app/service/restaurant/restaurant.service';
+import {getRestaurantsByTag} from '@/app/service/restaurant/restaurant.service';
 import ScrollToTop from '@/app/components/ScrollToTop';
 import Product from '@/app/components/Product';
 import Link from 'next/link';
+import nookies from 'nookies';
 
 interface Props {
     start: number;
     limit: number;
 }
 
-const TabFeatures: React.FC<Props> = ({ start, limit }) => {
+const TabFeatures: React.FC<Props> = ({start, limit}) => {
     const [restaurantsByMeeting, setRestaurantsByMeeting] = useState<RestaurantModel[]>([]);
     const [restaurantsByDate, setRestaurantsByDate] = useState<RestaurantModel[]>([]);
     const [restaurantsByFriend, setRestaurantsByFriend] = useState<RestaurantModel[]>([]);
     const [restaurantsByUnique, setRestaurantsByUnique] = useState<RestaurantModel[]>([]);
+    const cookies = nookies.get();
+    const userId = cookies.userId;
 
     useEffect(() => {
+
+
         const fetchRestaurants = async () => {
             try {
                 const meetingData = await getRestaurantsByTag(['회식']);
@@ -40,6 +45,7 @@ const TabFeatures: React.FC<Props> = ({ start, limit }) => {
             }
         };
 
+        console.log(userId)
         fetchRestaurants();
     }, []);
 
@@ -49,11 +55,12 @@ const TabFeatures: React.FC<Props> = ({ start, limit }) => {
             <div className="heading flex flex-col items-start text-left"> {/* 제목 왼쪽 정렬 */}
                 <h2 className="text-2xl font-bold mb-2">{title}</h2>
             </div>
-            <div className="relative list-product hide-product-sold section-swiper-navigation style-outline style-border md:mt-6 mt-4">
+            <div
+                className="relative list-product hide-product-sold section-swiper-navigation style-outline style-border md:mt-6 mt-4">
                 <Swiper
                     spaceBetween={12}
                     slidesPerView={2}
-                    navigation={{ nextEl: `.swiper-button-next-${index}`, prevEl: `.swiper-button-prev-${index}` }}
+                    navigation={{nextEl: `.swiper-button-next-${index}`, prevEl: `.swiper-button-prev-${index}`}}
                     loop={true}
                     modules={[Navigation, Autoplay]}
                     breakpoints={{
@@ -76,15 +83,27 @@ const TabFeatures: React.FC<Props> = ({ start, limit }) => {
 
                         <SwiperSlide key={restaurant.id}>
                             <Link href={`/restaurant/${restaurant.id}`}>
-                                <Product data={restaurant} type='grid' />
+                                <Product data={restaurant} type='grid'/>
                             </Link>
                         </SwiperSlide>
 
                     ))}
 
                 </Swiper>
-                <div className={`swiper-button-next swiper-button-next-${index}`} style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', zIndex: 10 }} />
-                <div className={`swiper-button-prev swiper-button-prev-${index}`} style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)', zIndex: 10 }} />
+                <div className={`swiper-button-next swiper-button-next-${index}`} style={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: '10px',
+                    transform: 'translateY(-50%)',
+                    zIndex: 10
+                }}/>
+                <div className={`swiper-button-prev swiper-button-prev-${index}`} style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '10px',
+                    transform: 'translateY(-50%)',
+                    zIndex: 10
+                }}/>
             </div>
 
         </div>
