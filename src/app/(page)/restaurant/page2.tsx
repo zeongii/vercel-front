@@ -8,6 +8,7 @@ import { getRestaurantsByTag } from '@/app/service/restaurant/restaurant.service
 import ScrollToTop from '@/app/components/ScrollToTop';
 import Product from '@/app/components/Product';
 import Link from 'next/link';
+import nookies from 'nookies';
 
 interface Props {
     start: number;
@@ -19,6 +20,8 @@ const TabFeatures: React.FC<Props> = ({ start, limit }) => {
     const [restaurantsByDate, setRestaurantsByDate] = useState<RestaurantModel[]>([]);
     const [restaurantsByFriend, setRestaurantsByFriend] = useState<RestaurantModel[]>([]);
     const [restaurantsByUnique, setRestaurantsByUnique] = useState<RestaurantModel[]>([]);
+    const cookies = nookies.get();
+    const userId = cookies.userId;
 
     useEffect(() => {
         const fetchRestaurants = async () => {
@@ -34,61 +37,59 @@ const TabFeatures: React.FC<Props> = ({ start, limit }) => {
 
                 const uniqueData = await getRestaurantsByTag(['유니크함']);
                 setRestaurantsByUnique(uniqueData);
-
             } catch (error) {
                 console.error('Error fetching restaurants by tag:', error);
             }
         };
 
+        console.log(userId);
         fetchRestaurants();
     }, []);
 
+    const renderSwiper = (title: string, restaurants: RestaurantModel[], index: number) => {
+        const restaurantCount = restaurants.length; // 슬라이드 수 계산
 
-    const renderSwiper = (title: string, restaurants: RestaurantModel[], index: number) => (
-        <div className="container mb-10" key={index}> {/* 컨테이너 간의 간격 조정 */}
-            <div className="heading flex flex-col items-start text-left"> {/* 제목 왼쪽 정렬 */}
-                <h2 className="text-2xl font-bold mb-2">{title}</h2>
+        return (
+            <div className="container mb-10" key={index}>
+                <div className="heading flex flex-col items-start text-left">
+                    <h2 className="text-2xl font-bold mb-2">{title}</h2>
+                </div>
+                <div className="relative list-product hide-product-sold section-swiper-navigation style-outline style-border md:mt-6 mt-4">
+                    <Swiper
+                        spaceBetween={12}
+                        slidesPerView={2}
+                        navigation={{ nextEl: `.swiper-button-next-${index}`, prevEl: `.swiper-button-prev-${index}` }}
+                        loop={restaurantCount >= 4} // 슬라이드 수가 6 이상일 때 루프 활성화
+                        modules={[Navigation, Autoplay]}
+                        breakpoints={{
+                            576: {
+                                slidesPerView: 2,
+                                spaceBetween: 12,
+                            },
+                            768: {
+                                slidesPerView: 3,
+                                spaceBetween: 20,
+                            },
+                            1200: {
+                                slidesPerView: 4,
+                                spaceBetween: 30,
+                            },
+                        }}
+                    >
+                        {restaurants.slice(start, limit).map((restaurant) => (
+                            <SwiperSlide key={restaurant.id}>
+                                {/* <Link href={`/restaurant/${restaurant.id}`}> */}
+                                    <Product data={restaurant} type='grid' />
+                                {/* </Link> */}
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                    <div className={`swiper-button-next swiper-button-next-${index}`} style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', zIndex: 10 }} />
+                    <div className={`swiper-button-prev swiper-button-prev-${index}`} style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)', zIndex: 10 }} />
+                </div>
             </div>
-            <div className="relative list-product hide-product-sold section-swiper-navigation style-outline style-border md:mt-6 mt-4">
-                <Swiper
-                    spaceBetween={12}
-                    slidesPerView={2}
-                    navigation={{ nextEl: `.swiper-button-next-${index}`, prevEl: `.swiper-button-prev-${index}` }}
-                    loop={true}
-                    modules={[Navigation, Autoplay]}
-                    breakpoints={{
-                        576: {
-                            slidesPerView: 2,
-                            spaceBetween: 12,
-                        },
-                        768: {
-                            slidesPerView: 3,
-                            spaceBetween: 20,
-                        },
-                        1200: {
-                            slidesPerView: 4,
-                            spaceBetween: 30,
-                        },
-                    }}
-                >
-
-                    {restaurants.slice(start, limit).map((restaurant) => (
-
-                        <SwiperSlide key={restaurant.id}>
-                            <Link href={`/restaurant/${restaurant.id}`}>
-                                <Product data={restaurant} type='grid' />
-                            </Link>
-                        </SwiperSlide>
-
-                    ))}
-
-                </Swiper>
-                <div className={`swiper-button-next swiper-button-next-${index}`} style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', zIndex: 10 }} />
-                <div className={`swiper-button-prev swiper-button-prev-${index}`} style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)', zIndex: 10 }} />
-            </div>
-
-        </div>
-    );
+        );
+    };
 
     return (
         <>
@@ -99,7 +100,6 @@ const TabFeatures: React.FC<Props> = ({ start, limit }) => {
                 {renderSwiper('#데이트, #기념일', restaurantsByDate, 2)}
                 {renderSwiper('#친구 모임', restaurantsByFriend, 3)}
             </div>
-
         </>
     );
 };

@@ -39,7 +39,7 @@ export default function Restaurant() {
         if (restaurant && restaurant.address) {
             const mapScript = document.createElement('script');
             mapScript.async = true;
-            mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=2352038d1f2d9450032dd17ae632df20&autoload=false&libraries=services`;
+            mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.KAKAO_MAP_APP_KEY}&autoload=false&libraries=services`;
             document.head.appendChild(mapScript);
 
             const onLoadKakaoMap = () => {

@@ -5,10 +5,11 @@ import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import { jwtDecode } from 'jwt-decode';
 import nookies from 'nookies';
+
 import {authenticateUser} from "@/app/service/user/user.service";
 
 interface DecodedToken {
-    id: string;
+    sub: string;
     username: string;
     role: string;
     nickname: string;
@@ -30,12 +31,13 @@ export default function Home() {
 
             const decoded: DecodedToken = jwtDecode<DecodedToken>(token);
 
+            nookies.set(null, 'userId', decoded.sub, { path: '/' });
 
-            nookies.set(null, 'userId', decoded.id, { path: '/' });
-
+            localStorage.setItem('token', token);
             localStorage.setItem('nickname', decoded.nickname);
             localStorage.setItem('username', decoded.username);
             localStorage.setItem('role', decoded.role);
+            
 
             router.push("/");
         } catch (error) {
@@ -44,9 +46,6 @@ export default function Home() {
         }
     };
 
-    const handleRegister = () => {
-        router.push("/register"); // 회원가입 페이지로 리디렉션
-    };
 
     return (
         <div className="login-block md:py-20 py-10 mt-10" style={{ borderRadius: '20px', overflow: 'hidden', backgroundColor: '#f9f9f9' }}>

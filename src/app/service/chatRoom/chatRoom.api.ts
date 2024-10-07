@@ -1,20 +1,17 @@
 // /src/app/service/chatRoom/chatRoom.api.ts
 import { deleteChatRoomApi, fetchChatRoomById, fetchChatRoomCount, fetchChatRooms } from "src/app/api/chatRoom/chatRoom.api";
 import { ChatRoomModel } from "src/app/model/chatRoom.model";
+import {customFetch} from "@/app/service/user/fetchClient";
 
 export async function insertChatRoom(chatRoom: ChatRoomModel): Promise<any | { status: number }> {
   try {
-
-
-    const response = await fetch('http://localhost:8081/api/chatRoom/save', {
+    // customFetch 사용
+    const response = await customFetch('http://localhost:8081/api/chatRoom/save', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
       body: JSON.stringify(chatRoom)
     });
-    console.log(chatRoom)
 
+    console.log(chatRoom);
 
     if (!response.ok) {
       const errorData = await response.json(); // 오류 메시지 확인
@@ -22,8 +19,7 @@ export async function insertChatRoom(chatRoom: ChatRoomModel): Promise<any | { s
       return { status: response.status }; // 상태 코드 반환
     }
 
-    const data = await response.json();
-    return data;
+    return response;
 
   } catch (e) {
     console.log('There has been a problem with your fetch operation', e);

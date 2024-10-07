@@ -17,7 +17,8 @@ const Product: React.FC<ProductProps> = ({ data, type }) => {
     const router = useRouter();
 
     const handleDetailProduct = (productId: string) => {
-        router.push(`/product/default?id=${productId}`);
+        // router.push(`/product/default?id=${productId}`);
+        router.push(`/restaurant/${productId}`)
     };
 
     const isInWishlist = wishlistState.wishlistArray.some(item => item.id === data.id);
