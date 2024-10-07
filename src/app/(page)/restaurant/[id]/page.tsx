@@ -19,8 +19,8 @@ export default function Restaurant() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const { restaurant, allAverage, tags } = await getRestaurantDetails(Number(id));
-                setRestaurant(restaurant);
+                const { restaurants, allAverage, tags } = await getRestaurantDetails(Number(id));
+                setRestaurant(restaurants);
                 setAllAverage(allAverage);
                 setTags(tags);
             } catch (error) {
@@ -77,9 +77,6 @@ export default function Restaurant() {
             mapScript.addEventListener('load', onLoadKakaoMap);
         }
     }, [restaurant]);
-
-
-
 
 
 

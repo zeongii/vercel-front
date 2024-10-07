@@ -35,3 +35,4 @@ const listById = async (userId:number) => {
 }
 
 export const post = { getById, getByRestaurant, insert, update, remove, listById };
+

@@ -1,6 +1,7 @@
 "use client";
 import React, {useEffect, useState} from 'react';
 import {useParams, useRouter} from 'next/navigation';
+import Star from 'src/app/components/Star';
 
 
 

@@ -2,26 +2,27 @@
 import {reply} from "src/app/api/reply/reply.api";
 import { initialReply, ReplyModel } from "src/app/model/reply.model";
 
-export const toggleReplyService = async (id: number, replyToggles: { [key: number]: boolean }) => {
+const toggle = async (id: number, replyToggles: { [key: number]: boolean }) => {
   const toggled = {
     ...replyToggles,
     [id]: !replyToggles[id],
   };
   if (!replyToggles[id]) {
-    const data = await reply.getById(id); // API 호출
+    const data = await reply.getById(id);
 
     return { toggled, replies: data || [] };
   }
   return { toggled, replies: null };
 };
 
-export const submitReplyService = async (postId: number, replyContent: string, currentId: number, replyToggles: { [key: number]: boolean }) => {
+const submit = async (postId: number, replyContent: string, currentId: number, replyToggles: { [key: number]: boolean }) => {
   const replyData: ReplyModel = {
     ...initialReply,
     postId: postId,
     content: replyContent,
-    userId: currentId
+    userId: currentId,
   };
+
   try {
     const newReply = await reply.insert(replyData);
 
@@ -36,7 +37,7 @@ export const submitReplyService = async (postId: number, replyContent: string, c
   }
 };
 
-export const editSaveReplyService = async (replyId: number, postId: number, updateContent: string, currentUserId: number) => {
+const editSave = async (replyId: number, postId: number, updateContent: string, currentUserId: number) => {
   const replyData = {
     ...initialReply, 
     id: replyId, 
@@ -54,7 +55,7 @@ export const editSaveReplyService = async (replyId: number, postId: number, upda
   }
 };
 
-export const deleteReplyService = async (replyId: number, postId: number, replies: { [key: number]: ReplyModel[] }) => {
+export const remove = async (replyId: number, postId: number, replies: { [key: number]: ReplyModel[] }) => {
     try {
       await reply.remove(replyId);
 
@@ -66,3 +67,5 @@ export const deleteReplyService = async (replyId: number, postId: number, replie
       return null;
   }
 };
+
+export const replyService = {toggle, submit, editSave, remove};

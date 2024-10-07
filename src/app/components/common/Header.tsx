@@ -1,9 +1,10 @@
 "use client";
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Search from 'src/app/components/Search';
 import * as Icon from "@phosphor-icons/react/dist/ssr";
  import { useModalWishlistContext } from 'src/app/context/ModalWishlistContext';
+import { useRouter } from 'next/navigation';
 
 
 interface User {
@@ -14,6 +15,7 @@ interface User {
 export default function Header() {
    const { openModalWishlist } = useModalWishlistContext();
   const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     // 로컬 스토리지에서 사용자 정보 가져오기
@@ -26,6 +28,7 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.removeItem('user');
     setUser(null);
+    router.push('/');
   };
 
 

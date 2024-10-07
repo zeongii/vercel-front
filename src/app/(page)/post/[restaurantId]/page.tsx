@@ -7,10 +7,10 @@ import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 import { PostModel } from "src/app/model/post.model";
 import { ReplyModel } from "src/app/model/reply.model";
-import { deleteReplyService, editSaveReplyService, submitReplyService, toggleReplyService } from "src/app/service/reply/reply.service";
-import { checkLikedService, toggleLikeService } from "src/app/service/upvote/upvote.service";
-import { getImageService } from "src/app/service/image/image.service";
-import { deletePostService, fetchPostService } from "src/app/service/post/post.service";
+import { replyService } from "src/app/service/reply/reply.service";
+import { upvoteService} from "src/app/service/upvote/upvote.service";
+import { imageService } from "src/app/service/image/image.service";
+import { postService } from "src/app/service/post/post.service";
 import { fetchRestaurantService } from "src/app/service/restaurant/restaurant.service";
 import {fetchReportRegister} from "src/app/service/report/report.service";
 import {fetchNoticeRegister} from "src/app/service/notice/notice.service";
@@ -38,7 +38,7 @@ export default function PostList() {
     const [replyInput, setReplyInput] = useState<{ [key: number]: string }>({});
     const [editReply, setEditReply] = useState<{ [key: number]: boolean }>({});
     const [editInput, setEditInput] = useState<{ [key: number]: string }>({});
-    const currentUserId = 1; // giveId : 테스트로 1값 설정
+    const currentUserId = 1; // 확인용
     const router = useRouter();
     const { restaurantId } = useParams();
     const [selectedReasons, setSelectedReasons] = useState<{ [key: number]: string }>({});
@@ -51,11 +51,11 @@ export default function PostList() {
             fetchPosts(Number(restaurantId));
             fetchRestaurant();
         }
-    }, [restaurantId, replies]);
+    }, [restaurantId]);
 
     const fetchPosts = async (restaurantId: number) => {
         try {
-            const postData = await fetchPostService(restaurantId);
+            const postData = await postService.fetchPost(restaurantId);
 
             setPosts(postData.map((data) => data.post));
             setLikedPosts(postData.filter((data) => data.liked).map((data) => data.post.id));
@@ -66,12 +66,14 @@ export default function PostList() {
                     return acc;
                 }, {} as { [key: number]: number })
             );
-            setImages(
-                postData.reduce((acc, data) => {
-                    acc[data.post.id] = data.images;
-                    return acc;
-                }, {} as { [key: number]: string[] })
-            );
+
+            const updatedImages: { [key: number]: string[] } = {};
+            for (const data of postData) {
+                const imageURLs = await imageService.getByPostId(data.post.id);
+                updatedImages[data.post.id] = imageURLs;
+            }
+            setImages(updatedImages);
+
         } catch (error) {
             console.error("loadPosts error:", error);
         }
@@ -85,7 +87,7 @@ export default function PostList() {
     };
 
     const fetchImage = async (postId: number) => {
-        const imageURLs = await getImageService(postId)
+        const imageURLs = await imageService.getByPostId(postId)
 
         setImages(prevImages => ({
             ...prevImages,
@@ -95,7 +97,7 @@ export default function PostList() {
 
     const handleDelete = async (postId: number) => {
         if (window.confirm("게시글을 삭제하시겠습니까?")) {
-            const success = await deletePostService(postId);
+            const success = await postService.remove(postId);
 
             if (success) {
                 alert("게시글이 삭제되었습니다.");
@@ -107,8 +109,7 @@ export default function PostList() {
 
     // 댓글 버튼 
     const toggleReply = async (id: number) => {
-        const { toggled, replies } = await toggleReplyService(id, replyToggles);
-        console.log("toggleReply: ", replies);
+        const { toggled, replies } = await replyService.toggle(id, replyToggles);
 
         setReplyToggles((prevToggles) => ({
             ...prevToggles,
@@ -130,15 +131,14 @@ export default function PostList() {
             alert('댓글을 입력하세요.');
             return;
         }
-        const result = await submitReplyService(postId, replyContent, currentUserId, replyToggles);
+        const result = await replyService.submit(postId, replyContent, currentUserId, replyToggles);
 
         if (result && result.success) {
             const { newReply } = result;
-            console.log("New Reply added: ", newReply);
 
             setReplies((prevReplies) => ({
-                    ...prevReplies,
-                    [postId]: [...(prevReplies[postId] || []), newReply],
+                ...prevReplies,
+                [postId]: [...(prevReplies[postId] || []), newReply],
             }));
 
             setReplyInput((prevInput) => ({
@@ -177,7 +177,7 @@ export default function PostList() {
 
     // 수정내용 저장 (서버연결)
     const replyEditSave = async (replyId: number, postId: number) => {
-        const updateReply = await editSaveReplyService(replyId, postId, editInput[replyId], currentUserId);
+        const updateReply = await replyService.editSave(replyId, postId, editInput[replyId], currentUserId);
         if (updateReply) {
             setReplies((prevReplies) => ({
                 ...prevReplies,
@@ -199,7 +199,7 @@ export default function PostList() {
     const replyDelete = async (replyId: number, postId: number) => {
         if (!window.confirm("댓글을 삭제하시겠습니까?")) return;
 
-        const updatedReplies = await deleteReplyService(replyId, postId, replies);
+        const updatedReplies = await replyService.remove(replyId, postId, replies);
 
         if (updatedReplies) {
             setReplies(prevReplies => ({
@@ -223,13 +223,13 @@ export default function PostList() {
 
     // 좋아요 상태 확인 
     const checkLikedStatus = async (postId: number) => {
-        const isLiked = await checkLikedService(postId, currentUserId);
+        const isLiked = await upvoteService.check(postId, currentUserId);
         return isLiked ? postId : null;
     };
 
     // 좋아요 & 취소 & count
     const handleLike = async (postId: number) => {
-        const result = await toggleLikeService(postId, currentUserId, likedPost);
+        const result = await upvoteService.toggle(postId, currentUserId, likedPost);
 
         if (result) {
             setLikedPosts(result.likedPost);
@@ -279,18 +279,34 @@ export default function PostList() {
     };
 
     return (
-        <main className="flex min-h-screen flex-col items-center p-6 ">
-
+        <main className="flex min-h-screen flex-col items-center p-6 " style={{ marginTop: '30px' }}>
             {restaurant && (
-                <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6 mb-4">
+                <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-3 mb-2 items-center h-16">
                     <h1 className="text-2xl font-bold">{restaurant.name}</h1>
                 </div>
             )}
 
+            <div className="w-full max-w-4xl flex justify-end mt-4">
+                <button
+                    className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded mr-2"
+                    onClick={() => router.push(`/post/register/${restaurantId}`)}>
+                    등록하기
+                </button>
+                <button
+                    className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded mr-2"
+                    onClick={() => router.push(`/restaurant/${restaurantId}`)}>
+                    뒤로가기
+                </button><button
+                    className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded"
+                    onClick={() => router.push(`/post/${restaurantId}/default`)}>
+                    CSS
+                </button>
+            </div>
+
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
                 <div className="flex flex-col space-y-4">
                     {posts.map((p) => (
-                        <div key={p.id} className="flex flex-col md:flex-row border border-indigo-600 rounded-lg p-4 shadow-lg bg-white">
+                        <div key={p.id} className="flex flex-col md:flex-row border border-[#F46119] rounded-lg p-4 shadow-lg bg-white">
                             <div className="md:w-full">
                                 <div>
                                     <div className="flex justify-between items-center mb-2">
@@ -353,11 +369,11 @@ export default function PostList() {
                                             <ul className="flex flex-wrap gap-2 ml-2 items-center">
                                                 {p.tags.map((tag, index) => (
                                                     <li
-                                                        key={index}
-                                                        className="rounded-full border border-sky-100 bg-sky-50 px-2 py-1 text-sky-700"
-                                                    >
-                                                        {tag}
-                                                    </li>
+                                                    key={index}
+                                                    className="rounded-full border border-[#F46119] px-3 py-1 text-[#F46119] font-semibold"
+                                                  >
+                                                    {tag}
+                                                  </li>
                                                 ))}
                                             </ul>
                                         ) : (
@@ -365,7 +381,8 @@ export default function PostList() {
                                         )}
                                     </div>
                                     <div className="flex justify-between items-center mb-2 text-gray-500">
-                                        <p>{formatDate(p.entryDate)}</p>
+                                        <p>{formatDate(
+                                            p.entryDate)}</p>
                                         <button
                                             onClick={() => toggleReply(p.id)}
                                             className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded">
@@ -412,52 +429,50 @@ export default function PostList() {
                                             <div className="mt-4 w-full">
                                                 {replies[p.id] && replies[p.id].length > 0 ? (
                                                     <ul>
-                                                    {replies[p.id].map((reply, index) => (
-                                                            <li key={index} className="mb-2 border-b border-gray-200 pb-2 flex items-center justify-between">
-                                                                <div className="flex items-center">
-                                                                    <span className="inline-block rounded-full bg-gray-300 px-3 py-1 text-sm font-semibold text-gray-700">
-                                                                        {reply.nickname}
-                                                                    </span>
-                                                                    {editReply[reply.id] ? (
-                                                                        <span
-                                                                            className="ml-2"
-                                                                            style={{ width: "600px", display: "inline-block", whiteSpace: "nowrap" }}
-                                                                        >
-                                                                            <textarea
-                                                                                name="content"
-                                                                                id="content"
-                                                                                value={editInput[reply.id] || reply.content}
-                                                                                onChange={(e) => replyInputChange(reply.id, e.target.value, false)}
-                                                                                className="border rounded p-2 w-full"
-                                                                                style={{ minHeight: "50px", width: "100%" }}
-                                                                            />
+                                                        {replies[p.id].map((reply, index) => (
+                                                            <li key={index} className="mb-2 border-b border-gray-200 pb-2">
+                                                                <div className="flex items-center justify-between">
+                                                                    <div className="flex items-center">
+                                                                        <span className="inline-block rounded-full bg-gray-300 px-3 py-1 text-sm font-semibold text-gray-700">
+                                                                            {reply.nickname}
                                                                         </span>
-                                                                    ) : (
-                                                                        <span
-                                                                            className="ml-2"
-                                                                            style={{ width: "auto", display: "inline-block", whiteSpace: "nowrap" }}
-                                                                        >
-                                                                            {reply.content}
-                                                                        </span>
-                                                                    )}
-                                                                </div>
-                                                                <div className="text-gray-500">{formatDate(reply.entryDate)}</div>
-                                                                {reply.userId === currentUserId && (
-                                                                    <div className="flex space-x-2 mt-2 justify-end">
-                                                                        <button
-                                                                            className="text-xs bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-3 border border-blue-500 hover:border-transparent rounded"
-                                                                            onClick={() => editReply[reply.id] ? replyEditSave(reply.id, p.id) : replyEditClick(reply.id, reply.content)}
-                                                                        >
-                                                                            {editReply[reply.id] ? '저장' : '수정'}
-                                                                        </button>
-                                                                        <button
-                                                                            className="text-xs bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-1 px-3 border border-red-500 hover:border-transparent rounded"
-                                                                            onClick={() => reply.id && replyDelete(reply.id, p.id)}
-                                                                        >
-                                                                            삭제
-                                                                        </button>
+                                                                        {editReply[reply.id] ? (
+                                                                            <span className="ml-2" style={{ width: "600px", display: "inline-block", whiteSpace: "nowrap" }}>
+                                                                                <textarea
+                                                                                    name="content"
+                                                                                    id="content"
+                                                                                    value={editInput[reply.id] || reply.content}
+                                                                                    onChange={(e) => replyInputChange(reply.id, e.target.value, false)}
+                                                                                    className="border rounded p-2 w-full"
+                                                                                    style={{ minHeight: "50px", width: "100%" }}
+                                                                                />
+                                                                            </span>
+                                                                        ) : (
+                                                                            <span className="ml-2" style={{ width: "auto", display: "inline-block", whiteSpace: "nowrap" }}>
+                                                                                {reply.content}
+                                                                            </span>
+                                                                        )}
                                                                     </div>
-                                                                )}
+                                                                    <div className="flex items-center">
+                                                                        <span className="text-gray-500 mr-4">{formatDate(reply.entryDate)}</span>
+                                                                        {reply.userId === currentUserId && (
+                                                                            <div className="flex space-x-2">
+                                                                                <button
+                                                                                    className="text-xs bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-3 border border-blue-500 hover:border-transparent rounded"
+                                                                                    onClick={() => editReply[reply.id] ? replyEditSave(reply.id, p.id) : replyEditClick(reply.id, reply.content)}
+                                                                                >
+                                                                                    {editReply[reply.id] ? '저장' : '수정'}
+                                                                                </button>
+                                                                                <button
+                                                                                    className="text-xs bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-1 px-3 border border-red-500 hover:border-transparent rounded"
+                                                                                    onClick={() => reply.id && replyDelete(reply.id, p.id)}
+                                                                                >
+                                                                                    삭제
+                                                                                </button>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
                                                             </li>
                                                         ))}
                                                     </ul>
@@ -482,9 +497,9 @@ export default function PostList() {
                                         </>
                                     )}
                                     {p.userId === currentUserId && (
-                                        <div className="mt-2">
+                                        <div className="flex justify-end mt-2">
                                             <button
-                                                className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mr-2"
+                                                className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded mr-2"
                                                 onClick={() => {
                                                     router.push(`/post/${restaurantId}/update/${p.id}`);
                                                 }}
@@ -492,7 +507,7 @@ export default function PostList() {
                                                 수정
                                             </button>
                                             <button
-                                                className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded mr-2"
+                                                className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded mr-2"
                                                 onClick={() => {
                                                     handleDelete(p.id);
                                                 }}
@@ -507,18 +522,7 @@ export default function PostList() {
                     ))}
                 </div>
             </div>
-            <div className="w-full flex justify-end mt-4">
-                <button
-                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mr-2"
-                    onClick={() => router.push(`/post/register/${restaurantId}`)}>
-                    등록하기
-                </button>
-                <button
-                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mr-2"
-                    onClick={() => router.push(`/restaurant/${restaurantId}`)}>
-                    뒤로가기
-                </button>
-            </div>
+
         </main>
     );
-}
+};
