@@ -8,23 +8,45 @@ import {fetchReceiptCost} from "src/app/service/receipt/receipt.service";
 
 Chart.register(...registerables);
 
+interface User {
+    id: string;
+}
+
 export default function MyWallet() {
     const [cost, setCost] = useState<CountCost[]>([]);
-    const id = 1;
+    const [user, setUser] = useState<User | null>(null);
+
 
     useEffect(() => {
         const fetchCostData = async ()  => {
             try {
-                const resp = await fetchReceiptCost(id);
-               
+                if (user) {
+                    const resp = await fetchReceiptCost(user.id);
+
                     setCost(resp);
                     console.log(resp);
+                    console.log(user.id)
+                }
 
             } catch (error) {
                 console.error("Error fetching cost data", error);
             }
         };
         fetchCostData();
+    }, [user]);
+
+
+
+    useEffect(() => {
+        const id = localStorage.getItem('id');
+
+        if (id) {
+            const storedUser: User = {
+                id
+
+            };
+            setUser(storedUser);
+        }
     }, []);
 
     const predefinedOrder = Array.from({ length: 12 }, (_, i) => `2024-${String(i + 1).padStart(2, '0')}`);

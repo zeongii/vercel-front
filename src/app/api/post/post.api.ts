@@ -27,7 +27,7 @@ const remove = async (postId: number) => {
     return response;
 };
 
-const listById = async (userId:number) => {
+const listById = async (userId:string) => {
     const response = await strategy.GET(`${api.post}/list/${userId}`);
     return response.data;
 

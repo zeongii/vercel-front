@@ -13,8 +13,17 @@ import {Bar, Doughnut} from "react-chartjs-2";
 import MyCalendar from "src/app/(page)/user/calendar/[id]/page";
 import MyWallet from "src/app/(page)/user/wallet/[id]/page";
 import {fetchPostList} from "src/app/service/post/post.service";
+import nookies from "nookies";
+
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale);
+
+
+interface User {
+    nickname: string;
+    username: string;
+    role: string;
+}
 
 
 export default function MyPage() {
@@ -23,40 +32,48 @@ export default function MyPage() {
     const [restaurant, setRestaurant] = useState<RestaurantList[]>([]);
     const [post, setPost] = useState<UserPostModel[]>([]);
     const [activeTab, setActiveTab] = useState<string | undefined>('myPage')
+    const [user, setUser] = useState<User | null>(null);
 
 
     useEffect(() => {
-        const countList = async () => {
-            const data = await fetchShowCount();
-            setCount(data)
-        };
-        countList()
-    }, []);
+        // 쿠키에서 id 가져오기
+        const cookies = nookies.get(null);
+        const id = cookies.userId;
+        console.log(id)
 
-    useEffect(() => {
-        const showArea = async () => {
-            const data = await fetchShowArea();
-            setRegion(data)
-        };
-        showArea()
-    }, []);
+        if (id) {
+            // 유저 정보를 localStorage에서 가져오기
+            const username = localStorage.getItem('username');
+            const nickname = localStorage.getItem('nickname');
+            const role = localStorage.getItem('role');
 
-    useEffect(() => {
-        const showRestaurant = async () => {
-            const data = await fetchShowRankByAge(userId);
-            setRestaurant(data)
-        };
-        showRestaurant()
-    }, []);
+            if (username && nickname && role) {
+                const storedUser: User = {
+                    username,
+                    nickname,
+                    role,
+                };
+                setUser(storedUser);
+            }
 
+            // id를 사용하여 데이터를 가져오는 로직
+            const fetchData = async () => {
+                const countData = await fetchShowCount();
+                setCount(countData);
 
-    useEffect(() => {
-        const showPostListByUserId = async () => {
-            const data = await fetchPostList(userId)
-            setPost(data)
+                const regionData = await fetchShowArea();
+                setRegion(regionData);
+
+                const restaurantData = await fetchShowRankByAge(id);  // id 사용
+                setRestaurant(restaurantData);
+
+                const postData = await fetchPostList(id);  // id 사용
+                setPost(postData);
+            };
+
+            fetchData();
         }
-        showPostListByUserId()
-    },[])
+    }, []);
 
 
     const [content, setContent] = useState("");
@@ -150,7 +167,7 @@ export default function MyPage() {
                                             className='md:w-[140px] w-[120px] md:h-[140px] h-[120px] rounded-full'
                                         />
                                     </div>
-                                    <div className="name heading6 mt-4 text-center">Tony Nguyen</div>
+                                    <div className="name heading6 mt-4 text-center">{user?.nickname}</div>
                                     <div
                                         className="mail heading6 font-normal normal-case text-secondary text-center mt-1">hi.avitex@gmail.com
                                     </div>

@@ -8,7 +8,7 @@ export const fetchReceiptRegister = async (formData: FormData): Promise<any> => 
     return data;
 };
 
-export const fetchReceiptCost = async (id : number) : Promise<CountCost[]>  => {
+export const fetchReceiptCost = async (id : string) : Promise<CountCost[]>  => {
     const data = await receipt.receiptCost(id);
     return data;
 }

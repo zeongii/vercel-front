@@ -93,7 +93,7 @@ const remove = async (postId: number) => {
 };
 
 
-export const fetchPostList = async (userId : number) => {
+export const fetchPostList = async (userId : string) => {
   const data: UserPostModel[] = await post.listById(userId);
   return data.sort((a, b) => {
     return new Date(b.entryDate).getTime() - new Date(a.entryDate).getTime();
