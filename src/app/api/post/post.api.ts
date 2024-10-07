@@ -13,7 +13,7 @@ const getByRestaurant = async (restaurantId: number) => {
 };
 
 const insert = async (formData: FormData): Promise<number> => {
-  const response = await strategy.POST(api.post, formData); // 고정경로
+  const response = await strategy.POST_MULTIPART(api.post, formData); // 고정경로
   return response.data;
 };
 
