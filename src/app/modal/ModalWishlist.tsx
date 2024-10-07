@@ -7,7 +7,7 @@ import * as Icon from "@phosphor-icons/react/dist/ssr";
 import { useModalWishlistContext } from '../context/ModalWishlistContext';
 import { useWishlist } from '../context/WishlistContext';
 import ModalWishlistDetail from './ModalWishlistDetail';
-
+import nookies from 'nookies';
 
 
 const pastelColors = [
@@ -17,6 +17,10 @@ const pastelColors = [
 
 
 const ModalWishlist = () => {
+    const cookies = nookies.get();
+    const userId = cookies.userId;
+
+
     const { isModalOpen, closeModalWishlist } = useModalWishlistContext();
     // const { wishlistState, removeFromWishlist } = useWishlist()
     const [wishList, setWishList] = useState<WishListModel[]>([]);
@@ -24,7 +28,6 @@ const ModalWishlist = () => {
     const [selectedWishlistName, setSelectedWishlistName] = useState<string | null>(null);
     const [showDetail, setShowDetail] = useState(false);
 
-    const userId = 1;
 
     useEffect(() => {
         const fetchWishlist = async () => {
