@@ -8,9 +8,9 @@ import { postService } from "src/app/service/post/post.service";
 import { tag } from "src/app/api/tag/tag.api";
 import { TagModel } from "src/app/model/tag.model";
 import { restaurant } from '@/app/api/restaurant/restaurant.api';
-import { Camera } from '@phosphor-icons/react/dist/ssr';
-import { useDropzone } from 'react-dropzone';
+import { Camera, X } from '@phosphor-icons/react/dist/ssr';
 import Modal from '@/app/components/Modal';
+import { useDropzone } from 'react-dropzone';
 
 export default function PostRegister() {
   const router = useRouter();
@@ -218,7 +218,7 @@ export default function PostRegister() {
             <label
               htmlFor="imageUpload"
               className='flex flex-col items-center justify-center cursor-pointer text-gray-500 z-10 w-full'
-              style={{ minHeight: '50px'}}
+              style={{ minHeight: '30px'}}
             >
               <Camera size={32} className='mb-2' color="#4B5563" weight="fill" />
               <span className='font-medium'>사진 첨부하기</span>
@@ -238,9 +238,9 @@ export default function PostRegister() {
                   <button
                     type="button"
                     onClick={() => handleDeleteImage(image.name)}
-                    className="absolute top-1 right-1 text-red-500"
+                    className="absolute top-1 right-1 text-white font-bold"
                   >
-                    삭제
+                    <X size={24} weight='bold'/>
                   </button>
                 </div>
               ))
@@ -255,8 +255,8 @@ export default function PostRegister() {
             )}
           </Modal>
         </div>
-
       </form>
+
       <div className="flex justify-end mt-6">
         <button type="button" className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded"
         onClick={handleSubmit}>

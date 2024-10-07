@@ -11,7 +11,7 @@ export default function PostDetail() {
   const [images, setImages] = useState<string[]>([]);
   const { id, restaurantId } = useParams();
   const router = useRouter();
-  const currentUserId = 1; // 확인용
+  const currentUserId = 8; // 확인용
 
   useEffect(() => {
     loadData();

@@ -28,7 +28,7 @@ const PostOptions: React.FC<PostOptionsProps> = ({postUserId, currentId, onEdit,
 
             {dropdown &&  (
                 <div className="dropdown-menu absolute top-8 right-0 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                    {postUserId === currentId ? (
+                    {Number(postUserId) === Number(currentId) ? (
                         <>
                         <button 
                             className="dropdown-item block w-full px-4 py-2 text-left text-sm hover:bg-gray-100 transition duration-200"

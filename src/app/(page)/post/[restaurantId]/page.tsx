@@ -24,7 +24,7 @@ import { ReportModel } from 'src/app/model/report.model';
 import Modal from 'src/app/components/Modal';
 import { fetchReportRegister } from '@/app/service/report/report.service';
 import { PostListProps } from '@/app/model/props';
-
+import nookies from 'nookies';
 
 const PostList: React.FC<PostListProps> = ({restaurantId}) => {
     const [posts, setPosts] = useState<PostModel[]>([]);
@@ -47,7 +47,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
     const [reportingPostId, setReportingPostId] = useState<number | null>(null);
     const [reportReason, setReportReason] = useState<string>("");
     const router = useRouter();
-    const currentUserId = 42; // 확인용
+    const currentUserId = 9; // 확인용
 
     // 신고하기
     const reportReasons = [
@@ -70,6 +70,14 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
             fetchTopTags(Number(restaurantId));
         }
     }, [restaurantId]);
+
+    // // 확인용
+    // useEffect(()=> {
+    //     const cookies = nookies.get()
+    //     const id = cookies.userId;
+    //     console.log("posts: ", posts);
+    //     console.log(id);
+    // })
 
     const fetchPosts = async (restaurantId: number) => {
         try {
@@ -137,7 +145,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
             if (success) {
                 alert("게시글이 삭제되었습니다.");
                 setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
-                router.push(`/post/${restaurantId}`);
+                router.push(`/restaurant/${restaurantId}`);
             }
         }
     };

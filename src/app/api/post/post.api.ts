@@ -17,8 +17,8 @@ const insert = async (formData: FormData): Promise<number> => {
   return response.data;
 };
 
-const update = async (id: number, postData: any): Promise<PostModel> => {
-  const response = await strategy.PUT(`${api.post}/${id}`, postData);
+const update = async (formData: FormData): Promise<PostModel> => {
+  const response = await strategy.PUT(`${api.post}`, formData);
   return response.data;
 };
 
