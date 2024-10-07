@@ -7,9 +7,9 @@ import {NoticeModel} from "src/app/model/notice.model";
 import {notice} from "src/app/api/notice/notice.api";
 import {UserPostModel} from "src/app/model/dash.model";
 
-const update = async (postId: number, postData: any, images: File[], imagesToDelete: number[]): Promise<void> => {
+const update = async (postId: number, updatePost: PostModel, images: File[], imagesToDelete: number[]): Promise<void> => {
   try {
-    await post.update(postId, postData);
+    await post.update(postId, updatePost);
 
     if (imagesToDelete.length > 0) {
       const imageIds = await image.getByImgId(postId);
@@ -50,13 +50,9 @@ const detailsPostAndImages = async (postId: number): Promise<{ postData: any; im
   }
 }
 
-const insert = async (postData: Partial<PostModel>, images: File[]): Promise<number> => {
+const insert = async (formData: FormData): Promise<number> => {
   try {
-    const postId = await post.insert(postData);
-
-    if (images && images.length > 0) {
-      await image.upload(postId, images);
-    }
+    const postId = await post.insert(formData);
     return postId;
   } catch (error) {
     console.error('Error occurred while inserting post:', error);

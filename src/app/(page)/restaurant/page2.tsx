@@ -8,6 +8,7 @@ import { getRestaurantsByTag } from '@/app/service/restaurant/restaurant.service
 import ScrollToTop from '@/app/components/ScrollToTop';
 import Product from '@/app/components/Product';
 import Link from 'next/link';
+import nookies from 'nookies';
 
 interface Props {
     start: number;
@@ -19,8 +20,14 @@ const TabFeatures: React.FC<Props> = ({ start, limit }) => {
     const [restaurantsByDate, setRestaurantsByDate] = useState<RestaurantModel[]>([]);
     const [restaurantsByFriend, setRestaurantsByFriend] = useState<RestaurantModel[]>([]);
     const [restaurantsByUnique, setRestaurantsByUnique] = useState<RestaurantModel[]>([]);
+    const cookies = nookies.get();
+    const userId = cookies.userId;
 
     useEffect(() => {
+
+        
+
+
         const fetchRestaurants = async () => {
             try {
                 const meetingData = await getRestaurantsByTag(['회식']);
@@ -40,6 +47,7 @@ const TabFeatures: React.FC<Props> = ({ start, limit }) => {
             }
         };
 
+        console.log(userId)
         fetchRestaurants();
     }, []);
 

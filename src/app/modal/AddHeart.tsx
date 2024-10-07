@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import Modal from '../components/Modal'; // Modal 컴포넌트 임포트
 import { fetchWishListsService } from '../service/wishList/wishList.service';
+import nookies from 'nookies';
 
 interface HeartButtonProps {
     restaurantId: number | undefined;
-    userId : number;
+    userId: number;
 }
 
 const HeartButton = ({ restaurantId }: HeartButtonProps) => {
@@ -17,8 +18,13 @@ const HeartButton = ({ restaurantId }: HeartButtonProps) => {
     const userId = 1;
 
     useEffect(() => {
+
         const fetchFavoritedRestaurants = async () => {
+
             try {
+
+
+
                 // 유저가 가지고 있는 모든 위시리스트의 모든 식당 가져와서 DB에 마운트된 전체 식당과 같은 아이디의 식당이 있으면 해당 식당은 하트 처리
                 const response = await fetch(`http://localhost:8080/api/wishList/getAll`, {
                     method: 'GET',
@@ -66,7 +72,7 @@ const HeartButton = ({ restaurantId }: HeartButtonProps) => {
         //setIsFavorited(newFavoritedState);
 
 
-        
+
 
         try {
             if (newFavoritedState) {

@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="49786053-a601-4996-9fe6-17ac685f1975" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/app/(page)/chatRoom/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/chatRoom/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +59,7 @@
     "git-widget-placeholder": "release0.06",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/bit/Documents/NC13_project/nyamnyam/frontend",
+    "last_opened_file_path": "C:/Users/bitcamp/team/release/nyamnyam-front",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -115,6 +115,9 @@
       <workItem from="1727760431335" duration="1482000" />
       <workItem from="1727842601005" duration="71000" />
       <workItem from="1728039836379" duration="732000" />
+      <workItem from="1728099778167" duration="187000" />
+      <workItem from="1728110739533" duration="203000" />
+      <workItem from="1728280154645" duration="61000" />
     </task>
     <servers />
   </component>

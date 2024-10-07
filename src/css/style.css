@@ -575,5 +575,14 @@ body {
       padding: 50px 0;
       font-size: 14px;
     }
+    .text-main{
+      color:#F46119;
+    }
+    .border-main{
+      border-color: #F46119;
+    }
+    .bg-main{
+      background-color: #F46119;
+    }
   }
   

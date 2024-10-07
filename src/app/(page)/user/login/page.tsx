@@ -1,10 +1,20 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { authenticateUser } from "src/app/service/user/user.api";
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
+import { jwtDecode } from 'jwt-decode';
+import nookies from 'nookies';
 
+import {authenticateUser} from "@/app/service/user/user.service";
+
+interface DecodedToken {
+    id: string;
+    username: string;
+    role: string;
+    nickname: string;
+    exp: number;
+}
 
 export default function Home() {
     const router = useRouter();
@@ -12,24 +22,30 @@ export default function Home() {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    // 로그인 후 사용자 정보를 Context에 저장
+
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const token = await authenticateUser(username, password); // 서비스 호출
+            const token = await authenticateUser(username, password);
 
-            // JWT 토큰을 로컬 스토리지에 저장
-            localStorage.setItem('token', token);
 
-            // 로그인 성공 후 리디렉션
-            router.push("/"); // 로그인 후 이동할 페이지
+            const decoded: DecodedToken = jwtDecode<DecodedToken>(token);
+
+
+            nookies.set(null, 'userId', decoded.id, { path: '/' });
+
+            localStorage.setItem('nickname', decoded.nickname);
+            localStorage.setItem('username', decoded.username);
+            localStorage.setItem('role', decoded.role);
+            
+
+            router.push("/");
         } catch (error) {
             console.error('Login failed:', error);
             setErrorMessage('Invalid username or password');
         }
     };
 
-    // 회원가입 페이지로 이동하는 함수
     const handleRegister = () => {
         router.push("/register"); // 회원가입 페이지로 리디렉션
     };
@@ -40,31 +56,29 @@ export default function Home() {
                 <div className="content-main flex gap-y-8 max-md:flex-col">
                     <div className="left md:w-1/2 w-full lg:pr-[60px] md:pr-[40px] md:border-r border-line p-5">
                         <div className="heading4 text-xl text-center">로그인</div>
-                        <form className="md:mt-7 mt-4">
-                            <div className="email ">
+                        <form className="md:mt-7 mt-4" onSubmit={handleLogin}>
+                            <div className="username">
                                 <input className="border-line px-4 pt-3 pb-3 w-full rounded-lg" id="username"
-                                       type="email" placeholder="Username or email address *" required/>
+                                       type="username" placeholder="username" required
+                                       value={username} onChange={(e) => setUsername(e.target.value)} />
                             </div>
                             <div className="pass mt-5">
                                 <input className="border-line px-4 pt-3 pb-3 w-full rounded-lg" id="password"
-                                       type="password" placeholder="Password *" required/>
+                                       type="password" placeholder="Password *" required
+                                       value={password} onChange={(e) => setPassword(e.target.value)} />
                             </div>
                             <div className="flex items-center justify-between mt-5">
                                 <div className='flex items-center'>
                                     <div className="block-input">
-                                        <input
-                                            type="checkbox"
-                                            name='remember'
-                                            id='remember'
-                                        />
-                                        <Icon.CheckSquare size={20} weight='fill' className='icon-checkbox'/>
+                                        <input type="checkbox" name='remember' id='remember' />
+                                        <Icon.CheckSquare size={20} weight='fill' className='icon-checkbox' />
                                     </div>
                                     <label htmlFor='remember' className="pl-2 cursor-pointer">로그인 유지</label>
                                 </div>
                                 <Link href={'/forgot-password'} className='font-semibold hover:underline'>비밀번호를 잊어버리셨나요?</Link>
                             </div>
                             <div className="block-button md:mt-7 mt-4">
-                                <button className="button-main">로그인</button>
+                                <button type="submit" className="button-main">로그인</button>
                             </div>
                         </form>
                     </div>
@@ -82,9 +96,9 @@ export default function Home() {
                 </div>
             </div>
         </div>
-
     );
 }
+
 
 
 // <div className="flex items-center justify-center h-screen">
