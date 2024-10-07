@@ -12,8 +12,16 @@ const nextConfig = {
     config.cache = false; // 캐시 비활성화
     return config;
   },
-  
+
+
+  env: {
+    // env는 서버측에서만 사용가능하기 때문에 next.config.js에서 
+    // 환경변수로 추가해주어야 클라이언트에서 접근 가능
+    KAKAO_MAP_APP_KEY: process.env.KAKAO_MAP_APP_KEY,
+  },
 };
+
+
 
 
 
