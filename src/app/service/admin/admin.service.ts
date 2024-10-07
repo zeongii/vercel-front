@@ -1,9 +1,5 @@
 import {admin} from "src/app/api/admin/admin.api";
 import {Area, CountCost, CountItem, RestaurantList} from "src/app/model/dash.model";
-import showRestaurant from "src/app/(page)/receipt/receiptRestaurant/[restaurantId]/page";
-import {number} from "prop-types";
-import {restaurant} from "src/app/api/restaurant/restaurant.api";
-
 
 
 export const fetchShowCount = async (): Promise<CountItem[]> => {
