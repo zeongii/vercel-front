@@ -1,7 +1,6 @@
 import { PostModel } from "src/app/model/post.model";
 import { api } from "../request";
 import { strategy } from "../api.strategy";
-import {List} from "postcss/lib/list";
 
 const getById = async (id:number): Promise<PostModel> =>{
     const response = await strategy.GET(`${api.post}/${id}`)
@@ -13,8 +12,8 @@ const getByRestaurant = async (restaurantId: number) => {
     return response.data;
 };
 
-const insert = async (postData: Partial<PostModel>): Promise<number> => {
-  const response = await strategy.POST(api.post, postData); // 고정경로
+const insert = async (formData: FormData): Promise<number> => {
+  const response = await strategy.POST(api.post, formData); // 고정경로
   return response.data;
 };
 

@@ -50,13 +50,9 @@ const detailsPostAndImages = async (postId: number): Promise<{ postData: any; im
   }
 }
 
-const insert = async (postData: Partial<PostModel>, images: File[]): Promise<number> => {
+const insert = async (formData: FormData): Promise<number> => {
   try {
-    const postId = await post.insert(postData);
-
-    if (images && images.length > 0) {
-      await image.upload(postId, images);
-    }
+    const postId = await post.insert(formData);
     return postId;
   } catch (error) {
     console.error('Error occurred while inserting post:', error);
