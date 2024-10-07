@@ -85,24 +85,33 @@ export default function PostRegister() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    // try {
-    //   const postId: number = await postService.insert({
-    //     content: formData.content,
-    //     taste: formData.taste,
-    //     clean: formData.clean,
-    //     service: formData.service,
-    //     tags: tags,
-    //     restaurantId: formData.restaurantId
-    //   });
+    const postData = {
+      content: formData.content,
+      taste: formData.taste,
+      clean: formData.clean,
+      service: formData.service,
+      tags: tags,
+      restaurantId: formData.restaurantId
+    };
+    
+    const newFormData = new FormData();
 
-    //   if (postId) {
-    //     setTags([]);
-    //     router.push(`/post/${restaurantId}/details/${postId}`);
-    //   }
-    // } catch (error) {
-    //   console.error('Post submission failed:', error);
-    // }
+    newFormData.append("model", new Blob([JSON.stringify(postData)], {type: "application/json"}));
+
+    images.forEach((file) => {
+      newFormData.append("files", file);
+    })
+    try {
+      const postId: number = await postService.insert(newFormData);
+      if (postId) {
+        setTags([]);
+        router.push(`/post/${restaurantId}/details/${postId}`);
+      }
+    } catch (error) {
+      console.error('Post submission failed:', error);
+    }
   };
+
 
   const handleDeleteImage = (fileName: string) => {
     setImages((prevImages) => prevImages.filter(img => img.name !== fileName));
@@ -115,7 +124,7 @@ export default function PostRegister() {
           {restaurantName?.name}
         </span> 리뷰 작성하기
       </div>
-      <form onSubmit={handleSubmit} className="space-y-4 p-6 bg-gray-100 rounded-lg shadow-lg w-full max-w-3xl">
+      <form className="space-y-4 p-6 bg-gray-100 rounded-lg shadow-lg w-full max-w-3xl">
         <div className="border-b-2 pb-4">
           <h2 className="font-bold text-lg mb-2">◦ 항목별 평점</h2>
           <div className="flex items-center mb-4">
@@ -238,7 +247,8 @@ export default function PostRegister() {
         </div>
       </form>
       <div className="flex justify-end mt-6">
-        <button type="submit" className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded">
+        <button type="button" className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded"
+        onClick={handleSubmit}>
           등록하기
         </button>
         <button

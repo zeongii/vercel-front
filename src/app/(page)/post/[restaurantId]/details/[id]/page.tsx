@@ -45,7 +45,7 @@ export default function PostDetail() {
 
       if (success) {
           alert("게시글이 삭제되었습니다.");
-          router.push(`/post/${restaurantId}`);
+          router.push(`/restaurant/${restaurantId}`);
       } else {
           alert("삭제 중 오류가 발생했습니다.");
       }
