@@ -160,8 +160,12 @@ const DashBoard = () => {
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div className={`${styles.col} mb-10`}>
+
+            <div className={styles.row}>
+
+                <div className={styles.col}>
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>음식점 많은 지역 랭킹</div>
                         <div className={styles.cardBody}>
@@ -189,9 +193,6 @@ const DashBoard = () => {
                     </div>
                 </div>
 
-            </div>
-
-            <div className={styles.row}>
                 <div className={styles.col}>
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>월별 영수증 리뷰 사용 횟수</div>

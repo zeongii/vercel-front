@@ -24,7 +24,7 @@ const receiptCost = async (id: string) :Promise<CountCost[]> => {
     }
 }
 
-const receiptWallet = async (id: number) :Promise<ReceiptModel[]> => {
+const receiptWallet = async (id: string) :Promise<ReceiptModel[]> => {
     try {
         const resp = await strategy.GET(`${api.receipt}/wallet/${id}`);
         return resp.data;

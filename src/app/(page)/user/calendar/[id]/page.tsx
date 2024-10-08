@@ -6,6 +6,7 @@ import { EventContentArg } from "@fullcalendar/core";
 import { Dropdown } from "react-bootstrap";
 import { ReceiptModel } from "src/app/model/receipt.model";
 import { fetchReceiptWallet } from "@/app/service/receipt/receipt.service";
+import nookies from "nookies";
 
 interface Todo {
     todo: string[];
@@ -21,7 +22,9 @@ interface CalendarEvent {
 const MyCalendar: React.FC = () => {
     const [openDropdowns, setOpenDropdowns] = useState<{ [key: string]: boolean }>({});
     const [wallet, setWallet] = useState<ReceiptModel[]>([]);
-    const id = 1;
+    const cookies = nookies.get();
+    const id = cookies.userId;
+
 
     // 현재 월과 연도를 추적하기 위한 상태
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);

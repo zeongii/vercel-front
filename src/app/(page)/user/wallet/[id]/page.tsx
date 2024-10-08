@@ -5,51 +5,34 @@ import {Chart, registerables} from "chart.js";
 import styles from "src/css/mypage.module.css";
 import {CountCost} from "src/app/model/dash.model";
 import {fetchReceiptCost} from "src/app/service/receipt/receipt.service";
+import nookies from "nookies";
 
 Chart.register(...registerables);
 
-interface User {
-    id: string;
-}
 
 export default function MyWallet() {
     const [cost, setCost] = useState<CountCost[]>([]);
-    const [user, setUser] = useState<User | null>(null);
+
+    const cookies = nookies.get();
+    const id = cookies.userId;
 
 
     useEffect(() => {
-        const fetchCostData = async ()  => {
+        const fetchCostData = async () => {
             try {
-                if (user) {
-                    const resp = await fetchReceiptCost(user.id);
-
-                    setCost(resp);
-                    console.log(resp);
-                    console.log(user.id)
-                }
+                const resp = await fetchReceiptCost(id);
+                setCost(resp);
+                console.log(resp)
 
             } catch (error) {
                 console.error("Error fetching cost data", error);
             }
         };
         fetchCostData();
-    }, [user]);
+    }, [id]);
 
 
-
-    useEffect(() => {
-        const id = localStorage.getItem('id');
-
-        if (id) {
-            const storedUser: User = {
-                id
-
-            };
-            setUser(storedUser);
-        }
-    }, []);
-
-    const predefinedOrder = Array.from({ length: 12 }, (_, i) => `2024-${String(i + 1).padStart(2, '0')}`);
+    const predefinedOrder = Array.from({length: 12}, (_, i) => `2024-${String(i + 1).padStart(2, '0')}`);
 
     // Memoize sorted cost data
     const sortedCost = useMemo(() => {
@@ -81,8 +64,8 @@ export default function MyWallet() {
                             responsive: true,
                             maintainAspectRatio: false,
                             scales: {
-                                x: { title: { display: true, text: 'Month' } },
-                                y: { title: { display: true, text: 'Cost' } },
+                                x: {title: {display: true, text: 'Month'}},
+                                y: {title: {display: true, text: 'Cost'}},
                             },
                         }}
                     />

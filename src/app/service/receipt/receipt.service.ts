@@ -13,7 +13,7 @@ export const fetchReceiptCost = async (id : string) : Promise<CountCost[]>  => {
     return data;
 }
 
-export const fetchReceiptWallet = async (id: number): Promise<ReceiptModel[]> => {
+export const fetchReceiptWallet = async (id: string): Promise<ReceiptModel[]> => {
     const data = await receipt.receiptWallet(id);
     return data.map((item: ReceiptModel) => ({
         ...item,

@@ -14,6 +14,7 @@ interface DecodedToken {
     role: string;
     nickname: string;
     exp: number;
+    score: number;
 }
 
 export default function Home() {
@@ -37,6 +38,7 @@ export default function Home() {
             localStorage.setItem('nickname', decoded.nickname);
             localStorage.setItem('username', decoded.username);
             localStorage.setItem('role', decoded.role);
+            localStorage.setItem('score', String(decoded.score));
             
 
             router.push("/");

@@ -4,7 +4,7 @@ import {fetchInsertOpinion} from "src/app/service/opinion/opinion.serivce";
 import Image from 'next/image'
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import {fetchShowArea, fetchShowCount, fetchShowRankByAge} from "src/app/service/admin/admin.service";
+import {fetchShowArea, fetchShowCount} from "src/app/service/admin/admin.service";
 import {Area, CountItem, RestaurantList, UserPostModel} from "src/app/model/dash.model";
 import {OpinionModel} from "src/app/model/opinion.model";
 import {ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip} from "chart.js";
@@ -12,8 +12,8 @@ import styles from "src/css/mypage.module.css";
 import {Bar, Doughnut} from "react-chartjs-2";
 import MyCalendar from "src/app/(page)/user/calendar/[id]/page";
 import MyWallet from "src/app/(page)/user/wallet/[id]/page";
-import {fetchPostList} from "src/app/service/post/post.service";
 import nookies from "nookies";
+import {fetchPostList} from "@/app/service/post/post.service";
 
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale);
@@ -33,6 +33,14 @@ export default function MyPage() {
     const [post, setPost] = useState<UserPostModel[]>([]);
     const [activeTab, setActiveTab] = useState<string | undefined>('myPage')
     const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        const countList = async () => {
+            const data = await fetchShowCount();
+            setCount(data);
+        };
+        countList();
+    }, []);
 
 
     useEffect(() => {
@@ -56,21 +64,21 @@ export default function MyPage() {
             }
 
             // // id를 사용하여 데이터를 가져오는 로직
-            // const fetchData = async () => {
-            //     const countData = await fetchShowCount();
-            //     setCount(countData);
-            //
-            //     const regionData = await fetchShowArea();
-            //     setRegion(regionData);
-            //
+            const fetchData = async () => {
+                const countData = await fetchShowCount();
+                setCount(countData);
+
+                const regionData = await fetchShowArea();
+                setRegion(regionData);
+
             //     const restaurantData = await fetchShowRankByAge(id);  // id 사용
             //     setRestaurant(restaurantData);
             //
-            //     const postData = await fetchPostList(id);  // id 사용
-            //     setPost(postData);
-            // };
-            //
-            // fetchData();
+                const postData = await fetchPostList(id);  // id 사용
+                setPost(postData);
+            };
+
+            fetchData();
         }
     }, []);
 

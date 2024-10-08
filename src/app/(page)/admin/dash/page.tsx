@@ -36,10 +36,15 @@ export default function AdminDash() {
     const [reportList, setReportList] = useState<ReportModel[]>([]);
 
 
+
+
+
+
     useEffect(() => {
         const countList = async () => {
             const data = await fetchShowCount();
             setCount(data);
+            console.log(role)
         };
         countList();
     }, []);
@@ -74,7 +79,16 @@ export default function AdminDash() {
         }, 0);
     };
 
+    const role = localStorage.getItem('role');
 
+    if (role !== 'ADMIN') {
+        return (
+            <div className="unauthorized text-center mt-5">
+                <h2>권한이 없습니다</h2>
+                <p>You do not have permission to view this content.</p>
+            </div>
+        );
+    }
 
     return (
         <>

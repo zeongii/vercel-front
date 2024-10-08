@@ -12,7 +12,7 @@ interface User {
   username: string;
   role: string;
   token: string;
-  userId: string; // 추가된 userId 필드
+  userId: string;
 }
 
 export default function Header() {
@@ -24,7 +24,7 @@ export default function Header() {
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
     const nickname = localStorage.getItem('nickname');
-    const role = localStorage.getItem('role');
+    const role = localStorage.getItem('role') || null;
     const cookies = nookies.get(); // nookies를 사용하여 쿠키에서 userId 가져오기
     const userId = cookies.userId; // 쿠키에서 userId 가져오기
 
@@ -91,10 +91,12 @@ export default function Header() {
                     <Icon.SignIn size={40} />
                   </Link>
               )}
+              {user?.role === 'ADMIN' && (
               <Link href="/admin/dash" className="action-btn">
                 <Icon.LegoSmiley size={40} />
                 <span className="animation-ripple-delay2"></span>
               </Link>
+              )}
               <Link href="/chatRoom" className="action-btn">
                 <i className="ico_message"></i>
                 <span className="animation-ripple-delay1"></span>

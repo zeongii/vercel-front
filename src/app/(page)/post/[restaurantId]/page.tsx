@@ -24,6 +24,7 @@ import { ReportModel } from 'src/app/model/report.model';
 import Modal from 'src/app/components/Modal';
 import { fetchReportRegister } from '@/app/service/report/report.service';
 import { PostListProps } from '@/app/model/props';
+import nookies from "nookies";
 
 
 const PostList: React.FC<PostListProps> = ({restaurantId}) => {
@@ -47,7 +48,9 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
     const [reportingPostId, setReportingPostId] = useState<number | null>(null);
     const [reportReason, setReportReason] = useState<string>("");
     const router = useRouter();
-    const currentUserId = 42; // 확인용
+    const cookies = nookies.get();
+    const id = cookies.userId;
+    console.log(id)
 
     // 신고하기
     const reportReasons = [
@@ -180,7 +183,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
             alert('댓글을 입력하세요.');
             return;
         }
-        const result = await replyService.submit(postId, replyContent, currentUserId, replyToggles);
+        const result = await replyService.submit(postId, replyContent, id, replyToggles);
 
         if (result && result.success) {
             const { newReply } = result;
@@ -226,7 +229,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
 
     // 수정내용 저장 (서버연결)
     const replyEditSave = async (replyId: number, postId: number) => {
-        const updateReply = await replyService.editSave(replyId, postId, editInput[replyId], currentUserId);
+        const updateReply = await replyService.editSave(replyId, postId, editInput[replyId], id);
         if (updateReply) {
             setReplies((prevReplies) => ({
                 ...prevReplies,
@@ -272,7 +275,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
 
     // 좋아요 & 취소 & count
     const handleLike = async (postId: number) => {
-        const result = await upvoteService.toggle(postId, currentUserId, likedPost);
+        const result = await upvoteService.toggle(postId, id, likedPost);
 
         if (result) {
             setLikedPosts(result.likedPost);
@@ -293,9 +296,10 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
         }
 
         const reportModel: ReportModel = {
-            userId: currentUserId,
+            userId: id,
             postId: postId,
-            reason: selectedReason
+            reason: selectedReason,
+            entryDate: ''
         };
 
         try {
@@ -466,7 +470,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
                                             </div>
                                             <PostOptions
                                                 postUserId={p.userId ?? 0}
-                                                currentId={currentUserId}
+                                                currentId={id}
                                                 onEdit={() => { router.push(`/post/${restaurantId}/update/${p.id}`) }}
                                                 onDelete={() => handleDelete(p.id)}
                                                 onReport={() => handleReportClick(p.id)}
@@ -582,7 +586,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
                                                                             </div>
                                                                             <div className="flex items-center">
                                                                                 <span className="text-gray-500 mr-4">{formatDate(reply.entryDate)}</span>
-                                                                                {reply.userId === currentUserId && (
+                                                                                {reply.userId === id && (
                                                                                     <div className="flex space-x-2">
                                                                                         <button
                                                                                             className="text-xs bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-3 border border-blue-500 hover:border-transparent rounded"
