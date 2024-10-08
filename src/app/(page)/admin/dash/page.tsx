@@ -35,6 +35,11 @@ export default function AdminDash() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [reportCountList, setReportCountList] = useState<ReportCountModel[]>([]);
     const [reportList, setReportList] = useState<ReportModel[]>([]);
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+    const handleRowClick = (index: number) => {
+        setOpenIndex(openIndex === index ? null : index);
+    };
 
 
     useEffect(() => {
@@ -58,7 +63,6 @@ export default function AdminDash() {
 
 
     }, []);
-
 
 
     const countData = {
@@ -194,8 +198,7 @@ export default function AdminDash() {
                                                     scales: {
                                                         x: {title: {display: true, text: 'Nickname'}},
                                                         y: {title: {display: true, text: 'Count'}},
-                                                    }, animation: {
-                                                    },
+                                                    }, animation: {},
                                                 }}
 
                                             />
@@ -220,25 +223,43 @@ export default function AdminDash() {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {reportCountList.map((r) => (
-                                        <tr
-                                            key={r.postId}
-                                            className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
-                                        >
-                                            <Link href={`/post/detail/${r.postId}`} className="text-border">
+                                    {reportCountList.map((r, index) => (
+                                        <React.Fragment key={r.postId}>
+                                            <tr
+                                                className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
+                                                onClick={() => handleRowClick(index)} // 클릭 시 드롭다운 토글
+                                            >
                                                 <td className="py-3">
                                                     <strong className="text-title">{r.postId}</strong>
                                                 </td>
-                                            </Link>
-
                                                 <td className="py-3">
-                                                    <div className="info flex flex-col">
-                                                        <strong className="product_name text-button">{r.content}</strong>
-                                                        <span className="product_tag caption1 text-secondary"></span>
-                                                    </div>
+                                                    {r.count}
                                                 </td>
-                                                <td className="py-3">{r.count}</td>
-                                        </tr>
+                                            </tr>
+                                            {openIndex === index && (
+                                                <>
+                                                    <tr>
+                                                        <td colSpan={2} className="py-3 pl-8">
+                                                            <Link href={`/post/detail/${r.postId}`}
+                                                                  className="text-border">
+                                                                <div className="bg-gray-100 p-2 rounded text-sm">
+                                                                    {r.content}
+                                                                </div>
+                                                            </Link>
+                                                        </td>
+                                                    </tr>
+                                                    {reportList.map((m) =>
+                                                        <tr>
+                                                            <td colSpan={2} className="py-3 pl-8 text-left text-sm">
+                                                                <div>* {m.reason}</div>
+                                                            </td>
+                                                        </tr>
+                                                    )}
+                                                </>
+
+
+                                            )}
+                                        </React.Fragment>
                                     ))}
                                     </tbody>
                                 </table>

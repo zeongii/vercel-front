@@ -1,9 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { fetchAllUsers } from "@/app/api/user/user.api";
-import { User } from "@/app/model/user.model";
+import React, {useEffect, useState} from "react";
+import {fetchAllUsers} from "@/app/api/user/user.api";
+import {User} from "@/app/model/user.model";
 
-const UserTable = ({ users = [] }) => {
+const UserTable = ({users = []}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10; // 페이지당 항목 수
 
@@ -41,10 +41,18 @@ const UserTable = ({ users = [] }) => {
             <table className="w-full max-[1400px]:w-[700px] max-md:w-[700px]">
                 <thead className="border-b border-line">
                 <tr>
-                    <th scope="col" className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">username</th>
-                    <th scope="col" className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">nickname</th>
-                    <th scope="col" className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">role</th>
-                    <th scope="col" className="pb-3 text-right text-sm font-bold uppercase text-secondary whitespace-nowrap">score</th>
+                    <th scope="col"
+                        className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">username
+                    </th>
+                    <th scope="col"
+                        className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">nickname
+                    </th>
+                    <th scope="col"
+                        className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">role
+                    </th>
+                    <th scope="col"
+                        className="pb-3 text-right text-sm font-bold uppercase text-secondary whitespace-nowrap">score
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -61,18 +69,31 @@ const UserTable = ({ users = [] }) => {
                         </td>
                         <td className="py-3 price">{u.role}</td>
                         <td className="py-3 text-right">
-                            <span className="tag px-4 py-1.5 rounded-full bg-opacity-10 bg-yellow text-yellow caption1 font-semibold">{u.score}</span>
+                             <span
+                                 className={`tag px-4 py-1.5 rounded-full bg-opacity-10 ${
+                                     u.score < 40 ? 'bg-sky-500 text-sky-500' :
+                                         u.score < 50 ? 'bg-green-400 text-green-400' :
+                                             u.score < 60 ? 'bg-yellow-500 text-yellow-500' :
+                                                 u.score < 80 ? 'bg-orange-400 text-orange-400' :
+                                                     u.score < 100 ? 'bg-red-500 text-red-500' :
+                                                 'bg-gray text-gray' // 기본 색상 (옵션)
+                                 } caption1 font-semibold`}
+                             >
+                                {u.score}
+                                     </span>
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
             <div className="pagination mt-4 flex justify-between">
-                <button onClick={handlePrevious} disabled={currentPage === 1} className="bg-blue-500 text-white py-1 px-3 rounded">
+                <button onClick={handlePrevious} disabled={currentPage === 1}
+                        className="bg-blue-500 text-white py-1 px-3 rounded">
                     이전
                 </button>
                 <span>페이지 {currentPage} / {totalPages}</span>
-                <button onClick={handleNext} disabled={currentPage === totalPages} className="bg-blue-500 text-white py-1 px-3 rounded">
+                <button onClick={handleNext} disabled={currentPage === totalPages}
+                        className="bg-blue-500 text-white py-1 px-3 rounded">
                     다음
                 </button>
             </div>
@@ -94,7 +115,7 @@ export default function UserList() {
 
     return (
         <div>
-            <UserTable users={user} />
+            <UserTable users={user}/>
         </div>
     );
 }
