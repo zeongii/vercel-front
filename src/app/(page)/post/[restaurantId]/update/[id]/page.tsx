@@ -11,6 +11,7 @@ import { Camera, X } from '@phosphor-icons/react/dist/ssr';
 import Modal from '@/app/components/Modal';
 import { useDropzone } from 'react-dropzone';
 import { ST } from 'next/dist/shared/lib/utils';
+import { ImageModel } from '@/app/model/image.model';
 
 export default function PostUpdate() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function PostUpdate() {
   const [allImages, setAllImages] = useState<(File | ImageModel)[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [imagesToDelete, setImagesToDelete] = useState<number[]>([]);
-  const [formData, setFormData] = useState<PostModel>(initialPost);
+  const [postData, setPostData] = useState<PostModel>(initialPost);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function PostUpdate() {
       const post = await postService.getPostDetails(id);
 
       const uniqueTags = Array.isArray(post.tags) ? Array.from(new Set(post.tags)) : [];
-      setFormData({ ...post, tags: uniqueTags });
+      setPostData({ ...post, tags: uniqueTags });
       setTags(uniqueTags);
 
       const prevImages = post.images || [];
@@ -56,18 +57,22 @@ export default function PostUpdate() {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("postId", String(id)); 
-  formData.append("title", formData.get("title") || "");
-  formData.append("content", formData.get("content") || ""); 
-
-    tags.forEach((tag) => {
-      formData.append("tags", tag);
+  
+    const postDataJSON = JSON.stringify({
+      id: postData.id,
+      content: postData.content, 
+      taste: postData.taste,
+      clean: postData.clean,
+      service: postData.service,
+      tags: tags,
     });
+  
+    formData.append("postData", postDataJSON); 
   
     imagesToDelete.forEach((imageId) => {
       formData.append("imagesToDelete", String(imageId));
     });
-
+  
     images.forEach((image) => {
       formData.append("files", image);
     });
@@ -79,10 +84,10 @@ export default function PostUpdate() {
       console.error('Error updating post:', error);
     }
   };
-
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setPostData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleTagSelect = (tag: string) => {
@@ -98,7 +103,7 @@ export default function PostUpdate() {
   };
 
   const handleStar = (value: number, field: keyof PostModel) => {
-    setFormData((prevData) => ({
+    setPostData((prevData) => ({
       ...prevData,
       [field]: value
     }));
@@ -146,7 +151,7 @@ export default function PostUpdate() {
             <Star
               w="w-8" h="h-8"
               readonly={false}
-              rate={formData?.taste}
+              rate={postData?.taste}
               onChange={(rating) => handleStar(rating, "taste")}
             />
           </div>
@@ -155,7 +160,7 @@ export default function PostUpdate() {
             <Star
               w="w-8" h="h-8"
               readonly={false}
-              rate={formData?.clean}
+              rate={postData?.clean}
               onChange={(rating) => handleStar(rating, "clean")}
             />
           </div>
@@ -164,7 +169,7 @@ export default function PostUpdate() {
             <Star
               w="w-8" h="h-8"
               readonly={false}
-              rate={formData?.service}
+              rate={postData?.service}
               onChange={(rating) => handleStar(rating, "service")}
             />
           </div>
@@ -205,7 +210,7 @@ export default function PostUpdate() {
           <textarea
             id="content"
             name="content"
-            value={formData?.content}
+            value={postData?.content}
             onChange={handleChange}
             className="border rounded p-2 w-full mt-2"
             rows={3}

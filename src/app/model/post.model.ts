@@ -1,3 +1,5 @@
+import { ImageModel } from "./image.model";
+
 //src/app/model/post.model.ts
 export interface PostModel {
   id: number;  

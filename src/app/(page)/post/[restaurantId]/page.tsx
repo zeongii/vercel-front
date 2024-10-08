@@ -26,11 +26,12 @@ import { fetchReportRegister } from '@/app/service/report/report.service';
 import { PostListProps } from '@/app/model/props';
 import nookies from 'nookies';
 
-const PostList: React.FC<PostListProps> = ({restaurantId}) => {
+const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const [posts, setPosts] = useState<PostModel[]>([]);
     const [restaurant, setRestaurant] = useState<RestaurantModel | null>(null);
     const [images, setImages] = useState<{ [key: number]: string[] }>({});
     const [allImages, setAllImages] = useState<string[]>([]);
+    const [imgDetails, setImgDetails] = useState<{ postId: number; url: string }[]>([]);
     const [likedPost, setLikedPosts] = useState<number[]>([]);
     const [likeCount, setLikeCounts] = useState<{ [key: number]: number }>({});
     const [replyToggles, setReplyToggles] = useState<{ [key: number]: boolean }>({});
@@ -47,7 +48,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
     const [reportingPostId, setReportingPostId] = useState<number | null>(null);
     const [reportReason, setReportReason] = useState<string>("");
     const router = useRouter();
-    const currentUserId = 9; // 확인용
+    const currentUserId = 2; // 확인용
 
     // 신고하기
     const reportReasons = [
@@ -145,6 +146,14 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
             if (success) {
                 alert("게시글이 삭제되었습니다.");
                 setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+
+                const updatedDetails = imgDetails.filter((detail) => detail.postId !== postId);
+                setImgDetails(updatedDetails);
+
+                setAllImages((prevImages) =>
+                    prevImages.filter((url) => !updatedDetails.some((detail) => detail.url === url))
+                );
+
                 router.push(`/restaurant/${restaurantId}`);
             }
         }
@@ -335,9 +344,9 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
             <div className="product-detail default" style={{ marginTop: '30px' }}>
                 <div className="review-block md:py-20 py-10 bg-surface">
                     <div className="heading flex items-center justify-between flex-wrap gap-4">
-                        <div className="heading4">{`${restaurant?.name}`} 
+                        <div className="heading4">{`${restaurant?.name}`}
                             <span style={{ color: '#F46119', fontSize: 'inherit', fontWeight: 'inherit' }} className='ml-2'>Review</span>
-                            </div>
+                        </div>
                         <button
                             className='button-main custom-button'
                             onClick={() => router.push(`/post/register/${restaurantId}`)}

@@ -1,6 +1,7 @@
 import { PostModel } from "src/app/model/post.model";
 import { api } from "../request";
 import { strategy } from "../api.strategy";
+import { headers } from "next/headers";
 
 const getById = async (id:number): Promise<PostModel> =>{
     const response = await strategy.GET(`${api.post}/${id}`)
@@ -13,12 +14,12 @@ const getByRestaurant = async (restaurantId: number) => {
 };
 
 const insert = async (formData: FormData): Promise<number> => {
-  const response = await strategy.POST_MULTIPART(api.post, formData); // 고정경로
+  const response = await strategy.POST_MULTIPART(`${api.post}`, formData);
   return response.data;
 };
 
-const update = async (formData: FormData): Promise<PostModel> => {
-  const response = await strategy.PUT(`${api.post}`, formData);
+const update = async (formData: FormData): Promise<number> => {
+  const response = await strategy.PUT_MULTIPART(`${api.post}`, formData);
   return response.data;
 };
 
