@@ -1,19 +1,18 @@
 import { upvote } from "src/app/api/upvote/upvote.api";
 import { initialUpvote, UpvoteModel } from "src/app/model/upvote.model";
 
-const check = async (postId: number, userId: number) => {
+const check = async (postId: number, userId: string) => {
     const upvoteData: UpvoteModel = {
         ...initialUpvote,
         giveId: userId,
         postId, 
-        haveId: 0
     }
     return await upvote.hasLiked(upvoteData);
 };
 
-const toggle = async ( postId: number,userId: number,likedPost: number[]
+const toggle = async ( postId: number,userId: string, likedPost: number[]
   ): Promise<{ likedPost: number[]; likeCountDelta: number }> => {
-    const upvoteData: UpvoteModel = { id: 0, giveId: userId, postId, haveId: 0 };
+    const upvoteData: UpvoteModel = { id: 0, giveId: userId, postId};
 
     if (likedPost.includes(postId)) {
         const success = await upvote.unLike(upvoteData);

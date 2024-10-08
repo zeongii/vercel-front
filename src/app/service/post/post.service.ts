@@ -4,6 +4,7 @@ import { PostModel } from "src/app/model/post.model";
 import { imageService } from "../image/image.service";
 import { image } from "src/app/api/image/image.api";
 import {UserPostModel} from "src/app/model/dash.model";
+import nookies from 'nookies';
 
 const update = async (formData: FormData): Promise<void> => {
   try {
@@ -51,7 +52,8 @@ const fetchPost = async (restaurantId: number) => {
     const posts: PostModel[] = await post.getByRestaurant(restaurantId);
 
     const likeStatusPromise = posts.map(async (post) => {
-      const liked = await upvote.hasLiked({ id: 0, giveId: 1, postId: post.id, haveId: 0 });
+      const userId = nookies.get().userId;
+      const liked = await upvote.hasLiked({ id: 0, giveId: userId, postId: post.id});
       const count = await getLikeCount(post.id);
       const images = await imageService.getByPostId(post.id);
 
@@ -79,7 +81,7 @@ const remove = async (postId: number) => {
 };
 
 
-export const fetchPostList = async (userId : number) => {
+export const fetchPostList = async (userId : string) => {
   const data: UserPostModel[] = await post.listById(userId);
   return data.sort((a, b) => {
     return new Date(b.entryDate).getTime() - new Date(a.entryDate).getTime();

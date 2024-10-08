@@ -5,13 +5,14 @@ import { useEffect, useState } from "react";
 import Star from "src/app/components/Star";
 import { PostModel } from "src/app/model/post.model";
 import { postService } from "src/app/service/post/post.service";
+import nookies from 'nookies';
 
 export default function PostDetail() {
   const [post, setPost] = useState<PostModel | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const { id, restaurantId } = useParams();
   const router = useRouter();
-  const currentUserId = 8; // 확인용
+  const currentUserId = nookies.get().userId;
 
   useEffect(() => {
     loadData();

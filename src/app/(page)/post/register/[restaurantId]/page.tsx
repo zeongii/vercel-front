@@ -11,6 +11,7 @@ import { restaurant } from '@/app/api/restaurant/restaurant.api';
 import { Camera, X } from '@phosphor-icons/react/dist/ssr';
 import Modal from '@/app/components/Modal';
 import { useDropzone } from 'react-dropzone';
+import nookies from 'nookies';
 
 export default function PostRegister() {
   const router = useRouter();
@@ -83,6 +84,8 @@ export default function PostRegister() {
     e.preventDefault();
 
     const postData = {
+      userId: nookies.get().userId,
+      nickname: localStorage.getItem('nickname'),
       content: formData.content,
       taste: formData.taste,
       clean: formData.clean,

@@ -48,7 +48,8 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const [reportingPostId, setReportingPostId] = useState<number | null>(null);
     const [reportReason, setReportReason] = useState<string>("");
     const router = useRouter();
-    const currentUserId = 2; // 확인용
+    const currentUserId = nookies.get().userId;
+    const nickname = localStorage.getItem('nickname')
 
     // 신고하기
     const reportReasons = [
@@ -71,14 +72,6 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
             fetchTopTags(Number(restaurantId));
         }
     }, [restaurantId]);
-
-    // // 확인용
-    // useEffect(()=> {
-    //     const cookies = nookies.get()
-    //     const id = cookies.userId;
-    //     console.log("posts: ", posts);
-    //     console.log(id);
-    // })
 
     const fetchPosts = async (restaurantId: number) => {
         try {
@@ -288,7 +281,12 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     };
 
     // 좋아요 & 취소 & count
-    const handleLike = async (postId: number) => {
+    const handleLike = async (postId: number, postUserId: string) => {
+        if(postUserId === currentUserId) {
+            window.alert("본인의 리뷰에는 좋아요를 누를 수 없어요.");
+            return;
+        }
+
         const result = await upvoteService.toggle(postId, currentUserId, likedPost);
 
         if (result) {
@@ -482,7 +480,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                                 <p className='ml-2'>{p.averageRating.toFixed(1)} / 5</p>
                                             </div>
                                             <PostOptions
-                                                postUserId={p.userId ?? 0}
+                                                postUserId={p.userId ?? ''}
                                                 currentId={currentUserId}
                                                 onEdit={() => { router.push(`/post/${restaurantId}/update/${p.id}`) }}
                                                 onDelete={() => handleDelete(p.id)}
@@ -557,7 +555,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                         <div className="action mt-1">
                                             <div className="flex items-center gap-4">
                                                 <button
-                                                    onClick={() => handleLike(p.id)}
+                                                    onClick={() => handleLike(p.id, p.userId)}
                                                     className="like-btn flex items-center gap-1 cursor-pointer">
                                                     <Icon.Heart
                                                         size={18}

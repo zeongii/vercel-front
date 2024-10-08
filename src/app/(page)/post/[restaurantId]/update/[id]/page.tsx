@@ -10,7 +10,6 @@ import { tagService } from 'src/app/service/tag/tag.service';
 import { Camera, X } from '@phosphor-icons/react/dist/ssr';
 import Modal from '@/app/components/Modal';
 import { useDropzone } from 'react-dropzone';
-import { ST } from 'next/dist/shared/lib/utils';
 import { ImageModel } from '@/app/model/image.model';
 
 export default function PostUpdate() {

@@ -15,7 +15,7 @@ const toggle = async (id: number, replyToggles: { [key: number]: boolean }) => {
   return { toggled, replies: null };
 };
 
-const submit = async (postId: number, replyContent: string, currentId: number, replyToggles: { [key: number]: boolean }) => {
+const submit = async (postId: number, replyContent: string, currentId: string, replyToggles: { [key: number]: boolean }) => {
   const replyData: ReplyModel = {
     ...initialReply,
     postId: postId,
@@ -37,7 +37,7 @@ const submit = async (postId: number, replyContent: string, currentId: number, r
   }
 };
 
-const editSave = async (replyId: number, postId: number, updateContent: string, currentUserId: number) => {
+const editSave = async (replyId: number, postId: number, updateContent: string, currentUserId: string) => {
   const replyData = {
     ...initialReply, 
     id: replyId, 

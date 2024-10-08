@@ -1,7 +1,6 @@
 import { PostModel } from "src/app/model/post.model";
 import { api } from "../request";
 import { strategy } from "../api.strategy";
-import { headers } from "next/headers";
 
 const getById = async (id:number): Promise<PostModel> =>{
     const response = await strategy.GET(`${api.post}/${id}`)
@@ -28,7 +27,7 @@ const remove = async (postId: number) => {
     return response;
 };
 
-const listById = async (userId:number) => {
+const listById = async (userId:string) => {
     const response = await strategy.GET(`${api.post}/list/${userId}`);
     return response.data;
 
