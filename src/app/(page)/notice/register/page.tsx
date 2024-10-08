@@ -63,7 +63,7 @@ export default function InsertNotice() {
                             required
                         />
                     </div>
-                    <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
+                    <button type="submit" className="px-4 py-2 bg-[#41B3A3] text-white rounded hover:bg-[#178E7F]">
                         추가
                     </button>
                 </form>

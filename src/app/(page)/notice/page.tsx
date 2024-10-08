@@ -73,7 +73,7 @@ export default function ShowNotice() {
             {role === 'ADMIN' && (
             <div className="flex flex-col mt-6 space-y-4">
                 <button onClick={moveToInsert}
-                        className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200">
+                        className="p-2 bg-[#41B3A3] text-white rounded hover:bg-blue-700 transition duration-200">
                     공지사항 추가하기
                 </button>
             </div>
