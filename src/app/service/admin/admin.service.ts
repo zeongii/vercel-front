@@ -17,15 +17,11 @@ export const fetchShowRestaurant = async (): Promise<RestaurantList[]> => {
     return data;
 }
 
-export const fetchRestaurantOne = async (id: number): Promise<RestaurantModel> => {
+export const fetchRestaurantOne = async (id: string): Promise<RestaurantModel> => {
     const data: RestaurantModel = await admin.showRestaurant(id);
     return data;
 }
 
-export const fetchShowRankByAge = async (id: number): Promise<RestaurantList[]> => {
-    const data: RestaurantList[] = await admin.showRankByAge(id);
-    return data;
-}
 
 export const fetchReceiptList = async (): Promise<CountCost[]> => {
     const data = await admin.receiptList();

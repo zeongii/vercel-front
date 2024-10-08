@@ -33,7 +33,7 @@ const showRankRestaurant = async (): Promise<RestaurantList[]> => {
     }
 }
 
-const showRestaurant = async (id: number): Promise<RestaurantModel> => {
+const showRestaurant = async (id: string): Promise<RestaurantModel> => {
     try {
         const response = await strategy.GET(`${api.admin}/randomByUserId/${id}`);
         return response.data; // 데이터 반환
@@ -43,15 +43,6 @@ const showRestaurant = async (id: number): Promise<RestaurantModel> => {
     }
 }
 
-const showRankByAge = async (id: number): Promise<RestaurantList[]> => {
-    try {
-        const resp = await strategy.GET(`${api.admin}/recommendByAge/${id}`);
-        return resp.data;
-    } catch (error) {
-        console.error("Failed to fetch user counts");
-        throw new Error("Failed to fetch user counts");
-    }
-}
 
 const receiptList = async (): Promise<CountCost[]> => {
     try {
@@ -82,7 +73,7 @@ const upvoteRestaurant = async (): Promise<RestaurantList[]> => {
 
 
 
-export const admin = {showCount, showArea, showRankRestaurant,showRestaurant, showRankByAge, receiptList, upvoteRestaurant}
+export const admin = {showCount, showArea, showRankRestaurant,showRestaurant, receiptList, upvoteRestaurant}
 
 
 

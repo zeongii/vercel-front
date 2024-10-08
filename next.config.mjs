@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: false,
   swcMinify: true, // SWC 활성화
   experimental: {
     esmExternals: false, // ESM 외부 모듈 처리 비활성화 시도

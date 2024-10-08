@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import {fetchReceiptRegister} from "src/app/service/receipt/receipt.service";
+import nookies from "nookies";
 
 export default function InsertReceipt() {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -10,6 +11,10 @@ export default function InsertReceipt() {
     const [preview, setPreview] = useState<string | null>(null);
     const router = useRouter();
     const fileInputRef = useRef<HTMLInputElement | null>(null); // ref 생성
+
+    const cookies = nookies.get();
+    const id = cookies.userId;
+
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
@@ -36,12 +41,10 @@ export default function InsertReceipt() {
             formData.append('file', selectedFile);
 
             try {
-                const resp = await fetchReceiptRegister(formData);
+                const resp = await fetchReceiptRegister(formData, id);
+                console.log(resp);
 
-                if (resp.status === 200) {
-
-                    console.log(resp);
-                    const restaurantId = resp.data.id;
+                    const restaurantId = resp.id;
 
                     if (restaurantId == null) {
                         alert("이미 등록된 정보입니다");
@@ -49,7 +52,6 @@ export default function InsertReceipt() {
                     } else {
                         router.push(`/receipt/receiptRestaurant/${restaurantId}`);
                     }
-                }
 
             } catch (error) {
                 console.error('파일 업로드 오류:', error);

@@ -3,8 +3,8 @@ import {CountCost} from "src/app/model/dash.model";
 import {ReceiptModel} from "@/app/model/receipt.model";
 
 
-export const fetchReceiptRegister = async (formData: FormData): Promise<any> => {
-    const data = await receipt.receiptRegister(formData);
+export const fetchReceiptRegister = async (formData: FormData, id: string): Promise<any> => {
+    const data = await receipt.receiptRegister(formData, id);
     return data;
 };
 

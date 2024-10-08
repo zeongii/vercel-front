@@ -55,22 +55,22 @@ export default function MyPage() {
                 setUser(storedUser);
             }
 
-            // id를 사용하여 데이터를 가져오는 로직
-            const fetchData = async () => {
-                const countData = await fetchShowCount();
-                setCount(countData);
-
-                const regionData = await fetchShowArea();
-                setRegion(regionData);
-
-                const restaurantData = await fetchShowRankByAge(id);  // id 사용
-                setRestaurant(restaurantData);
-
-                const postData = await fetchPostList(id);  // id 사용
-                setPost(postData);
-            };
-
-            fetchData();
+            // // id를 사용하여 데이터를 가져오는 로직
+            // const fetchData = async () => {
+            //     const countData = await fetchShowCount();
+            //     setCount(countData);
+            //
+            //     const regionData = await fetchShowArea();
+            //     setRegion(regionData);
+            //
+            //     const restaurantData = await fetchShowRankByAge(id);  // id 사용
+            //     setRestaurant(restaurantData);
+            //
+            //     const postData = await fetchPostList(id);  // id 사용
+            //     setPost(postData);
+            // };
+            //
+            // fetchData();
         }
     }, []);
 

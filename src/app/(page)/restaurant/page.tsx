@@ -19,25 +19,8 @@ export default function Home() {
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [modalRestaurant, setModalRestaurant] = useState<RestaurantModel | null>(null);
 
-    useEffect(() => {
 
-        const loadRestaurant = async () => {
-            try {
-                const restaurantData = await fetchRestaurantOne(8);
-                console.log(restaurantData);
-                setModalRestaurant(restaurantData);
-                setIsModalOpen(true);
-            } catch (error) {
-                console.error("Error fetching restaurant:", error);
-                setIsModalOpen(false);
-            }
-        };
-
-        loadRestaurant();
-    }, []);
 
     const handleFilterChange = (tags: string[], categories: string[]) => {
         setSelectedTags(tags);
@@ -115,29 +98,6 @@ export default function Home() {
                                 )}
                             </div>
                             <ScrollToTop />
-                            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                                {modalRestaurant ? (
-                                    <div className={"text-center"}>
-                                        <h5></h5>
-                                        <h1>오늘 이 음식점 어때요?</h1>
-                                        <h2 className="text-xl font-bold">{modalRestaurant.name}</h2>
-
-                                        <img
-                                            src={modalRestaurant.thumbnailImageUrl || '/default-thumbnail.jpg'}
-                                            alt={modalRestaurant.name}
-                                            className="w-full h-48 object-cover"
-                                        />
-                                        <p className="mt-2">주소: {modalRestaurant.address}</p>
-                                        <p className="mt-2">전화번호: {modalRestaurant.tel}</p>
-                                        <p className="mt-2">유형: {modalRestaurant.type}</p>
-                                        <Link href={`/restaurant/${modalRestaurant.id}`}><button className="mt-4 bg-orange-400 text-white py-2 px-4 rounded">음식점으로 이동</button></Link>
-
-                                    </div>
-
-                                ) : (
-                                    <p>로딩 중...</p>
-                                )}
-                            </Modal>
                         </div>
                     </div>
                 </div>

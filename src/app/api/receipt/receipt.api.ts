@@ -4,9 +4,9 @@ import {CountCost} from "src/app/model/dash.model";
 import {ReceiptModel} from "@/app/model/receipt.model";
 
 
-const receiptRegister = async (formData: FormData): Promise<any> => {
+const receiptRegister = async (formData: FormData, id: string): Promise<any> => {
     try {
-        const resp = await strategy.POST(`${api.receipt}/insert`, formData);
+        const resp = await strategy.POST(`${api.receipt}/insert/${id}`, formData);
         return resp.data;
     } catch (error) {
         console.error("Failed to register receipt:", error);
