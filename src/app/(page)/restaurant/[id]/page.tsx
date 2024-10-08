@@ -204,7 +204,7 @@ export default function Restaurant() {
                     </>
                 )}
 
-                <div style={{ borderTop: '1px solid #e0e0e0' }} className='my-30'>
+                <div style={{ borderTop: '1px solid #e0e0e0' }} className='my-15'>
                     <PostList restaurantId={Number(id)} />
                 </div>
             </div>

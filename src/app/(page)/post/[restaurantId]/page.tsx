@@ -3,7 +3,7 @@
 import React, { FormEvent, useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
+import { Autoplay, Navigation } from 'swiper/modules';
 import 'swiper/css/bundle';
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import 'swiper/css';
@@ -45,10 +45,12 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentImg, setCurrentImg] = useState<string>('');
     const [sort, setSort] = useState<'date' | 'rating' | 'likes'>('date');
+    const [visible, setVisible] = useState(2);
     const [reportingPostId, setReportingPostId] = useState<number | null>(null);
     const [reportReason, setReportReason] = useState<string>("");
     const router = useRouter();
     const currentUserId = nookies.get().userId;
+    const nickname = localStorage.getItem('nickname') || '';
 
     // 신고하기
     const reportReasons = [
@@ -95,7 +97,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                 imageURLs.forEach(url => {
                     updatedDetails.push({ postId: data.post.id, url });
                 });
-    
+
             }
             setImages(updatedImages);
             setImgDetails(updatedDetails);
@@ -137,22 +139,18 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const closeModal = () => {
         setIsOpen(false);
     }
-    useEffect(() => {
-  console.log("Current imgDetails:", imgDetails);
-  console.log("Current allImages:", allImages);
-}, [imgDetails, allImages]);
 
     const handleDelete = async (postId: number) => {
         if (window.confirm("게시글을 삭제하시겠습니까?")) {
             const success = await postService.remove(postId);
-    
+
             if (success) {
                 alert("게시글이 삭제되었습니다.");
                 setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
 
-                setImages((prevImages)=> {
-                    const updatedImages ={...prevImages};
-                    delete updatedImages[postId]; 
+                setImages((prevImages) => {
+                    const updatedImages = { ...prevImages };
+                    delete updatedImages[postId];
                     return updatedImages;
                 })
 
@@ -160,7 +158,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                 setImgDetails(updatedDetails);
 
                 setAllImages(updatedDetails.map((detail) => detail.url));
-    
+
                 router.push(`/restaurant/${restaurantId}`);
             }
         }
@@ -204,7 +202,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
             alert('댓글을 입력하세요.');
             return;
         }
-        const result = await replyService.submit(postId, replyContent, currentUserId, replyToggles);
+        const result = await replyService.submit(postId, replyContent, currentUserId, nickname, replyToggles);
 
         if (result && result.success) {
             const { newReply } = result;
@@ -312,6 +310,12 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
         }
     };
 
+    // View More 
+    const handleViewMore = () => {
+        setVisible((prevCount) => prevCount + 2);
+    }
+    const visiblePosts = posts.slice(0, visible);
+
     // 신고하기
     const postReport = async (postId: number) => {
         const selectedReason = reportReason;
@@ -407,6 +411,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                     spaceBetween={16}
                                     slidesPerView={3}
                                     modules={[Navigation]}
+                                    navigation
                                     breakpoints={{
                                         576: { slidesPerView: 4, spaceBetween: 16, },
                                         640: { slidesPerView: 5, spaceBetween: 16, },
@@ -428,6 +433,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                             />
                                         </SwiperSlide>
                                     ))}
+
                                 </Swiper>
                                 <Modal
                                     isOpen={isOpen} onClose={closeModal} closeButton={false}>
@@ -656,8 +662,11 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                 </div>
                             ))}
                         </>
-
-                        <div className="text-button more-review-btn text-center mt-2 underline">View More Comments</div>
+                        {visible < posts.length && (
+                            <div className="text-button more-review-btn text-center mt-2 underline" onClick={handleViewMore}>
+                                View More Comments
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
