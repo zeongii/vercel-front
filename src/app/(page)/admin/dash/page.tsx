@@ -19,14 +19,12 @@ import {
 } from "chart.js";
 import styles from "src/css/mypage.module.css";
 import {Bar} from "react-chartjs-2";
-import MyCalendar from "src/app/(page)/user/calendar/[id]/page";
 import Modal from "src/app/components/Modal";
 import ShowOpinion from "src/app/(page)/admin/showOpinion/page";
 import DashBoard from "src/app/(page)/admin/dashboard/page";
 import {fetchReportCountAll, fetchReportList} from "src/app/service/report/report.service";
 import {ReportModel} from "src/app/model/report.model";
-import {fetchAllUsers} from "@/app/api/user/user.api";
-import {User} from "@/app/model/user.model";
+import UserList from "@/app/(page)/user/userList/page";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -35,12 +33,8 @@ export default function AdminDash() {
     const [count, setCount] = useState<CountItem[]>([]);
     const [activeTab, setActiveTab] = useState<string | undefined>('user')
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [reportList, setReportList] = useState<ReportCountModel[]>([]);
-    const [user, setUser] = useState<User[]>([]);
-
-
-
-
+    const [reportCountList, setReportCountList] = useState<ReportCountModel[]>([]);
+    const [reportList, setReportList] = useState<ReportModel[]>([]);
 
 
     useEffect(() => {
@@ -50,12 +44,17 @@ export default function AdminDash() {
         };
         countList();
 
-        const userList = async() => {
-            const data = await fetchAllUsers();
-            setUser(data);
-            console.log(data)
+        const showCountReport = async () => {
+            const data = await fetchReportCountAll();
+            setReportCountList(data);
         }
-        userList();
+        showCountReport()
+
+        const showReport = async () => {
+            const data = await fetchReportList();
+            setReportList(data);
+        }
+        showReport();
 
 
     }, []);
@@ -74,14 +73,6 @@ export default function AdminDash() {
             }
         ],
     };
-
-    useEffect(() => {
-        const showReport = async () => {
-            const data = await fetchReportCountAll();
-            setReportList(data);
-        }
-        showReport()
-    }, []);
 
 
     // const countByPostId = (postId: number) => {
@@ -210,47 +201,8 @@ export default function AdminDash() {
                                             />
                                         </div>
                                     </div>
-                                    <h6 className="heading6"> MY POST </h6>
-                                    <div className="list overflow-x-auto w-full mt-5">
-                                        <table className="w-full max-[1400px]:w-[700px] max-md:w-[700px]">
-                                            <thead className="border-b border-line">
-                                            <tr>
-                                                <th scope="col"
-                                                    className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Order
-                                                </th>
-                                                <th scope="col"
-                                                    className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Products
-                                                </th>
-                                                <th scope="col"
-                                                    className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Pricing
-                                                </th>
-                                                <th scope="col"
-                                                    className="pb-3 text-right text-sm font-bold uppercase text-secondary whitespace-nowrap">Status
-                                                </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr className="item duration-300 border-b border-line">
-                                                <th scope="row" className="py-3 text-left">
-                                                    <strong className="text-title">postId</strong>
-                                                </th>
-                                                <td className="py-3">
-                                                    <div className="info flex flex-col">
-                                                        <strong
-                                                            className="product_name text-button">postcontent</strong>
-                                                        <span className="product_tag caption1 text-secondary"></span>
-                                                    </div>
-                                                </td>
-                                                <td className="py-3 price">restaurantname</td>
-                                                <td className="py-3 text-right">
-                                                    <span
-                                                        className="tag px-4 py-1.5 rounded-full bg-opacity-10 bg-yellow text-yellow caption1 font-semibold">뭐넣지</span>
-                                                </td>
-                                            </tr>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    <h6 className="heading6">UserList</h6>
+                                    <UserList/>
                                 </div>
                             </div>
                             <div
@@ -263,15 +215,12 @@ export default function AdminDash() {
                                             className="py-3 text-sm font-bold uppercase text-secondary">postId
                                         </th>
                                         <th scope="col"
-                                            className="py-3 text-sm font-bold uppercase text-secondary">content
-                                        </th>
-                                        <th scope="col"
                                             className="py-3 text-sm font-bold uppercase text-secondary">postCount
                                         </th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {reportList.map((r) => (
+                                    {reportCountList.map((r) => (
                                         <tr
                                             key={r.postId}
                                             className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
@@ -293,8 +242,6 @@ export default function AdminDash() {
                                     ))}
                                     </tbody>
                                 </table>
-
-
                             </div>
                             <div
                                 className={`tab_opinion text-content w-full text-center p-7 mt-7 border border-line rounded-xl ${activeTab === 'opinion' ? 'block' : 'hidden'}`}>
