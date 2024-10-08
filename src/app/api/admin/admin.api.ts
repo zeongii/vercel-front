@@ -33,7 +33,7 @@ const showRankRestaurant = async (): Promise<RestaurantList[]> => {
     }
 }
 
-const showRestaurant = async (id: number): Promise<RestaurantModel> => {
+const showRestaurant = async (id: string): Promise<RestaurantModel> => {
     try {
         const response = await strategy.GET(`${api.admin}/randomByUserId/${id}`);
         return response.data; // 데이터 반환

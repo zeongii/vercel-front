@@ -21,7 +21,7 @@ export const fetchShowRestaurant = async (): Promise<RestaurantList[]> => {
     return data;
 }
 
-export const fetchRestaurantOne = async (id: number): Promise<RestaurantModel> => {
+export const fetchRestaurantOne = async (id: string): Promise<RestaurantModel> => {
     const data: RestaurantModel = await admin.showRestaurant(id);
     return data;
 }

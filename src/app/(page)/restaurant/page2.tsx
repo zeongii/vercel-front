@@ -9,6 +9,7 @@ import ScrollToTop from '@/app/components/ScrollToTop';
 import Product from '@/app/components/Product';
 import Link from 'next/link';
 import nookies from 'nookies';
+import { fetchRestaurantOne } from '@/app/service/admin/admin.service';
 
 interface Props {
     start: number;
@@ -20,8 +21,30 @@ const TabFeatures: React.FC<Props> = ({ start, limit }) => {
     const [restaurantsByDate, setRestaurantsByDate] = useState<RestaurantModel[]>([]);
     const [restaurantsByFriend, setRestaurantsByFriend] = useState<RestaurantModel[]>([]);
     const [restaurantsByUnique, setRestaurantsByUnique] = useState<RestaurantModel[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [modalRestaurant, setModalRestaurant] = useState<RestaurantModel | null>(null);
+
     const cookies = nookies.get();
     const userId = cookies.userId;
+
+    useEffect(() => {
+
+        const loadRestaurant = async () => {
+            try {
+                const restaurantData = await fetchRestaurantOne(userId);
+                console.log(restaurantData);
+                setModalRestaurant(restaurantData);
+                setIsModalOpen(true);
+            } catch (error) {
+                console.error("Error fetching restaurant:", error);
+                setIsModalOpen(false);
+            }
+        };
+
+        loadRestaurant();
+    }, []);
+
+    
 
     useEffect(() => {
         const fetchRestaurants = async () => {
