@@ -24,14 +24,14 @@ import { ReportModel } from 'src/app/model/report.model';
 import Modal from 'src/app/components/Modal';
 import { fetchReportRegister } from '@/app/service/report/report.service';
 import { PostListProps } from '@/app/model/props';
-import nookies from "nookies";
+import nookies from 'nookies';
 
-
-const PostList: React.FC<PostListProps> = ({restaurantId}) => {
+const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const [posts, setPosts] = useState<PostModel[]>([]);
     const [restaurant, setRestaurant] = useState<RestaurantModel | null>(null);
     const [images, setImages] = useState<{ [key: number]: string[] }>({});
     const [allImages, setAllImages] = useState<string[]>([]);
+    const [imgDetails, setImgDetails] = useState<{ postId: number; url: string }[]>([]);
     const [likedPost, setLikedPosts] = useState<number[]>([]);
     const [likeCount, setLikeCounts] = useState<{ [key: number]: number }>({});
     const [replyToggles, setReplyToggles] = useState<{ [key: number]: boolean }>({});
@@ -48,9 +48,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
     const [reportingPostId, setReportingPostId] = useState<number | null>(null);
     const [reportReason, setReportReason] = useState<string>("");
     const router = useRouter();
-    const cookies = nookies.get();
-    const id = cookies.userId;
-    console.log(id)
+    const currentUserId = nookies.get().userId;
 
     // 신고하기
     const reportReasons = [
@@ -89,11 +87,18 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
             );
 
             const updatedImages: { [key: number]: string[] } = {};
+            const updatedDetails: { postId: number; url: string }[] = [];
+
             for (const data of postData) {
                 const imageURLs = await imageService.getByPostId(data.post.id);
                 updatedImages[data.post.id] = imageURLs;
+                imageURLs.forEach(url => {
+                    updatedDetails.push({ postId: data.post.id, url });
+                });
+
             }
             setImages(updatedImages);
+            setImgDetails(updatedDetails);
 
         } catch (error) {
             console.error("loadPosts error:", error);
@@ -139,8 +144,20 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
 
             if (success) {
                 alert("게시글이 삭제되었습니다.");
-                setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
-                router.push(`/post/${restaurantId}`);
+                setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+
+                setImages((prevImages)=> {
+                    const updatedImages ={...prevImages};
+                    delete updatedImages[postId];
+                    return updatedImages;
+                })
+
+                const updatedDetails = imgDetails.filter((detail) => detail.postId !== postId);
+                setImgDetails(updatedDetails);
+
+                setAllImages(updatedDetails.map((detail) => detail.url));
+
+                router.push(`/restaurant/${restaurantId}`);
             }
         }
     };
@@ -183,7 +200,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
             alert('댓글을 입력하세요.');
             return;
         }
-        const result = await replyService.submit(postId, replyContent, id, replyToggles);
+        const result = await replyService.submit(postId, replyContent, currentUserId, replyToggles);
 
         if (result && result.success) {
             const { newReply } = result;
@@ -229,7 +246,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
 
     // 수정내용 저장 (서버연결)
     const replyEditSave = async (replyId: number, postId: number) => {
-        const updateReply = await replyService.editSave(replyId, postId, editInput[replyId], id);
+        const updateReply = await replyService.editSave(replyId, postId, editInput[replyId], currentUserId);
         if (updateReply) {
             setReplies((prevReplies) => ({
                 ...prevReplies,
@@ -274,8 +291,13 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
     };
 
     // 좋아요 & 취소 & count
-    const handleLike = async (postId: number) => {
-        const result = await upvoteService.toggle(postId, id, likedPost);
+    const handleLike = async (postId: number, postUserId: string) => {
+        if (postUserId === currentUserId) {
+            window.alert("본인의 리뷰에는 좋아요를 누를 수 없어요.");
+            return;
+        }
+
+        const result = await upvoteService.toggle(postId, currentUserId, likedPost);
 
         if (result) {
             setLikedPosts(result.likedPost);
@@ -296,7 +318,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
         }
 
         const reportModel: ReportModel = {
-            userId: id,
+            userId: currentUserId,
             postId: postId,
             reason: selectedReason,
             entryDate: ''
@@ -331,9 +353,9 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
             <div className="product-detail default" style={{ marginTop: '30px' }}>
                 <div className="review-block md:py-20 py-10 bg-surface">
                     <div className="heading flex items-center justify-between flex-wrap gap-4">
-                        <div className="heading4">{`${restaurant?.name}`} 
+                        <div className="heading4">{`${restaurant?.name}`}
                             <span style={{ color: '#F46119', fontSize: 'inherit', fontWeight: 'inherit' }} className='ml-2'>Review</span>
-                            </div>
+                        </div>
                         <button
                             className='button-main custom-button'
                             onClick={() => router.push(`/post/register/${restaurantId}`)}
@@ -469,8 +491,8 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
                                                 <p className='ml-2'>{p.averageRating.toFixed(1)} / 5</p>
                                             </div>
                                             <PostOptions
-                                                postUserId={p.userId ?? 0}
-                                                currentId={id}
+                                                postUserId={p.userId ?? ''}
+                                                currentId={currentUserId}
                                                 onEdit={() => { router.push(`/post/${restaurantId}/update/${p.id}`) }}
                                                 onDelete={() => handleDelete(p.id)}
                                                 onReport={() => handleReportClick(p.id)}
@@ -544,7 +566,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
                                         <div className="action mt-1">
                                             <div className="flex items-center gap-4">
                                                 <button
-                                                    onClick={() => handleLike(p.id)}
+                                                    onClick={() => handleLike(p.id, p.userId)}
                                                     className="like-btn flex items-center gap-1 cursor-pointer">
                                                     <Icon.Heart
                                                         size={18}
@@ -586,7 +608,7 @@ const PostList: React.FC<PostListProps> = ({restaurantId}) => {
                                                                             </div>
                                                                             <div className="flex items-center">
                                                                                 <span className="text-gray-500 mr-4">{formatDate(reply.entryDate)}</span>
-                                                                                {reply.userId === id && (
+                                                                                {reply.userId === currentUserId && (
                                                                                     <div className="flex space-x-2">
                                                                                         <button
                                                                                             className="text-xs bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-3 border border-blue-500 hover:border-transparent rounded"

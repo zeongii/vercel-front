@@ -1,3 +1,5 @@
+import { ImageModel } from "./image.model";
+
 //src/app/model/post.model.ts
 export interface PostModel {
   id: number;  
@@ -11,8 +13,8 @@ export interface PostModel {
   tags?: string[]; 
   images: ImageModel[];
   restaurantId?: number;
-  userId?: number;
-  nickname?: string;
+  userId: string;
+  nickname: string;
 }
 
 export const initialPost: PostModel = {
@@ -27,7 +29,7 @@ export const initialPost: PostModel = {
   tags: [], 
   images: [],
   restaurantId: 0,
-  userId: 0,
+  userId: '',
   nickname:''
 }
 

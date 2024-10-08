@@ -3,25 +3,12 @@ import { getLikeCount, upvote} from "src/app/api/upvote/upvote.api";
 import { PostModel } from "src/app/model/post.model";
 import { imageService } from "../image/image.service";
 import { image } from "src/app/api/image/image.api";
-import {NoticeModel} from "src/app/model/notice.model";
-import {notice} from "src/app/api/notice/notice.api";
 import {UserPostModel} from "src/app/model/dash.model";
+import nookies from 'nookies';
 
-const update = async (postId: number, updatePost: PostModel, images: File[], imagesToDelete: number[]): Promise<void> => {
+const update = async (formData: FormData): Promise<void> => {
   try {
-    await post.update(postId, updatePost);
-
-    if (imagesToDelete.length > 0) {
-      const imageIds = await image.getByImgId(postId);
-      for (const imageId of imagesToDelete) {
-        if (imageIds.includes(imageId)) {
-          await image.remove(imageId);
-        }
-      }
-    }
-    if (images.length > 0) {
-      await image.upload(postId, images);
-    }
+    await post.update(formData);
   } catch (error) {
     console.error('Error in updatePostService:', error);
     throw error;
@@ -65,7 +52,8 @@ const fetchPost = async (restaurantId: number) => {
     const posts: PostModel[] = await post.getByRestaurant(restaurantId);
 
     const likeStatusPromise = posts.map(async (post) => {
-      const liked = await upvote.hasLiked({ id: 0, giveId: 1, postId: post.id, haveId: 0 });
+      const userId = nookies.get().userId;
+      const liked = await upvote.hasLiked({ id: 0, giveId: userId, postId: post.id});
       const count = await getLikeCount(post.id);
       const images = await imageService.getByPostId(post.id);
 

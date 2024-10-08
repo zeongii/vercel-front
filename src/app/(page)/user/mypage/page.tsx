@@ -14,6 +14,8 @@ import MyCalendar from "src/app/(page)/user/calendar/[id]/page";
 import MyWallet from "src/app/(page)/user/wallet/[id]/page";
 import nookies from "nookies";
 import {fetchPostList} from "@/app/service/post/post.service";
+import { useSearchContext } from "@/app/components/SearchContext";
+import { useRouter } from "next/navigation";
 
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale);
@@ -34,12 +36,17 @@ export default function MyPage() {
     const [activeTab, setActiveTab] = useState<string | undefined>('myPage')
     const [user, setUser] = useState<User | null>(null);
 
+    const { searchTerm } = useSearchContext();
+    const router = useRouter();
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
+
     useEffect(() => {
         const countList = async () => {
             const data = await fetchShowCount();
             setCount(data);
         };
         countList();
+        setIsInitialLoad(false);
     }, []);
 
 
@@ -81,6 +88,13 @@ export default function MyPage() {
             fetchData();
         }
     }, []);
+
+    useEffect(() => {
+        if (searchTerm && !isInitialLoad) {
+            router.push(`/?search=${searchTerm}`);
+        }
+    }, [searchTerm]);
+
 
 
     const [content, setContent] = useState("");

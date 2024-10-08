@@ -37,7 +37,7 @@ const submit = async (postId: number, replyContent: string, currentId: string, r
   }
 };
 
-const editSave = async (replyId: number, postId: number, updateContent: string, currentUserId: number) => {
+const editSave = async (replyId: number, postId: number, updateContent: string, currentUserId: string) => {
   const replyData = {
     ...initialReply, 
     id: replyId, 
