@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import {fetchShowCount} from "src/app/service/admin/admin.service";
-import {CountItem} from "src/app/model/dash.model";
+import {CountItem, ReportCountModel} from "src/app/model/dash.model";
 import {
     ArcElement,
     BarElement,
@@ -19,12 +19,12 @@ import {
 } from "chart.js";
 import styles from "src/css/mypage.module.css";
 import {Bar} from "react-chartjs-2";
-import MyCalendar from "src/app/(page)/user/calendar/[id]/page";
 import Modal from "src/app/components/Modal";
 import ShowOpinion from "src/app/(page)/admin/showOpinion/page";
 import DashBoard from "src/app/(page)/admin/dashboard/page";
-import {fetchReportList} from "src/app/service/report/report.service";
+import {fetchReportCountAll, fetchReportList} from "src/app/service/report/report.service";
 import {ReportModel} from "src/app/model/report.model";
+import UserList from "@/app/(page)/user/userList/page";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -33,20 +33,30 @@ export default function AdminDash() {
     const [count, setCount] = useState<CountItem[]>([]);
     const [activeTab, setActiveTab] = useState<string | undefined>('user')
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [reportCountList, setReportCountList] = useState<ReportCountModel[]>([]);
     const [reportList, setReportList] = useState<ReportModel[]>([]);
-
-
-
-
 
 
     useEffect(() => {
         const countList = async () => {
             const data = await fetchShowCount();
             setCount(data);
-            console.log(role)
         };
         countList();
+
+        const showCountReport = async () => {
+            const data = await fetchReportCountAll();
+            setReportCountList(data);
+        }
+        showCountReport()
+
+        const showReport = async () => {
+            const data = await fetchReportList();
+            setReportList(data);
+        }
+        showReport();
+
+
     }, []);
 
 
@@ -64,20 +74,12 @@ export default function AdminDash() {
         ],
     };
 
-    useEffect(() => {
-        const showReport = async () => {
-            const data = await fetchReportList();
-            setReportList(data);
-        }
-        showReport()
-    }, []);
 
-
-    const countByPostId = (postId: number) => {
-        return reportList.reduce((acc, report:ReportModel) => {
-            return report.postId === postId ? acc + 1 : acc;
-        }, 0);
-    };
+    // const countByPostId = (postId: number) => {
+    //     return reportList.reduce((acc, report:ReportModel) => {
+    //         return report.postId === postId ? acc + 1 : acc;
+    //     }, 0);
+    // };
 
     const role = localStorage.getItem('role');
 
@@ -93,7 +95,7 @@ export default function AdminDash() {
     return (
         <>
 
-            <div className="profile-block md:py-20 py-10 mt-10">
+            <div className="profile-block md:py-20 py-10 md:px-8 px-4 mt-10">
                 <div className="container">
                     <div className="content-main flex gap-y-8 max-md:flex-col w-full">
                         <div className="left md:w-1/3 xl:pr-[3.125rem] lg:pr-[28px] md:pr-[16px]">
@@ -199,47 +201,8 @@ export default function AdminDash() {
                                             />
                                         </div>
                                     </div>
-                                    <h6 className="heading6"> MY POST </h6>
-                                    <div className="list overflow-x-auto w-full mt-5">
-                                        <table className="w-full max-[1400px]:w-[700px] max-md:w-[700px]">
-                                            <thead className="border-b border-line">
-                                            <tr>
-                                                <th scope="col"
-                                                    className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Order
-                                                </th>
-                                                <th scope="col"
-                                                    className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Products
-                                                </th>
-                                                <th scope="col"
-                                                    className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Pricing
-                                                </th>
-                                                <th scope="col"
-                                                    className="pb-3 text-right text-sm font-bold uppercase text-secondary whitespace-nowrap">Status
-                                                </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr className="item duration-300 border-b border-line">
-                                                <th scope="row" className="py-3 text-left">
-                                                    <strong className="text-title">postId</strong>
-                                                </th>
-                                                <td className="py-3">
-                                                    <div className="info flex flex-col">
-                                                        <strong
-                                                            className="product_name text-button">postcontent</strong>
-                                                        <span className="product_tag caption1 text-secondary"></span>
-                                                    </div>
-                                                </td>
-                                                <td className="py-3 price">restaurantname</td>
-                                                <td className="py-3 text-right">
-                                                    <span
-                                                        className="tag px-4 py-1.5 rounded-full bg-opacity-10 bg-yellow text-yellow caption1 font-semibold">뭐넣지</span>
-                                                </td>
-                                            </tr>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    <h6 className="heading6">UserList</h6>
+                                    <UserList/>
                                 </div>
                             </div>
                             <div
@@ -252,33 +215,33 @@ export default function AdminDash() {
                                             className="py-3 text-sm font-bold uppercase text-secondary">postId
                                         </th>
                                         <th scope="col"
-                                            className="py-3 text-sm font-bold uppercase text-secondary">reason
-                                        </th>
-                                        <th scope="col"
                                             className="py-3 text-sm font-bold uppercase text-secondary">postCount
                                         </th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {reportList.map((r) => (
-                                        <tr key={r.userId}
-                                            className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer">
-                                            <td className="py-3">
-                                                <strong className="text-title">{r.postId}</strong>
-                                            </td>
-                                            <td className="py-3">
+                                    {reportCountList.map((r) => (
+                                        <tr
+                                            key={r.postId}
+                                            className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
+                                        >
+                                            <Link href={`/post/detail/${r.postId}`} className="text-border">
+                                                <td className="py-3">
+                                                    <strong className="text-title">{r.postId}</strong>
+                                                </td>
+                                            </Link>
+
+                                                <td className="py-3">
                                                     <div className="info flex flex-col">
-                                                        <strong className="product_name text-button">{r.reason}</strong>
+                                                        <strong className="product_name text-button">{r.content}</strong>
                                                         <span className="product_tag caption1 text-secondary"></span>
                                                     </div>
-                                            </td>
-                                            <td className="py-3">{countByPostId(r.postId)}</td>
+                                                </td>
+                                                <td className="py-3">{r.count}</td>
                                         </tr>
                                     ))}
                                     </tbody>
                                 </table>
-
-
                             </div>
                             <div
                                 className={`tab_opinion text-content w-full text-center p-7 mt-7 border border-line rounded-xl ${activeTab === 'opinion' ? 'block' : 'hidden'}`}>

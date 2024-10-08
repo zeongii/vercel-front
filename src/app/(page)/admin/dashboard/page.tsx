@@ -113,6 +113,17 @@ const DashBoard = () => {
         ],
     };
 
+    const role = localStorage.getItem('role');
+
+    if (role !== 'ADMIN') {
+        return (
+            <div className="unauthorized text-center mt-5">
+                <h2>권한이 없습니다</h2>
+                <p>You do not have permission to view this content.</p>
+            </div>
+        );
+    }
+
 
     return (
         <>
@@ -138,7 +149,6 @@ const DashBoard = () => {
                         </div>
                     </div>
                 </div>
-
                 <div className={styles.col}>
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>좋아요를 많이 받은 포스팅의 음식점 랭킹</div>
@@ -161,10 +171,7 @@ const DashBoard = () => {
                     </div>
                 </div>
             </div>
-
-
             <div className={styles.row}>
-
                 <div className={styles.col}>
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>음식점 많은 지역 랭킹</div>
@@ -192,7 +199,6 @@ const DashBoard = () => {
                         </div>
                     </div>
                 </div>
-
                 <div className={styles.col}>
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>월별 영수증 리뷰 사용 횟수</div>

@@ -1,6 +1,7 @@
 import {notice} from "src/app/api/notice/notice.api";
 import {ReportModel} from "src/app/model/report.model";
 import {report} from "src/app/api/report/report.api";
+import {ReportCountModel} from "@/app/model/dash.model";
 
 export const fetchReportList = async () => {
     const data: ReportModel[] = await report.reportAll();
@@ -18,4 +19,9 @@ export const fetchReportRegister = async (reportModel: ReportModel) => {
         throw error;
     }
 
+}
+
+export const fetchReportCountAll = async () => {
+    const data: ReportCountModel[] = await report.reportCountAll();
+    return data;
 }

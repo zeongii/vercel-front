@@ -26,3 +26,9 @@ export interface UserPostModel {
     entryDate: string;
     upvoteCount: number;
 }
+
+export interface ReportCountModel {
+    postId: number;
+    content: string;
+    count: number;
+}

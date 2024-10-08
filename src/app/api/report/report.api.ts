@@ -24,4 +24,17 @@ const reportRegister = async (report: ReportModel): Promise<ReportModel[]> => {
     }
 }
 
-export const report = {reportAll, reportRegister}
+const reportCountAll = async () => {
+    try {
+        const response = await strategy.GET(`${api.report}/reportAll`);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Failed to fetch group details");
+        throw new Error("Failed to fetch notice details");
+    }
+}
+
+
+
+export const report = {reportAll, reportRegister, reportCountAll}
