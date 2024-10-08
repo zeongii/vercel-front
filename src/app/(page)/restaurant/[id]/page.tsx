@@ -1,11 +1,15 @@
-"use client";
-import { useParams, usePathname, useRouter } from 'next/navigation';
+'use client';
+import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useSearchContext } from 'src/app/components/SearchContext';
 import { getRestaurantDetails } from 'src/app/service/restaurant/restaurant.service';
 import Star from '../../../components/Star';
 import PostList from '../../post/[restaurantId]/page';
-import { serialize } from 'v8';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Thumbs, Autoplay } from 'swiper/modules';
+import 'swiper/css/bundle';
+import * as Icon from "@phosphor-icons/react/dist/ssr";
+import Image from 'next/image'
 
 
 
@@ -14,21 +18,15 @@ export default function Restaurant() {
     const { searchTerm } = useSearchContext();
     const [restaurant, setRestaurant] = useState<RestaurantModel | null>(null);
     const [loading, setLoading] = useState(true);
-    const [filteredRestaurants, setFilteredRestaurants] = useState<RestaurantModel[]>([]);
-    const [allAverage, setAllAverage] = useState<number | null>(null);
-    const [tags, setTags] = useState<string[]>([]);
+    const [openPopupImg, setOpenPopupImg] = useState(false);
     const router = useRouter();
-    // [id]로 처음 이동시 바로 홈 검색결과로 넘어가는 것을 방지하기 위해서
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
-
             try {
-                const { restaurants, allAverage, tags } = await getRestaurantDetails(Number(id));
+                const { restaurants } = await getRestaurantDetails(Number(id));
                 setRestaurant(restaurants);
-                setAllAverage(allAverage);
-                setTags(tags);
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
@@ -41,7 +39,6 @@ export default function Restaurant() {
             fetchData();
         }
     }, [id]);
-
 
     useEffect(() => {
         if (restaurant && restaurant.address) {
@@ -87,8 +84,6 @@ export default function Restaurant() {
         }
     }, [restaurant]);
 
-
-
     useEffect(() => {
         if (searchTerm && !isInitialLoad) {
             router.push(`/?search=${searchTerm}`);
@@ -97,14 +92,11 @@ export default function Restaurant() {
 
 
 
-
     if (loading) return <div className="text-center py-4">Loading...</div>;
     if (!restaurant) return <div className="text-center py-4">Restaurant not found.</div>;
 
-
     const renderMenu = (menu: string) => {
         const menuItems = menu.split(/(?<=\d원),/).map(item => item.trim()).filter(item => item.length > 0);
-
         return (
             <div className="space-y-2">
                 {menuItems.map((item, index) => {
@@ -142,68 +134,79 @@ export default function Restaurant() {
     return (
         <div>
             <div className="container mx-auto px-4 py-4 bg-white shadow-lg rounded-lg">
-                {filteredRestaurants.length > 0 ? (
-                    <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                        {filteredRestaurants.map((res) => (
-                            <li key={res.id} onClick={() => router.push(`/restaurant/${res.id}`)} className="cursor-pointer">
-                                <img
-                                    src={res.thumbnailImageUrl || '/default-thumbnail.jpg'}
-                                    alt={res.name}
-                                    className="w-full h-64 object-cover"
-                                />
-                                <div className="p-4">
-                                    <h2 className="text-xl font-bold mb-2">{res.name}</h2>
-                                    <p className="text-gray-600">유형: {res.type}</p>
-                                    <p className="text-gray-600">주소: {res.address}</p>
-                                    <p className="text-gray-600">전화번호: {res.tel}</p>
-                                    <p className="text-gray-600">평점: ★ {res.rate}</p>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <>
-                        <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-4 shadow-md p-4 rounded-lg bg-gray-100">
-                            {restaurant.name}
-                        </h1>
-                        <div className="flex mb-4">
-                            <div className="w-2/3 pr-4">
-                                <div className="flex mb-4">
-                                    <img
-                                        src={restaurant.thumbnailImageUrl || '/default-thumbnail.jpg'}
+                <div className="product-detail default">
+                    <div className="featured-product md:py-20 py-10">
+                        <div className="container flex flex-col md:flex-row justify-between gap-y-6">
+                            <div className="list-img md:w-1/2 md:pr-[45px] w-full">
+                            <Swiper
+                                slidesPerView={1}
+                                spaceBetween={0}
+                                modules={[Thumbs, Autoplay]} 
+                                autoplay={{ delay: 2000, disableOnInteraction: false }}
+                                className="mySwiper2 rounded-2xl overflow-hidden"
+                            >
+                                <SwiperSlide onClick={() => setOpenPopupImg(true)}>
+                                    <Image
+                                        src={restaurant.thumbnailImageUrl  || '/default-image.jpg'}
+                                        width={1000}
+                                        height={1000}
                                         alt={restaurant.name}
-                                        style={{ width: '100%', height: '300px', objectFit: 'cover' }}
+                                        className="w-full aspect-[3/4] object-cover"
                                     />
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Image
+                                        src={restaurant.subImageUrl  || '/default-image.jpg' }  
+                                        width={1000}
+                                        height={1000}
+                                        alt={restaurant.name}
+                                        className="w-full aspect-[3/4] object-cover"
+                                    />
+                                </SwiperSlide>
+                            </Swiper>
+                            </div>
+                            <div className="product-infor md:w-1/2 w-full lg:pl-[15px] md:pl-2">
+                                <div className="caption2 text-secondary font-semibold uppercase">{restaurant.type}</div>
+                                <div className="heading4 mt-1">
+                                    {restaurant.name}
                                 </div>
-                                <div className="text-gray-700 text-lg"><strong>유형:</strong> {restaurant.type}</div>
-                                <div className="text-gray-700 text-lg"><strong>주소:</strong> {restaurant.address}</div>
-                                <div className="text-gray-700 text-lg"><strong>전화번호:</strong> {restaurant.tel}</div>
-                                <div className="text-gray-700 text-lg"><strong>[네이버 평점]</strong></div>
-                                <div className="flex items-center">
+                                <div className='desc text-secondary mt-3'>
+                                전화번호: {restaurant.tel}
+                                </div>
+                                <div className="flex items-center mt-2">
+                                    <br></br>
                                     {restaurant.rate != null && restaurant.rate !== 0 ? (
                                         <div className="flex items-center">
-                                            <Star w="w-6" h="h-6" readonly={true} rate={restaurant.rate} onChange={() => { }} />
+                                            네이버 평점 <Star w="w-6" h="h-6" readonly={true} rate={restaurant.rate} onChange={() => { }} />
                                             <p className="ml-2">{restaurant.rate.toFixed(1)} / 5</p>
                                         </div>
                                     ) : '등록된 평점이 없습니다'}
                                 </div>
-                                <strong className="text-lg mt-2">메뉴</strong>
-                                <div>{renderMenu(restaurant.menu)}</div>
-                                <strong className="text-lg">운영시간</strong>
-                                <div>{renderOperTime(restaurant.operation)}</div>
-                            </div>
-                            <div className="w-1/3 h-80 rounded-lg shadow-md mt-0">
-                                <div id="map" className="w-full h-full rounded-lg shadow-md mb-4"></div>
+                                <br></br>
+
+                                <div className="mt-4">
+                                    <strong className="text-lg">메뉴</strong>
+                                    <div>{renderMenu(restaurant.menu)}</div>
+                                </div>
+
+                                <br></br>
+                                <div className="mt-4">
+                                    <strong className="text-lg">운영시간</strong>
+                                    <div>{renderOperTime(restaurant.operation)}</div>
+                                </div>
                             </div>
                         </div>
-                    </>
-                )}
-
-                <div style={{ borderTop: '1px solid #e0e0e0' }} className='my-30'>
-                    <PostList restaurantId={Number(id)} />
+                        <div className="w-full h-96 rounded-lg shadow-md mt-6">
+                            <div id="map" className="w-full h-full rounded-lg"></div>
+                        </div>
+                        <div style={{ borderTop: '1px solid #e0e0e0' }} className='my-30'>
+                            <PostList restaurantId={Number(id)} />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     );
-};
 
+
+}
