@@ -25,6 +25,8 @@ import ShowOpinion from "src/app/(page)/admin/showOpinion/page";
 import DashBoard from "src/app/(page)/admin/dashboard/page";
 import {fetchReportList} from "src/app/service/report/report.service";
 import {ReportModel} from "src/app/model/report.model";
+import {fetchAllUsers} from "@/app/api/user/user.api";
+import {User} from "@/app/model/user.model";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -34,6 +36,7 @@ export default function AdminDash() {
     const [activeTab, setActiveTab] = useState<string | undefined>('user')
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [reportList, setReportList] = useState<ReportModel[]>([]);
+    const [user, setUser] = useState<User[]>([]);
 
 
 
@@ -44,9 +47,17 @@ export default function AdminDash() {
         const countList = async () => {
             const data = await fetchShowCount();
             setCount(data);
-            console.log(role)
         };
         countList();
+
+        const userList = async() => {
+            const data = await fetchAllUsers();
+            setUser(data);
+            console.log(data)
+        }
+        userList();
+
+
     }, []);
 
 
@@ -261,18 +272,23 @@ export default function AdminDash() {
                                     </thead>
                                     <tbody>
                                     {reportList.map((r) => (
-                                        <tr key={r.userId}
-                                            className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer">
-                                            <td className="py-3">
-                                                <strong className="text-title">{r.postId}</strong>
-                                            </td>
-                                            <td className="py-3">
+                                        <tr
+                                            key={r.userId}
+                                            className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
+                                        >
+                                            <Link href={`/post/detail/${r.postId}`} className="text-border">
+                                                <td className="py-3">
+                                                    <strong className="text-title">{r.postId}</strong>
+                                                </td>
+                                            </Link>
+
+                                                <td className="py-3">
                                                     <div className="info flex flex-col">
                                                         <strong className="product_name text-button">{r.reason}</strong>
                                                         <span className="product_tag caption1 text-secondary"></span>
                                                     </div>
-                                            </td>
-                                            <td className="py-3">{countByPostId(r.postId)}</td>
+                                                </td>
+                                                <td className="py-3">{countByPostId(r.postId)}</td>
                                         </tr>
                                     ))}
                                     </tbody>
