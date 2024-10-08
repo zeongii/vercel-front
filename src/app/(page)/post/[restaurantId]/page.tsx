@@ -49,7 +49,6 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const [reportReason, setReportReason] = useState<string>("");
     const router = useRouter();
     const currentUserId = nookies.get().userId;
-    const nickname = localStorage.getItem('nickname')
 
     // 신고하기
     const reportReasons = [
@@ -88,11 +87,18 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
             );
 
             const updatedImages: { [key: number]: string[] } = {};
+            const updatedDetails: { postId: number; url: string }[] = [];
+
             for (const data of postData) {
                 const imageURLs = await imageService.getByPostId(data.post.id);
                 updatedImages[data.post.id] = imageURLs;
+                imageURLs.forEach(url => {
+                    updatedDetails.push({ postId: data.post.id, url });
+                });
+    
             }
             setImages(updatedImages);
+            setImgDetails(updatedDetails);
 
         } catch (error) {
             console.error("loadPosts error:", error);
@@ -131,22 +137,30 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const closeModal = () => {
         setIsOpen(false);
     }
+    useEffect(() => {
+  console.log("Current imgDetails:", imgDetails);
+  console.log("Current allImages:", allImages);
+}, [imgDetails, allImages]);
 
     const handleDelete = async (postId: number) => {
         if (window.confirm("게시글을 삭제하시겠습니까?")) {
             const success = await postService.remove(postId);
-
+    
             if (success) {
                 alert("게시글이 삭제되었습니다.");
-                setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+                setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+
+                setImages((prevImages)=> {
+                    const updatedImages ={...prevImages};
+                    delete updatedImages[postId]; 
+                    return updatedImages;
+                })
 
                 const updatedDetails = imgDetails.filter((detail) => detail.postId !== postId);
                 setImgDetails(updatedDetails);
 
-                setAllImages((prevImages) =>
-                    prevImages.filter((url) => !updatedDetails.some((detail) => detail.url === url))
-                );
-
+                setAllImages(updatedDetails.map((detail) => detail.url));
+    
                 router.push(`/restaurant/${restaurantId}`);
             }
         }
@@ -282,7 +296,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
 
     // 좋아요 & 취소 & count
     const handleLike = async (postId: number, postUserId: string) => {
-        if(postUserId === currentUserId) {
+        if (postUserId === currentUserId) {
             window.alert("본인의 리뷰에는 좋아요를 누를 수 없어요.");
             return;
         }
