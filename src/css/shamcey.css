@@ -618,8 +618,6 @@ pre code {
 .container {
   margin-right: auto;
   margin-left: auto;
-  padding-right: 15px;
-  padding-left: 15px;
   width: 100%;
 }
 @media (min-width: 576px) {

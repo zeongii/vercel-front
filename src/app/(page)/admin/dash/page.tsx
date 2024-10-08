@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import {fetchShowCount} from "src/app/service/admin/admin.service";
-import {CountItem} from "src/app/model/dash.model";
+import {CountItem, ReportCountModel} from "src/app/model/dash.model";
 import {
     ArcElement,
     BarElement,
@@ -23,7 +23,7 @@ import MyCalendar from "src/app/(page)/user/calendar/[id]/page";
 import Modal from "src/app/components/Modal";
 import ShowOpinion from "src/app/(page)/admin/showOpinion/page";
 import DashBoard from "src/app/(page)/admin/dashboard/page";
-import {fetchReportList} from "src/app/service/report/report.service";
+import {fetchReportCountAll, fetchReportList} from "src/app/service/report/report.service";
 import {ReportModel} from "src/app/model/report.model";
 import {fetchAllUsers} from "@/app/api/user/user.api";
 import {User} from "@/app/model/user.model";
@@ -35,7 +35,7 @@ export default function AdminDash() {
     const [count, setCount] = useState<CountItem[]>([]);
     const [activeTab, setActiveTab] = useState<string | undefined>('user')
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [reportList, setReportList] = useState<ReportModel[]>([]);
+    const [reportList, setReportList] = useState<ReportCountModel[]>([]);
     const [user, setUser] = useState<User[]>([]);
 
 
@@ -77,18 +77,18 @@ export default function AdminDash() {
 
     useEffect(() => {
         const showReport = async () => {
-            const data = await fetchReportList();
+            const data = await fetchReportCountAll();
             setReportList(data);
         }
         showReport()
     }, []);
 
 
-    const countByPostId = (postId: number) => {
-        return reportList.reduce((acc, report:ReportModel) => {
-            return report.postId === postId ? acc + 1 : acc;
-        }, 0);
-    };
+    // const countByPostId = (postId: number) => {
+    //     return reportList.reduce((acc, report:ReportModel) => {
+    //         return report.postId === postId ? acc + 1 : acc;
+    //     }, 0);
+    // };
 
     const role = localStorage.getItem('role');
 
@@ -104,7 +104,7 @@ export default function AdminDash() {
     return (
         <>
 
-            <div className="profile-block md:py-20 py-10 mt-10">
+            <div className="profile-block md:py-20 py-10 md:px-8 px-4 mt-10">
                 <div className="container">
                     <div className="content-main flex gap-y-8 max-md:flex-col w-full">
                         <div className="left md:w-1/3 xl:pr-[3.125rem] lg:pr-[28px] md:pr-[16px]">
@@ -263,7 +263,7 @@ export default function AdminDash() {
                                             className="py-3 text-sm font-bold uppercase text-secondary">postId
                                         </th>
                                         <th scope="col"
-                                            className="py-3 text-sm font-bold uppercase text-secondary">reason
+                                            className="py-3 text-sm font-bold uppercase text-secondary">content
                                         </th>
                                         <th scope="col"
                                             className="py-3 text-sm font-bold uppercase text-secondary">postCount
@@ -273,7 +273,7 @@ export default function AdminDash() {
                                     <tbody>
                                     {reportList.map((r) => (
                                         <tr
-                                            key={r.userId}
+                                            key={r.postId}
                                             className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
                                         >
                                             <Link href={`/post/detail/${r.postId}`} className="text-border">
@@ -284,11 +284,11 @@ export default function AdminDash() {
 
                                                 <td className="py-3">
                                                     <div className="info flex flex-col">
-                                                        <strong className="product_name text-button">{r.reason}</strong>
+                                                        <strong className="product_name text-button">{r.content}</strong>
                                                         <span className="product_tag caption1 text-secondary"></span>
                                                     </div>
                                                 </td>
-                                                <td className="py-3">{countByPostId(r.postId)}</td>
+                                                <td className="py-3">{r.count}</td>
                                         </tr>
                                     ))}
                                     </tbody>
