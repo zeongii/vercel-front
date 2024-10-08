@@ -1,10 +1,10 @@
 "use client";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Image from 'next/image'
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import {fetchShowCount} from "src/app/service/admin/admin.service";
-import {CountItem} from "src/app/model/dash.model";
+import { fetchShowCount } from "src/app/service/admin/admin.service";
+import { CountItem } from "src/app/model/dash.model";
 import {
     ArcElement,
     BarElement,
@@ -18,11 +18,14 @@ import {
     Tooltip
 } from "chart.js";
 import styles from "src/css/mypage.module.css";
-import {Bar} from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import MyCalendar from "src/app/(page)/user/calendar/[id]/page";
 import Modal from "src/app/components/Modal";
 import ShowOpinion from "src/app/(page)/admin/showOpinion/page";
 import DashBoard from "src/app/(page)/admin/dashboard/page";
+import { useSearchContext } from "@/app/components/SearchContext";
+import { useRouter } from 'next/navigation';
+
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -31,6 +34,10 @@ export default function AdminDash() {
     const [count, setCount] = useState<CountItem[]>([]);
     const [activeTab, setActiveTab] = useState<string | undefined>('user')
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { searchTerm } = useSearchContext();
+    const router = useRouter();
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
+    
 
 
     useEffect(() => {
@@ -39,7 +46,16 @@ export default function AdminDash() {
             setCount(data);
         };
         countList();
+        setIsInitialLoad(false);
     }, []);
+
+
+    useEffect(() => {
+        if (searchTerm  && !isInitialLoad) {
+            router.push(`/?search=${searchTerm}`); 
+        }
+    }, [searchTerm]);
+
 
 
 
@@ -84,32 +100,32 @@ export default function AdminDash() {
                                 </div>
                                 <div className="menu-tab w-full max-w-none lg:mt-10 mt-6">
                                     <Link href={'#!'} scroll={false}
-                                          className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white ${activeTab === 'user' ? 'active' : ''}`}
-                                          onClick={() => setActiveTab('user')}>
-                                        <Icon.UserCheck size={20}/>
+                                        className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white ${activeTab === 'user' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('user')}>
+                                        <Icon.UserCheck size={20} />
                                         <strong className="heading6">User</strong>
                                     </Link>
                                     <Link href={'#!'} scroll={false}
-                                          className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'post' ? 'active' : ''}`}
-                                          onClick={() => setActiveTab('post')}>
-                                        <Icon.Note size={20}/>
+                                        className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'post' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('post')}>
+                                        <Icon.Note size={20} />
                                         <strong className="heading6">Post</strong>
                                     </Link>
                                     <Link href={'#!'} scroll={false}
-                                          className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'opinion' ? 'active' : ''}`}
-                                          onClick={() => setActiveTab('opinion')}>
-                                        <Icon.PaperPlaneTilt size={20}/>
+                                        className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'opinion' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('opinion')}>
+                                        <Icon.PaperPlaneTilt size={20} />
                                         <strong className="heading6">Opinion</strong>
                                     </Link>
                                     <Link href={'#!'} scroll={false}
-                                          className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'dash' ? 'active' : ''}`}
-                                          onClick={() => setActiveTab('dash')}>
-                                        <Icon.ChartLine size={20}/>
+                                        className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'dash' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('dash')}>
+                                        <Icon.ChartLine size={20} />
                                         <strong className="heading6">Dashboard</strong>
                                     </Link>
                                     <Link href={'/login'}
-                                          className="item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5">
-                                        <Icon.SignOut size={20}/>
+                                        className="item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5">
+                                        <Icon.SignOut size={20} />
                                         <strong className="heading6">Logout</strong>
                                     </Link>
                                 </div>
@@ -126,7 +142,7 @@ export default function AdminDash() {
                                                 <h5 className="heading5 mt-1">Tag </h5>
                                             </div>
                                         </Link>
-                                        <Icon.Tag className='text-4xl'/>
+                                        <Icon.Tag className='text-4xl' />
                                     </div>
                                     <div
                                         className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">
@@ -134,7 +150,7 @@ export default function AdminDash() {
                                             <span className="tese">Cancelled post</span>
                                             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}> </Modal>
                                         </div>
-                                        <Icon.ReceiptX className='text-4xl'/>
+                                        <Icon.ReceiptX className='text-4xl' />
                                     </div>
                                     <div
                                         className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">
@@ -142,7 +158,7 @@ export default function AdminDash() {
                                             <span className="tese">Total Number of post</span>
                                             <h5 className="heading5 mt-1">200</h5>
                                         </div>
-                                        <Icon.Package className='text-4xl'/>
+                                        <Icon.Package className='text-4xl' />
                                     </div>
                                 </div>
                                 <div className="recent_order pt-5 px-5 pb-2 mt-7 border border-line rounded-xl">
@@ -158,8 +174,8 @@ export default function AdminDash() {
                                                     responsive: true,
                                                     maintainAspectRatio: false,
                                                     scales: {
-                                                        x: {title: {display: true, text: 'Nickname'}},
-                                                        y: {title: {display: true, text: 'Count'}},
+                                                        x: { title: { display: true, text: 'Nickname' } },
+                                                        y: { title: { display: true, text: 'Count' } },
                                                     }, animation: {
                                                         duration: 0, // 애니메이션 삭제
                                                     },
@@ -172,39 +188,39 @@ export default function AdminDash() {
                                     <div className="list overflow-x-auto w-full mt-5">
                                         <table className="w-full max-[1400px]:w-[700px] max-md:w-[700px]">
                                             <thead className="border-b border-line">
-                                            <tr>
-                                                <th scope="col"
-                                                    className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Order
-                                                </th>
-                                                <th scope="col"
-                                                    className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Products
-                                                </th>
-                                                <th scope="col"
-                                                    className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Pricing
-                                                </th>
-                                                <th scope="col"
-                                                    className="pb-3 text-right text-sm font-bold uppercase text-secondary whitespace-nowrap">Status
-                                                </th>
-                                            </tr>
+                                                <tr>
+                                                    <th scope="col"
+                                                        className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Order
+                                                    </th>
+                                                    <th scope="col"
+                                                        className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Products
+                                                    </th>
+                                                    <th scope="col"
+                                                        className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Pricing
+                                                    </th>
+                                                    <th scope="col"
+                                                        className="pb-3 text-right text-sm font-bold uppercase text-secondary whitespace-nowrap">Status
+                                                    </th>
+                                                </tr>
                                             </thead>
                                             <tbody>
-                                            <tr className="item duration-300 border-b border-line">
-                                                <th scope="row" className="py-3 text-left">
-                                                    <strong className="text-title">postId</strong>
-                                                </th>
-                                                <td className="py-3">
-                                                    <div className="info flex flex-col">
-                                                        <strong
-                                                            className="product_name text-button">postcontent</strong>
-                                                        <span className="product_tag caption1 text-secondary"></span>
-                                                    </div>
-                                                </td>
-                                                <td className="py-3 price">restaurantname</td>
-                                                <td className="py-3 text-right">
-                                                    <span
-                                                        className="tag px-4 py-1.5 rounded-full bg-opacity-10 bg-yellow text-yellow caption1 font-semibold">뭐넣지</span>
-                                                </td>
-                                            </tr>
+                                                <tr className="item duration-300 border-b border-line">
+                                                    <th scope="row" className="py-3 text-left">
+                                                        <strong className="text-title">postId</strong>
+                                                    </th>
+                                                    <td className="py-3">
+                                                        <div className="info flex flex-col">
+                                                            <strong
+                                                                className="product_name text-button">postcontent</strong>
+                                                            <span className="product_tag caption1 text-secondary"></span>
+                                                        </div>
+                                                    </td>
+                                                    <td className="py-3 price">restaurantname</td>
+                                                    <td className="py-3 text-right">
+                                                        <span
+                                                            className="tag px-4 py-1.5 rounded-full bg-opacity-10 bg-yellow text-yellow caption1 font-semibold">뭐넣지</span>
+                                                    </td>
+                                                </tr>
 
                                             </tbody>
                                         </table>
@@ -214,17 +230,17 @@ export default function AdminDash() {
                             <div
                                 className={`tab text-content overflow-hidden w-full h-auto p-7 mt-7 border border-line rounded-xl ${activeTab === 'post' ? 'block' : 'hidden'}`}>
                                 <h6 className="heading6">My Wallet</h6>
-                                <div className="mb-10"><MyCalendar/></div>
+                                <div className="mb-10"><MyCalendar /></div>
                             </div>
                             <div
                                 className={`tab_opinion text-content w-full text-center p-7 mt-7 border border-line rounded-xl ${activeTab === 'opinion' ? 'block' : 'hidden'}`}>
                                 <h3 className="heading6">의견보기</h3>
-                                <div className="mb-10"><ShowOpinion/></div>
+                                <div className="mb-10"><ShowOpinion /></div>
                             </div>
 
                             <div
                                 className={`tab text-content overflow-hidden w-full p-7 mt-7 border border-line rounded-xl ${activeTab === 'dash' ? 'block' : 'hidden'}`}>
-                                <DashBoard/>
+                                <DashBoard />
                             </div>
 
                         </div>

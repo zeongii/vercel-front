@@ -29,7 +29,7 @@ const ModalWishlistDetail: React.FC<ModalWishlistDetailProps> = ({ userId, wishl
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'userId': userId,
+                    'userId': userId.toString(),
                 },
             });
 

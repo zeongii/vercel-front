@@ -6,6 +6,8 @@ import * as Icon from "@phosphor-icons/react/dist/ssr";
 import { useModalWishlistContext } from 'src/app/context/ModalWishlistContext';
 import { useRouter } from 'next/navigation';
 import nookies from "nookies";
+import { useSearchContext } from '../SearchContext';
+
 
 interface User {
   nickname: string;
@@ -17,6 +19,7 @@ interface User {
 
 export default function Header() {
   const { openModalWishlist } = useModalWishlistContext();
+  const { setSearchTerm } = useSearchContext(); 
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
@@ -57,6 +60,13 @@ export default function Header() {
     openModalWishlist();
   };
 
+
+
+  const handleHomeClick = () => {
+    setSearchTerm('');
+    router.push('/'); 
+  };
+
   return (
       <header className="page-header">
         <div className="page-header__inner">
@@ -65,9 +75,9 @@ export default function Header() {
               <button className="menu-btn ico_menu is-active"></button>
             </div>
             <div className="page-header__logo">
-              <Link href="/">
+              <div className="page-header__logo" onClick={handleHomeClick}>
                 <img src="/assets/img/nyamnyam_logo.png" alt="logo" />
-              </Link>
+              </div>
             </div>
           </div>
           <div className="page-header__content">

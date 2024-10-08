@@ -13,8 +13,9 @@ import {
     PointElement, LineElement
 } from "chart.js"; // ArcElement 추가
 import styles from "src/css/mypage.module.css";
-import axios from "axios";
-import Link from "next/link";
+import { useRouter } from 'next/navigation';
+
+
 import {
     fetchReceiptList,
     fetchShowArea,
@@ -30,6 +31,7 @@ const DashBoard = () => {
     const [restaurant, setRestaurant] = useState<RestaurantList[]>([]);
     const [countRestaurant, setCountRestaurant] = useState<CountCost[]>([]);
     const [sumList, setSumList] = useState<RestaurantList[]>([]);
+   
 
 
     useEffect(() => {
@@ -38,6 +40,7 @@ const DashBoard = () => {
             setRegion(data);
         };
         showArea();
+
     }, []);
 
     useEffect(() => {
@@ -55,6 +58,7 @@ const DashBoard = () => {
         };
         countRestaurant();
     }, []);
+
 
 
 

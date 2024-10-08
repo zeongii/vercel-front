@@ -1,19 +1,21 @@
 "use client";
-import React, {useEffect, useState} from "react";
-import {fetchInsertOpinion} from "src/app/service/opinion/opinion.serivce";
+import React, { useEffect, useState } from "react";
+import { fetchInsertOpinion } from "src/app/service/opinion/opinion.serivce";
 import Image from 'next/image'
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import {fetchShowArea, fetchShowCount, fetchShowRankByAge} from "src/app/service/admin/admin.service";
-import {Area, CountItem, RestaurantList, UserPostModel} from "src/app/model/dash.model";
-import {OpinionModel} from "src/app/model/opinion.model";
-import {ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip} from "chart.js";
+import { fetchShowArea, fetchShowCount, fetchShowRankByAge } from "src/app/service/admin/admin.service";
+import { Area, CountItem, RestaurantList, UserPostModel } from "src/app/model/dash.model";
+import { OpinionModel } from "src/app/model/opinion.model";
+import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from "chart.js";
 import styles from "src/css/mypage.module.css";
-import {Bar, Doughnut} from "react-chartjs-2";
+import { Bar, Doughnut } from "react-chartjs-2";
 import MyCalendar from "src/app/(page)/user/calendar/[id]/page";
 import MyWallet from "src/app/(page)/user/wallet/[id]/page";
-import {fetchPostList} from "src/app/service/post/post.service";
-import {PostModel} from "src/app/model/post.model";
+import { fetchPostList } from "src/app/service/post/post.service";
+import { PostModel } from "src/app/model/post.model";
+import { useRouter } from 'next/navigation';
+import { useSearchContext } from "@/app/components/SearchContext";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale);
 
@@ -25,6 +27,9 @@ export default function MyPage() {
     const [post, setPost] = useState<UserPostModel[]>([]);
     const [activeTab, setActiveTab] = useState<string | undefined>('myPage')
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { searchTerm } = useSearchContext();
+    const router = useRouter();
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
 
 
     useEffect(() => {
@@ -33,6 +38,7 @@ export default function MyPage() {
             setCount(data)
         };
         countList()
+        setIsInitialLoad(false);
     }, []);
 
     useEffect(() => {
@@ -58,7 +64,14 @@ export default function MyPage() {
             setPost(data)
         }
         showPostListByUserId()
-    },[])
+    }, [])
+
+
+    useEffect(() => {
+        if (searchTerm && !isInitialLoad) {
+            router.push(`/?search=${searchTerm}`);
+        }
+    }, [searchTerm]);
 
 
     const [content, setContent] = useState("");
@@ -159,38 +172,38 @@ export default function MyPage() {
                                 </div>
                                 <div className="menu-tab w-full max-w-none lg:mt-10 mt-6">
                                     <Link href={'#!'} scroll={false}
-                                          className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white ${activeTab === 'myPage' ? 'active' : ''}`}
-                                          onClick={() => setActiveTab('myPage')}>
-                                        <Icon.HouseLine size={20}/>
+                                        className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white ${activeTab === 'myPage' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('myPage')}>
+                                        <Icon.HouseLine size={20} />
                                         <strong className="heading6">MyPage</strong>
                                     </Link>
                                     <Link href={'#!'} scroll={false}
-                                          className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'myWallet' ? 'active' : ''}`}
-                                          onClick={() => setActiveTab('myWallet')}>
-                                        <Icon.Wallet size={20}/>
+                                        className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'myWallet' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('myWallet')}>
+                                        <Icon.Wallet size={20} />
                                         <strong className="heading6">MyWallet</strong>
                                     </Link>
                                     <Link href={'#!'} scroll={false}
-                                          className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'dash' ? 'active' : ''}`}
-                                          onClick={() => setActiveTab('dash')}>
-                                        <Icon.ChartDonut size={20}/>
+                                        className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'dash' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('dash')}>
+                                        <Icon.ChartDonut size={20} />
                                         <strong className="heading6">Dashboard</strong>
                                     </Link>
                                     <Link href={'#!'} scroll={false}
-                                          className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'opinion' ? 'active' : ''}`}
-                                          onClick={() => setActiveTab('opinion')}>
-                                        <Icon.Clipboard size={20}/>
+                                        className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'opinion' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('opinion')}>
+                                        <Icon.Clipboard size={20} />
                                         <strong className="heading6">MyOpinion</strong>
                                     </Link>
                                     <Link href={'#!'} scroll={false}
-                                          className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'edit' ? 'active' : ''}`}
-                                          onClick={() => setActiveTab('edit')}>
-                                        <Icon.Clipboard size={20}/>
+                                        className={`item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5 ${activeTab === 'edit' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('edit')}>
+                                        <Icon.Clipboard size={20} />
                                         <strong className="heading6">Edit</strong>
                                     </Link>
                                     <Link href={'/login'}
-                                          className="item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5">
-                                        <Icon.SignOut size={20}/>
+                                        className="item flex items-center gap-3 w-full px-5 py-4 rounded-lg cursor-pointer duration-300 hover:bg-white mt-1.5">
+                                        <Icon.SignOut size={20} />
                                         <strong className="heading6">Logout</strong>
                                     </Link>
                                 </div>
@@ -208,7 +221,7 @@ export default function MyPage() {
                                                 <h5 className="heading5 mt-1">insert</h5>
                                             </div>
                                         </Link>
-                                        <Icon.Receipt className='text-4xl'/>
+                                        <Icon.Receipt className='text-4xl' />
                                     </div>
                                     <div
                                         className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">
@@ -216,7 +229,7 @@ export default function MyPage() {
                                             <span className="tese">Total Post</span>
                                             <h5 className="heading5 mt-1">{totalPost}</h5>
                                         </div>
-                                        <Icon.NotePencil className='text-4xl'/>
+                                        <Icon.NotePencil className='text-4xl' />
                                     </div>
                                     <div
                                         className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">
@@ -224,7 +237,7 @@ export default function MyPage() {
                                             <span className="tese">MY FOLLOWER</span>
                                             <h5 className="heading5 mt-1">200</h5>
                                         </div>
-                                        <Icon.UserCircle className='text-4xl'/>
+                                        <Icon.UserCircle className='text-4xl' />
                                     </div>
                                 </div>
                                 <div className="recent_order pt-5 px-5 pb-2 mt-7 border border-line rounded-xl">
@@ -240,8 +253,8 @@ export default function MyPage() {
                                                     responsive: true,
                                                     maintainAspectRatio: false,
                                                     scales: {
-                                                        x: {title: {display: true, text: 'Nickname'}},
-                                                        y: {title: {display: true, text: 'Count'}},
+                                                        x: { title: { display: true, text: 'Nickname' } },
+                                                        y: { title: { display: true, text: 'Count' } },
                                                     },
                                                 }}
                                             />
@@ -251,44 +264,44 @@ export default function MyPage() {
                                     <div className="list overflow-x-auto w-full mt-5">
                                         <table className="w-full max-[1400px]:w-[700px] max-md:w-[700px] text-center text-sm">
                                             <thead className="border-b border-line">
-                                            <tr className="text-center">
-                                                <th scope="col"
-                                                    className="pb-3 text-sm font-bold uppercase text-secondary whitespace-nowrap">음식점
-                                                </th>
-                                                <th scope="col"
-                                                    className="pb-3 text-sm font-bold uppercase text-secondary whitespace-nowrap">내용
-                                                </th>
-                                                <th scope="col"
-                                                    className="pb-3 text-sm font-bold uppercase text-secondary whitespace-nowrap">작성날짜
-                                                </th>
-                                                <th scope="col"
-                                                    className="pb-3 text-sm font-bold uppercase text-secondary whitespace-nowrap">좋아요 수
-                                                </th>
-                                            </tr>
+                                                <tr className="text-center">
+                                                    <th scope="col"
+                                                        className="pb-3 text-sm font-bold uppercase text-secondary whitespace-nowrap">음식점
+                                                    </th>
+                                                    <th scope="col"
+                                                        className="pb-3 text-sm font-bold uppercase text-secondary whitespace-nowrap">내용
+                                                    </th>
+                                                    <th scope="col"
+                                                        className="pb-3 text-sm font-bold uppercase text-secondary whitespace-nowrap">작성날짜
+                                                    </th>
+                                                    <th scope="col"
+                                                        className="pb-3 text-sm font-bold uppercase text-secondary whitespace-nowrap">좋아요 수
+                                                    </th>
+                                                </tr>
                                             </thead>
                                             <tbody>
-                                            {post.map(p => (
-                                                <tr key={p.postId} className="item duration-300 border-b border-line">
-                                                    <Link className=" text-sm text-secondary" href={`/restaurant/${p.restaurantId}`}>
-                                                    <th scope="row" className="py-3">
-                                                        <strong className="text-title">{p.name}</strong>
-                                                    </th>
-                                                    </Link>
-                                                    <td className="py-3 text-left">
-                                                        <div className="info flex flex-col font-bold">
-                                                            {p.content}
-                                                        </div>
-                                                    </td>
-                                                    <td className="py-3 price">
-                                                        {new Date(p.entryDate).toISOString().slice(0, 19).replace('T', ' ')}
-                                                    </td>
-                                                    <td className="py-3">
-                                                        <div className="info flex flex-col">
-                                                            {p.upvoteCount}
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))}
+                                                {post.map(p => (
+                                                    <tr key={p.postId} className="item duration-300 border-b border-line">
+                                                        <Link className=" text-sm text-secondary" href={`/restaurant/${p.restaurantId}`}>
+                                                            <th scope="row" className="py-3">
+                                                                <strong className="text-title">{p.name}</strong>
+                                                            </th>
+                                                        </Link>
+                                                        <td className="py-3 text-left">
+                                                            <div className="info flex flex-col font-bold">
+                                                                {p.content}
+                                                            </div>
+                                                        </td>
+                                                        <td className="py-3 price">
+                                                            {new Date(p.entryDate).toISOString().slice(0, 19).replace('T', ' ')}
+                                                        </td>
+                                                        <td className="py-3">
+                                                            <div className="info flex flex-col">
+                                                                {p.upvoteCount}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
 
                                             </tbody>
                                         </table>
@@ -298,8 +311,8 @@ export default function MyPage() {
                             <div
                                 className={`tab text-content overflow-hidden w-full h-auto p-7 mt-7 border border-line rounded-xl ${activeTab === 'myWallet' ? 'block' : 'hidden'}`}>
                                 <h6 className="heading6">My Wallet</h6>
-                                <div className="mb-10"><MyCalendar/></div>
-                                <div><MyWallet/></div>
+                                <div className="mb-10"><MyCalendar /></div>
+                                <div><MyWallet /></div>
                             </div>
                             <div
                                 className={`tab text-content overflow-hidden w-full p-7 mt-7 border border-line rounded-xl ${activeTab === 'dash' ? 'block' : 'hidden'}`}>
@@ -313,8 +326,8 @@ export default function MyPage() {
                                                 responsive: true,
                                                 maintainAspectRatio: false,
                                                 scales: {
-                                                    x: {title: {display: true, text: 'Restaurant'}},
-                                                    y: {title: {display: true, text: 'Count'}},
+                                                    x: { title: { display: true, text: 'Restaurant' } },
+                                                    y: { title: { display: true, text: 'Count' } },
                                                 },
                                             }}
                                         />
@@ -342,7 +355,7 @@ export default function MyPage() {
                                                     }
                                                 }
                                             }
-                                        }}/>
+                                        }} />
                                     </div>
                                 </div>
                             </div>
@@ -352,14 +365,14 @@ export default function MyPage() {
                                 <h2 className="text-lg font-semibold text-gray-800 mb-2">냠냠에 전하고 싶은 의견이 있나요?</h2>
                                 <h2 className="text-md text-gray-600 mb-4">00님의 소중한 의견을 꼼꼼히 읽어볼게요</h2>
                                 <form onSubmit={handleSubmit}>
-                             <textarea
-                                 value={content}
-                                 onChange={(e) => setContent(e.target.value)}
-                                 placeholder="여기에 의견을 남겨주세요"
-                                 rows={4}
-                                 className="w-full border border-gray-300 rounded-md p-2 mb-2"
-                                 style={{borderBottom: '2px solid #ccc', marginBottom: '10px'}}
-                             />
+                                    <textarea
+                                        value={content}
+                                        onChange={(e) => setContent(e.target.value)}
+                                        placeholder="여기에 의견을 남겨주세요"
+                                        rows={4}
+                                        className="w-full border border-gray-300 rounded-md p-2 mb-2"
+                                        style={{ borderBottom: '2px solid #ccc', marginBottom: '10px' }}
+                                    />
                                     <button
                                         type="submit"
                                         className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"

@@ -9,6 +9,10 @@ import {number} from "prop-types";
 import {NoticeModel} from "src/app/model/notice.model";
 import {notice} from "src/app/api/notice/notice.api";
 
+export const getRestaurantAll = async () => {
+  return await restaurant.fetchRestaurantAll();
+}
+
 export const getRestaurantsBySearch = async (keyword: string) => {
     return await restaurant.fetchRestaurantsBySearch(keyword);
 };

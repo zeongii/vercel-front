@@ -35,7 +35,7 @@ const ModalWishlist = () => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'userId': userId,
+                    'userId': userId.toString(),
                 },
             });
 
