@@ -99,9 +99,9 @@ const TabFeatures: React.FC<Props> = ({ start, limit }) => {
                     >
                         {restaurants.slice(start, limit).map((restaurant) => (
                             <SwiperSlide key={restaurant.id}>
-                                <Link href={`/restaurant/${restaurant.id}`}>
+                                {/* <Link href={`/restaurant/${restaurant.id}`}> */}
                                     <Product data={restaurant} type='grid' />
-                                </Link>
+                                {/* </Link> */}
                             </SwiperSlide>
                         ))}
                     </Swiper>

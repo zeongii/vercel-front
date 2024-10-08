@@ -5,18 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="49786053-a601-4996-9fe6-17ac685f1975" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/app/(page)/user/calendars/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/next.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(page)/receipt/insertReceipt/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/receipt/insertReceipt/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(page)/restaurant/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/restaurant/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(page)/restaurant/page2.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/restaurant/page2.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(page)/user/mypage/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/mypage/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/api/admin/admin.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/admin/admin.api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/api/receipt/receipt.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/receipt/receipt.api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/service/admin/admin.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/admin/admin.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/service/receipt/receipt.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/receipt/receipt.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+=======
+      <change afterPath="$PROJECT_DIR$/src/app/service/user/fetchClient.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/user/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/common/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/common/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/service/chatRoom/chatRoom.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/chatRoom/chatRoom.api.ts" afterDir="false" />
+>>>>>>> nyamnyam-user
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +30,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="release0.06" />
+        <entry key="$PROJECT_DIR$" value="nyamnyam-user" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -54,16 +51,10 @@
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
 }</component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
-  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
   <component name="ProjectId" id="2mKXWhchfbj0WfBytJDO1CpkFBN" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
   <component name="ProjectViewState">
     <option name="flattenPackages" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -71,21 +62,19 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "nyamnyam-admin",
+    "git-widget-placeholder": "nyamnyam-user",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/USER/Documents/nyamnyam/nyamnyam-kr",
+    "last_opened_file_path": "C:/Users/bitcamp/team/release/nyamnyam-front",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie",
-    "ts.external.directory.path": "C:\\Users\\USER\\Documents\\nyamnyam\\nyamnyam-front\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "C:\\Users\\bitcamp\\Documents\\GitHub\\nyamnyam-front\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -95,6 +84,7 @@
       <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\model" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\bitcamp\Documents\GitHub\nyamnyam-front\src\app\components" />
       <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\(page)\user\wallet\[id]" />
       <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\(page)\admin" />
     </key>
@@ -102,8 +92,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.15989.150" />
-        <option value="bundled-js-predefined-1d06a55b98c1-91d5c284f522-JavaScript-IU-241.15989.150" />
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.20224.419" />
+        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-IU-242.20224.419" />
       </set>
     </attachedChunks>
   </component>
@@ -134,7 +124,9 @@
       <workItem from="1727760431335" duration="1482000" />
       <workItem from="1727842601005" duration="71000" />
       <workItem from="1728039836379" duration="732000" />
-      <workItem from="1728274762138" duration="3541000" />
+      <workItem from="1728099778167" duration="187000" />
+      <workItem from="1728110739533" duration="203000" />
+      <workItem from="1728280154645" duration="61000" />
     </task>
     <servers />
   </component>
@@ -151,8 +143,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>
