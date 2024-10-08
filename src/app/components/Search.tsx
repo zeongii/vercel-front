@@ -37,7 +37,7 @@ const Search: React.FC = () => {
         <input
           type="search"
           name="search"
-          placeholder="Search"
+          placeholder="지역, 음식 또는 식당명 입력"
           value={inputValue} 
           onChange={handleSearchChange} 
         />

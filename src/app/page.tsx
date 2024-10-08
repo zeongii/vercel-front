@@ -17,11 +17,11 @@ const Page = () => {
 
     useEffect(() => {
         setShowHome(!!searchTerm); // 검색어가 있을 경우 Home 컴포넌트를 보여주는
-    }, [searchTerm]); 
+    }, [searchTerm]);
 
     return (
         <StoreProvider>
-            {showHome ? <Home /> : <TabFeatures start={0} limit={20} />}
+            {showHome ? <Home /> : <TabFeatures start={0} limit={10} />}
         </StoreProvider>
     );
 };

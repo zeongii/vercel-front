@@ -95,7 +95,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                 imageURLs.forEach(url => {
                     updatedDetails.push({ postId: data.post.id, url });
                 });
-    
+
             }
             setImages(updatedImages);
             setImgDetails(updatedDetails);
@@ -141,14 +141,14 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const handleDelete = async (postId: number) => {
         if (window.confirm("게시글을 삭제하시겠습니까?")) {
             const success = await postService.remove(postId);
-    
+
             if (success) {
                 alert("게시글이 삭제되었습니다.");
                 setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
 
                 setImages((prevImages)=> {
                     const updatedImages ={...prevImages};
-                    delete updatedImages[postId]; 
+                    delete updatedImages[postId];
                     return updatedImages;
                 })
 
@@ -156,7 +156,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                 setImgDetails(updatedDetails);
 
                 setAllImages(updatedDetails.map((detail) => detail.url));
-    
+
                 router.push(`/restaurant/${restaurantId}`);
             }
         }
@@ -320,7 +320,8 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
         const reportModel: ReportModel = {
             userId: currentUserId,
             postId: postId,
-            reason: selectedReason
+            reason: selectedReason,
+            entryDate: ''
         };
 
         try {

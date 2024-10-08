@@ -4,12 +4,13 @@ import {report} from "src/app/api/report/report.api";
 
 export const fetchReportList = async () => {
     const data: ReportModel[] = await report.reportAll();
-    return data;
+    const sortedData = data.sort((a, b) => new Date(b.entryDate).getTime() - new Date(a.entryDate).getTime());
+    return sortedData;
 };
 
 export const fetchReportRegister = async (reportModel: ReportModel) => {
     try {
-        const data = await report.reportRegister(reportModel);;
+        const data = await report.reportRegister(reportModel);
 
         return data;
     } catch (error) {

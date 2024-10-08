@@ -8,15 +8,17 @@ import { useModalWishlistContext } from '../context/ModalWishlistContext';
 import { useWishlist } from '../context/WishlistContext';
 
 
-
 interface ModalWishlistDetailProps {
-    userId: number;
+    userId: string;
     wishlistId: number;
     wishlistName: string;
     closeDetails: () => void;
 }
 
 const ModalWishlistDetail: React.FC<ModalWishlistDetailProps> = ({ userId, wishlistId, wishlistName, closeDetails }) => {
+  
+
+
     const { isModalOpen } = useModalWishlistContext();
     const [restaurants, setRestaurants] = useState<RestaurantModel[]>([]);
 

@@ -39,7 +39,7 @@ export default function Restaurant() {
         if (restaurant && restaurant.address) {
             const mapScript = document.createElement('script');
             mapScript.async = true;
-            mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=2352038d1f2d9450032dd17ae632df20&autoload=false&libraries=services`;
+            mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.KAKAO_MAP_APP_KEY}&autoload=false&libraries=services`;
             document.head.appendChild(mapScript);
 
             const onLoadKakaoMap = () => {
@@ -190,7 +190,6 @@ export default function Restaurant() {
                             </div>
                             <div className="w-1/3 h-80 rounded-lg shadow-md mt-0">
                                 <div id="map" className="w-full h-full rounded-lg shadow-md mb-4" ></div>
-
                                 {/* 광고 이미지 추가 */}
                                 <div className="w-1/3 mx-auto mb-4">
                                     <img

@@ -23,6 +23,8 @@ import MyCalendar from "src/app/(page)/user/calendar/[id]/page";
 import Modal from "src/app/components/Modal";
 import ShowOpinion from "src/app/(page)/admin/showOpinion/page";
 import DashBoard from "src/app/(page)/admin/dashboard/page";
+import {fetchReportList} from "src/app/service/report/report.service";
+import {ReportModel} from "src/app/model/report.model";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -31,12 +33,18 @@ export default function AdminDash() {
     const [count, setCount] = useState<CountItem[]>([]);
     const [activeTab, setActiveTab] = useState<string | undefined>('user')
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [reportList, setReportList] = useState<ReportModel[]>([]);
+
+
+
+
 
 
     useEffect(() => {
         const countList = async () => {
             const data = await fetchShowCount();
             setCount(data);
+            console.log(role)
         };
         countList();
     }, []);
@@ -49,14 +57,38 @@ export default function AdminDash() {
             {
                 label: 'UserRank',
                 data: count.map(item => item.count),
-                backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                borderColor: 'rgba(255, 159, 64, 1)',
+                backgroundColor: 'rgb(253,235,216)',
+                borderColor: 'rgb(253,158,64)',
                 borderWidth: 1,
             }
         ],
     };
 
+    useEffect(() => {
+        const showReport = async () => {
+            const data = await fetchReportList();
+            setReportList(data);
+        }
+        showReport()
+    }, []);
 
+
+    const countByPostId = (postId: number) => {
+        return reportList.reduce((acc, report:ReportModel) => {
+            return report.postId === postId ? acc + 1 : acc;
+        }, 0);
+    };
+
+    const role = localStorage.getItem('role');
+
+    if (role !== 'ADMIN') {
+        return (
+            <div className="unauthorized text-center mt-5">
+                <h2>권한이 없습니다</h2>
+                <p>You do not have permission to view this content.</p>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -161,7 +193,6 @@ export default function AdminDash() {
                                                         x: {title: {display: true, text: 'Nickname'}},
                                                         y: {title: {display: true, text: 'Count'}},
                                                     }, animation: {
-                                                        duration: 0, // 애니메이션 삭제
                                                     },
                                                 }}
 
@@ -213,8 +244,41 @@ export default function AdminDash() {
                             </div>
                             <div
                                 className={`tab text-content overflow-hidden w-full h-auto p-7 mt-7 border border-line rounded-xl ${activeTab === 'post' ? 'block' : 'hidden'}`}>
-                                <h6 className="heading6">My Wallet</h6>
-                                <div className="mb-10"><MyCalendar/></div>
+
+                                <table className="w-full bg-white rounded-lg text-center">
+                                    <thead className="bg-gray-100 border-b border-gray-300 text-center">
+                                    <tr>
+                                        <th scope="col"
+                                            className="py-3 text-sm font-bold uppercase text-secondary">postId
+                                        </th>
+                                        <th scope="col"
+                                            className="py-3 text-sm font-bold uppercase text-secondary">reason
+                                        </th>
+                                        <th scope="col"
+                                            className="py-3 text-sm font-bold uppercase text-secondary">postCount
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {reportList.map((r) => (
+                                        <tr key={r.userId}
+                                            className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer">
+                                            <td className="py-3">
+                                                <strong className="text-title">{r.postId}</strong>
+                                            </td>
+                                            <td className="py-3">
+                                                    <div className="info flex flex-col">
+                                                        <strong className="product_name text-button">{r.reason}</strong>
+                                                        <span className="product_tag caption1 text-secondary"></span>
+                                                    </div>
+                                            </td>
+                                            <td className="py-3">{countByPostId(r.postId)}</td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+
+
                             </div>
                             <div
                                 className={`tab_opinion text-content w-full text-center p-7 mt-7 border border-line rounded-xl ${activeTab === 'opinion' ? 'block' : 'hidden'}`}>

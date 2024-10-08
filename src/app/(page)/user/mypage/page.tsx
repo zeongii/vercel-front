@@ -4,7 +4,7 @@ import {fetchInsertOpinion} from "src/app/service/opinion/opinion.serivce";
 import Image from 'next/image'
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import {fetchShowArea, fetchShowCount, fetchShowRankByAge} from "src/app/service/admin/admin.service";
+import {fetchShowArea, fetchShowCount} from "src/app/service/admin/admin.service";
 import {Area, CountItem, RestaurantList, UserPostModel} from "src/app/model/dash.model";
 import {OpinionModel} from "src/app/model/opinion.model";
 import {ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip} from "chart.js";
@@ -12,10 +12,18 @@ import styles from "src/css/mypage.module.css";
 import {Bar, Doughnut} from "react-chartjs-2";
 import MyCalendar from "src/app/(page)/user/calendar/[id]/page";
 import MyWallet from "src/app/(page)/user/wallet/[id]/page";
-import {fetchPostList} from "src/app/service/post/post.service";
-import {PostModel} from "src/app/model/post.model";
+import nookies from "nookies";
+import {fetchPostList} from "@/app/service/post/post.service";
+
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale);
+
+
+interface User {
+    nickname: string;
+    username: string;
+    role: string;
+}
 
 
 export default function MyPage() {
@@ -24,41 +32,55 @@ export default function MyPage() {
     const [restaurant, setRestaurant] = useState<RestaurantList[]>([]);
     const [post, setPost] = useState<UserPostModel[]>([]);
     const [activeTab, setActiveTab] = useState<string | undefined>('myPage')
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         const countList = async () => {
             const data = await fetchShowCount();
-            setCount(data)
+            setCount(data);
         };
-        countList()
-    }, []);
-
-    useEffect(() => {
-        const showArea = async () => {
-            const data = await fetchShowArea();
-            setRegion(data)
-        };
-        showArea()
-    }, []);
-
-    useEffect(() => {
-        const showRestaurant = async () => {
-            const data = await fetchShowRankByAge(userId);
-            setRestaurant(data)
-        };
-        showRestaurant()
+        countList();
     }, []);
 
 
     useEffect(() => {
-        const showPostListByUserId = async () => {
-            const data = await fetchPostList(userId)
-            setPost(data)
+        const cookies = nookies.get();
+        const id = cookies.userId;
+        console.log(id)
+
+        if (id) {
+            // 유저 정보를 localStorage에서 가져오기
+            const username = localStorage.getItem('username');
+            const nickname = localStorage.getItem('nickname');
+            const role = localStorage.getItem('role');
+
+            if (username && nickname && role) {
+                const storedUser: User = {
+                    username,
+                    nickname,
+                    role,
+                };
+                setUser(storedUser);
+            }
+
+            // // id를 사용하여 데이터를 가져오는 로직
+            const fetchData = async () => {
+                const countData = await fetchShowCount();
+                setCount(countData);
+
+                const regionData = await fetchShowArea();
+                setRegion(regionData);
+
+            //     const restaurantData = await fetchShowRankByAge(id);  // id 사용
+            //     setRestaurant(restaurantData);
+            //
+                const postData = await fetchPostList(id);  // id 사용
+                setPost(postData);
+            };
+
+            fetchData();
         }
-        showPostListByUserId()
-    },[])
+    }, []);
 
 
     const [content, setContent] = useState("");
@@ -111,7 +133,7 @@ export default function MyPage() {
         labels: region.map(item => item.area),
         datasets: [{
             data: region.map(item => item.total),
-            backgroundColor: ["red", "orange", "yellow", "green", "blue"],
+            backgroundColor: ["#fa8307", "#fd8a12", "#eca459", "#ecb780", "#F4CEA4FF"],
             borderColor: ["#fff", "#fff", "#fff", "#fff", "#fff"],
             borderWidth: 1,
         }],
@@ -152,7 +174,7 @@ export default function MyPage() {
                                             className='md:w-[140px] w-[120px] md:h-[140px] h-[120px] rounded-full'
                                         />
                                     </div>
-                                    <div className="name heading6 mt-4 text-center">Tony Nguyen</div>
+                                    <div className="name heading6 mt-4 text-center">{user?.nickname}</div>
                                     <div
                                         className="mail heading6 font-normal normal-case text-secondary text-center mt-1">hi.avitex@gmail.com
                                     </div>
@@ -270,12 +292,13 @@ export default function MyPage() {
                                             {post.map(p => (
                                                 <tr key={p.postId} className="item duration-300 border-b border-line">
                                                     <Link className=" text-sm text-secondary" href={`/restaurant/${p.restaurantId}`}>
-                                                    <th scope="row" className="py-3">
-                                                        <strong className="text-title">{p.name}</strong>
-                                                    </th>
+                                                        <th scope="row" className="py-3">
+                                                            <span
+                                                                className="tag px-4 py-1.5 rounded-full bg-orange-100 text-orange font-semibold text-sm">{p.name}</span>
+                                                        </th>
                                                     </Link>
                                                     <td className="py-3 text-left">
-                                                        <div className="info flex flex-col font-bold">
+                                                        <div className="info flex flex-col font-bold text-sm">
                                                             {p.content}
                                                         </div>
                                                     </td>

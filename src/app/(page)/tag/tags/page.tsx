@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { tag } from "src/app/api/tag/tag.api";
 import {initialTag, TagModel } from "src/app/model/tag.model";
 import { tagService } from "src/app/service/tag/tag.service";
@@ -61,6 +61,19 @@ export default function TagList() {
       }
     }
   };
+
+  const role = localStorage.getItem('role');
+
+  if (role !== 'ADMIN') {
+    return (
+        <div className="unauthorized text-center mt-5">
+          <h2>권한이 없습니다</h2>
+          <p>You do not have permission to view this content.</p>
+        </div>
+    );
+  }
+
+
 
   return (
     <main className="flex min-h-screen flex-col items-center" style={{ marginTop: '30px' }}>
