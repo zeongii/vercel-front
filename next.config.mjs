@@ -5,7 +5,7 @@ const nextConfig = {
     esmExternals: false, // ESM 외부 모듈 처리 비활성화 시도
   },
   images: {
-      domains: ['search.pstatic.net', 'kr.object.ncloudstorage.com'],
+    domains: ['search.pstatic.net', 'kr.object.ncloudstorage.com'], // 여기에 사용하려는 이미지 도메인 추가
   },
 
   webpack: (config, { isServer }) => {

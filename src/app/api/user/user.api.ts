@@ -1,8 +1,6 @@
-// src/app/api/user.api.ts
 
 import { User } from "src/app/model/user.model";
 
-// 사용자 존재 여부 확인
 export const fetchUserExists = async (id: string): Promise<boolean> => {
     const response = await fetch(`http://localhost:8081/api/user/existsById?id=${id}`);
     if (!response.ok) {
@@ -11,7 +9,6 @@ export const fetchUserExists = async (id: string): Promise<boolean> => {
     return response.json();
 };
 
-// 사용자 정보 가져오기
 export const fetchUserById = async (id: string): Promise<User> => {
     const response = await fetch(`http://localhost:8081/api/user/findById?id=${id}`);
     if (!response.ok) {
@@ -20,7 +17,6 @@ export const fetchUserById = async (id: string): Promise<User> => {
     return response.json();
 };
 
-// 모든 사용자 가져오기
 export const fetchAllUsers = async (): Promise<User[]> => {
     const response = await fetch(`http://localhost:8081/api/user/findAll`);
     if (!response.ok) {
@@ -29,7 +25,6 @@ export const fetchAllUsers = async (): Promise<User[]> => {
     return response.json();
 };
 
-// 사용자 수 가져오기
 export const fetchUserCount = async (): Promise<number> => {
     const response = await fetch(`http://localhost:8081/api/user/count`);
     if (!response.ok) {
@@ -38,7 +33,6 @@ export const fetchUserCount = async (): Promise<number> => {
     return response.json();
 };
 
-// 사용자 삭제
 export const deleteUserById = async (id: string): Promise<void> => {
     const response = await fetch(`http://localhost:8081/api/user/deleteById?id=${id}`, {
         method: 'DELETE',
@@ -48,7 +42,6 @@ export const deleteUserById = async (id: string): Promise<void> => {
     }
 };
 
-// 사용자 정보 업데이트
 export const updateUser = async (user: User): Promise<User> => {
     const response = await fetch(`http://localhost:8081/api/user/update`, {
         method: 'PUT',
@@ -63,28 +56,61 @@ export const updateUser = async (user: User): Promise<User> => {
     return response.json();
 };
 
-// 사용자 등록
-export const registerUser = async (user: User): Promise<User> => {
+export const registerUser = async (user: User, thumbnails: File[]): Promise<User> => {
+    const formData = new FormData();
+    formData.append('user', new Blob([JSON.stringify(user)], { type: 'application/json' }));
+
+    thumbnails.forEach((thumbnail, index) => {
+        formData.append(`thumbnails`, thumbnail);
+    });
+
     const response = await fetch(`http://localhost:8081/api/user/join`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user),
+        body: formData,
     });
+
     if (!response.ok) {
         throw new Error('Failed to register user');
     }
     return response.json();
 };
 
-// 사용자 로그인
+
+
 export const loginUser = async (username: string, password: string): Promise<string> => {
     const response = await fetch(`http://localhost:8081/api/user/login?username=${username}&password=${password}`, {
         method: 'POST',
     });
+
     if (!response.ok) {
         throw new Error('Failed to log in');
     }
-    return response.json();
+
+
+    const contentType = response.headers.get('Content-Type');
+    if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+        return data.token;
+    } else {
+        return response.text();
+    }
 };
+export const uploadThumbnailApi = async (thumbnails: File[]): Promise<number[]> => {
+    const formData = new FormData();
+    thumbnails.forEach(thumbnail => {
+        formData.append('images', thumbnail);
+    });
+
+    const response = await fetch('http://localhost:8081/api/thumbnails/upload', {
+        method: 'POST',
+        body: formData,
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to upload thumbnails');
+    }
+
+    const data = await response.json();
+    return data.imgIds;
+};
+

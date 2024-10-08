@@ -5,17 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="49786053-a601-4996-9fe6-17ac685f1975" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/next.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(page)/restaurant/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/restaurant/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(page)/restaurant/page2.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/restaurant/page2.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/Modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/Modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/Product.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/Product.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/context/WishlistContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/context/WishlistContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/modal/AddHeart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/modal/AddHeart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +22,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="nyamnyam-ad" />
+        <entry key="$PROJECT_DIR$" value="nyamnyam-user" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -66,7 +56,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "Merging release0.06",
+    "git-widget-placeholder": "nyamnyam-post",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/bit/Documents/NC13_project/nyamnyam/frontend",
@@ -76,7 +66,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.2.0.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "ts.external.directory.path": "C:\\Users\\bit\\Documents\\NC13_project\\nyamnyam\\frontend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -86,6 +76,7 @@
       <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\model" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\bitcamp\Documents\GitHub\nyamnyam-front\src\app\components" />
       <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\(page)\user\wallet\[id]" />
       <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\(page)\admin" />
     </key>
@@ -125,8 +116,7 @@
       <workItem from="1727760431335" duration="1482000" />
       <workItem from="1727842601005" duration="71000" />
       <workItem from="1728039836379" duration="732000" />
-      <workItem from="1728099778167" duration="187000" />
-      <workItem from="1728110739533" duration="203000" />
+      <workItem from="1728380955440" duration="817000" />
     </task>
     <servers />
   </component>

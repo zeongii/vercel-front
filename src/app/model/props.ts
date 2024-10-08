@@ -1,11 +1,11 @@
 export interface PostOptionsProps {
-    postUserId: number;     
-    currentId: number;     
-    onEdit: () => void; 
-    onDelete: () => void;      
-    onReport: () => void;      
-  }
+  postUserId: string;
+  currentId: string;
+  onEdit: () => void;
+  onDelete: () => void;
+  onReport: () => void;
+}
 
-  export interface PostListProps{
-    restaurantId: number;
-  }
+export interface PostListProps {
+  restaurantId: number;
+}

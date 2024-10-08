@@ -9,11 +9,7 @@ const postStrategy = async (url: string, data: any) => {
 };
 
 const postMultipartStrategy = async (url: string, formData: FormData) => {
-    return await instance.post(url, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+    return await instance.post(url, formData);
 }
 
 const postWithParamsStrategy = async (url: string, params?: any, data: any = {}) => {
@@ -23,6 +19,10 @@ const postWithParamsStrategy = async (url: string, params?: any, data: any = {})
 const putStrategy = async (url: string, data: any) => {
     return await instance.put(url, data);
 };
+
+const putMultipartStrategy = async (url: string, formData: FormData) => {
+    return await instance.put(url, formData);
+}
 
 const deleteStrategy = async (url: string) => {
     return await instance.delete(url);
@@ -58,6 +58,7 @@ export const strategy = {
     POST_MULTIPART: postMultipartStrategy,
     POST_PARAMS: postWithParamsStrategy,
     PUT: putStrategy,
+    PUT_MULTIPART: putMultipartStrategy,
     DELETE: deleteStrategy,
     DELETE_PARAMS: deleteWithParamStrategy
 };

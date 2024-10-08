@@ -8,7 +8,10 @@ import { postService } from "src/app/service/post/post.service";
 import { tag } from "src/app/api/tag/tag.api";
 import { TagModel } from "src/app/model/tag.model";
 import { restaurant } from '@/app/api/restaurant/restaurant.api';
-import { Camera } from '@phosphor-icons/react/dist/ssr';
+import { Camera, X } from '@phosphor-icons/react/dist/ssr';
+import Modal from '@/app/components/Modal';
+import { useDropzone } from 'react-dropzone';
+import nookies from 'nookies';
 
 export default function PostRegister() {
   const router = useRouter();
@@ -18,8 +21,8 @@ export default function PostRegister() {
   const [tagsByCategory, setTagsCategory] = useState<{ [key: string]: TagModel[] }>({});
   const [tags, setTags] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]);
-  const [previmages, setPrevImages] = useState<ImageModel[]>([]);
-  const [imagesToDelete, setImagesToDelete] = useState<number[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null); // Modal
 
   useEffect(() => {
     setFormData((prevData) => ({
@@ -31,7 +34,6 @@ export default function PostRegister() {
   }, [restaurantId]);
 
   useEffect(() => {
-    console.log("업데이트된 이미지 목록: ", images); //확인용
   }, [images]);
 
   const fetchRestaurant = async (restaurantId: number) => {
@@ -72,13 +74,9 @@ export default function PostRegister() {
     });
   };
 
-  const uploadImage = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-
-      const selectesFiles = Array.from(e.target.files);
-      console.log("선택된 파일 목록: ", selectesFiles); //확인용
-
-      setImages((prev) => [...prev, ...selectesFiles]);
+  const uploadImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setImages([...images, ...Array.from(event.target.files)]); 
     }
   };
 
@@ -86,6 +84,8 @@ export default function PostRegister() {
     e.preventDefault();
 
     const postData = {
+      userId: nookies.get().userId,
+      nickname: localStorage.getItem('nickname'),
       content: formData.content,
       taste: formData.taste,
       clean: formData.clean,
@@ -112,6 +112,19 @@ export default function PostRegister() {
     }
   };
 
+  // Drag & Drop
+  const {getRootProps, getInputProps} = useDropzone({
+    accept: {'image/*': []},
+    onDrop: (acceptedFiles) =>{
+      setImages((prevImg) => [...prevImg, ...acceptedFiles]);
+    },
+  });
+
+  // Modal
+  const handleImgClick = (image: File) => {
+    setSelectedImage(URL.createObjectURL(image));
+    setIsOpen(true);
+  }
 
   const handleDeleteImage = (fileName: string) => {
     setImages((prevImages) => prevImages.filter(img => img.name !== fileName));
@@ -202,24 +215,17 @@ export default function PostRegister() {
 
         <div className="mb-4">
           <label className="font-bold">◦ 이미지 첨부</label>
-          <div className='flex justify-center items-center border border-dashed border-gray-400 rounded-lg p-4 mt-2 relative'>
+          <div {...getRootProps()} 
+          className='flex flex-col justify-center items-center border border-dashed border-gray-400 rounded-lg p-4 mt-2 cursor-pointer text-gray-500 relative'>
+            <input {...getInputProps()} className='absolute top-0 left-0 w-full h-full cursor-pointer opacity-0'/>
             <label
               htmlFor="imageUpload"
-              className='flex flex-col items-center justify-center cursor-pointer text-gray-500 z-10'
-              style={{ minHeight: '50px', minWidth: '300px', zIndex: 20 }}
+              className='flex flex-col items-center justify-center cursor-pointer text-gray-500 z-10 w-full'
+              style={{ minHeight: '30px'}}
             >
               <Camera size={32} className='mb-2' color="#4B5563" weight="fill" />
               <span className='font-medium'>사진 첨부하기</span>
             </label>
-            <input
-              id='imageUpload'
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={uploadImage}
-              className="absolute top-0 left-0 w-full h-full cursor-pointer opacity-0 z-20"
-              style={{ position: 'relative', zIndex: 20 }}
-            />
           </div>
 
           <div className="flex flex-wrap gap-4 mt-4">
@@ -230,13 +236,14 @@ export default function PostRegister() {
                     src={URL.createObjectURL(image)}
                     alt={`미리보기 이미지 ${index + 1}`}
                     className="w-[120px] h-[120px] object-cover rounded-lg"
+                    onClick={() => handleImgClick(image)}
                   />
                   <button
                     type="button"
                     onClick={() => handleDeleteImage(image.name)}
-                    className="absolute top-1 right-1 text-red-500"
+                    className="absolute top-1 right-1 text-white font-bold"
                   >
-                    삭제
+                    <X size={24} weight='bold'/>
                   </button>
                 </div>
               ))
@@ -244,8 +251,15 @@ export default function PostRegister() {
               <p>선택된 파일 없음</p>
             )}
           </div>
+          
+          <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} closeButton={false}>
+            {selectedImage && (
+              <img src={selectedImage} alt="Modal 이미지" className="max-w-full max-h-screen rounded-lg" />
+            )}
+          </Modal>
         </div>
       </form>
+
       <div className="flex justify-end mt-6">
         <button type="button" className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded"
         onClick={handleSubmit}>
