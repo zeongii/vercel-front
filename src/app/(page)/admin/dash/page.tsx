@@ -25,6 +25,8 @@ import DashBoard from "src/app/(page)/admin/dashboard/page";
 import {fetchReportCountAll, fetchReportList} from "src/app/service/report/report.service";
 import {ReportModel} from "src/app/model/report.model";
 import UserList from "@/app/(page)/user/userList/page";
+import { useSearchContext } from "@/app/components/SearchContext";
+import { useRouter } from "next/navigation";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -35,7 +37,10 @@ export default function AdminDash() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [reportCountList, setReportCountList] = useState<ReportCountModel[]>([]);
     const [reportList, setReportList] = useState<ReportModel[]>([]);
-
+    
+    const { searchTerm } = useSearchContext();
+    const router = useRouter();
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     useEffect(() => {
         const countList = async () => {
@@ -56,8 +61,14 @@ export default function AdminDash() {
         }
         showReport();
 
-
+        setIsInitialLoad(false);
     }, []);
+
+    useEffect(() => {
+        if (searchTerm && !isInitialLoad) {
+            router.push(`/?search=${searchTerm}`);
+        }
+    }, [searchTerm]);
 
 
 
@@ -91,6 +102,8 @@ export default function AdminDash() {
             </div>
         );
     }
+
+    
 
     return (
         <>

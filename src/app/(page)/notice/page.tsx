@@ -4,10 +4,14 @@ import { useRouter } from "next/navigation";
 import { NoticeModel } from "src/app/model/notice.model";
 import { fetchNoticeList } from "src/app/service/notice/notice.service";
 import Link from "next/link";
+import { useSearchContext } from "@/app/components/SearchContext";
 
 export default function ShowNotice() {
     const [notice, setNotice] = useState<NoticeModel[]>([]);
+    const { searchTerm } = useSearchContext();
     const router = useRouter();
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
+
 
     const role = localStorage.getItem('role') || null;
 
@@ -22,7 +26,17 @@ export default function ShowNotice() {
         };
 
         loadNotices(); // 함수 호출
+
+
+        setIsInitialLoad(false);
     }, []);
+
+    useEffect(() => {
+        if (searchTerm && !isInitialLoad) {
+            router.push(`/?search=${searchTerm}`);
+        }
+    }, [searchTerm]);
+
 
     const moveToOne = (id: number) => {
         router.push(`/notice/details/${id}`);
@@ -41,42 +55,42 @@ export default function ShowNotice() {
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
                 <table className="w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
                     <thead>
-                    <tr className="bg-[#F46119] text-white">
-                        <th className="py-3 px-4 border-b">번호</th>
-                        <th className="py-3 px-4 border-b">제목</th>
-                        <th className="py-3 px-4 border-b">조회수</th>
-                        <th className="py-3 px-4 border-b">날짜</th>
-                    </tr>
+                        <tr className="bg-[#F46119] text-white">
+                            <th className="py-3 px-4 border-b">번호</th>
+                            <th className="py-3 px-4 border-b">제목</th>
+                            <th className="py-3 px-4 border-b">조회수</th>
+                            <th className="py-3 px-4 border-b">날짜</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {notice.map((n) => (
-                        <tr key={n.id}
-                            className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer text-center"
-                            onClick={() => moveToOne(n.id)}>
-                            <td className="py-3 px-4 border-b">
-                                <strong className="text-title">{n.id}</strong>
-                            </td>
-                            <td className="py-3 px-4 border-b">
-                                <Link href={`/product/default/${n.id}`}>
-                                    <div className="info flex flex-col">
-                                       {n.title}
-                                    </div>
-                                </Link>
-                            </td>
-                            <td className="py-3 px-4 border-b">{n.hits}</td>
-                            <td className="py-3 px-4 border-b">{n.date}</td>
-                        </tr>
-                    ))}
+                        {notice.map((n) => (
+                            <tr key={n.id}
+                                className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer text-center"
+                                onClick={() => moveToOne(n.id)}>
+                                <td className="py-3 px-4 border-b">
+                                    <strong className="text-title">{n.id}</strong>
+                                </td>
+                                <td className="py-3 px-4 border-b">
+                                    <Link href={`/product/default/${n.id}`}>
+                                        <div className="info flex flex-col">
+                                            {n.title}
+                                        </div>
+                                    </Link>
+                                </td>
+                                <td className="py-3 px-4 border-b">{n.hits}</td>
+                                <td className="py-3 px-4 border-b">{n.date}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
             {role === 'ADMIN' && (
-            <div className="flex flex-col mt-6 space-y-4">
-                <button onClick={moveToInsert}
+                <div className="flex flex-col mt-6 space-y-4">
+                    <button onClick={moveToInsert}
                         className="p-2 bg-[#41B3A3] text-white rounded hover:bg-blue-700 transition duration-200">
-                    공지사항 추가하기
-                </button>
-            </div>
+                        공지사항 추가하기
+                    </button>
+                </div>
             )}
         </main>
 

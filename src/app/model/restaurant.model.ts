@@ -11,4 +11,4 @@ interface RestaurantModel {
     operation: string;  
     lat?: number;
     lng?: number;
-}
+}   
