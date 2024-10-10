@@ -670,7 +670,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                             ))}
                         </>
                         
-                        <div className="text-button more-review-btn text-center mt-2 underline" onClick={handleViewMore}>
+                        <div className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded" onClick={handleViewMore}>
                             {visible >= sortedPosts.length ? "Hide Reviews" : "View More Reviews"}
                         </div>
                     </div>
