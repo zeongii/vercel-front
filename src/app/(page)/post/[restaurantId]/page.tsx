@@ -3,7 +3,7 @@
 import React, { FormEvent, useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation } from 'swiper/modules';
+import { Navigation } from 'swiper/modules';
 import 'swiper/css/bundle';
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import 'swiper/css';
@@ -362,7 +362,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     return (
         <>
             <div className="product-detail default" style={{ marginTop: '30px' }}>
-                <div className="review-block md:py-20 py-10 bg-surface">
+                <div className="review-block md:py-10 py-10 bg-surface">
                     <div className="heading flex items-center justify-between flex-wrap gap-4">
                         <div className="heading4">{`${restaurant?.name}`}
                             <span style={{ color: '#F46119', fontSize: 'inherit', fontWeight: 'inherit' }} className='ml-2'>Review</span>
@@ -669,9 +669,10 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                 </div>
                             ))}
                         </>
-                        
-                        <div className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded" onClick={handleViewMore}>
+                        <div className='flex justify-center'>
+                        <div className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded" onClick={handleViewMore}> 
                             {visible >= sortedPosts.length ? "Hide Reviews" : "View More Reviews"}
+                        </div>
                         </div>
                     </div>
                 </div>
