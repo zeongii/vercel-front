@@ -33,6 +33,13 @@ export const fetchUpvoteRestaurant = async (): Promise<RestaurantList[]> => {
     return data;
 }
 
+export const fetchTypeCount = async (id : string): Promise<CountItem[]> => {
+    const data = await admin.typeCount(id);
+    return data.slice(0, 5);
+};
+
+
+
 
 
 

@@ -1,6 +1,6 @@
 export interface OpinionModel {
     id: number;
-    userId: number;
+    userId: string;
     content: string;
     entryDate: string;
 

@@ -17,7 +17,7 @@ import styles from "src/css/mypage.module.css";
 import {
     fetchReceiptList,
     fetchShowArea,
-    fetchShowRestaurant,
+    fetchShowRestaurant, fetchTypeCount,
     fetchUpvoteRestaurant
 } from "src/app/service/admin/admin.service";
 import {Area, CountCost, CountItem, RestaurantList} from "src/app/model/dash.model";
@@ -25,19 +25,20 @@ import {Area, CountCost, CountItem, RestaurantList} from "src/app/model/dash.mod
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale, PointElement, LineElement);
 const DashBoard = () => {
-    const [count, setCount] = useState<CountItem[]>([]);
+    const [type, setType] = useState<CountItem[]>([]);
     const [region, setRegion] = useState<Area[]>([]);
     const [restaurant, setRestaurant] = useState<RestaurantList[]>([]);
     const [countRestaurant, setCountRestaurant] = useState<CountCost[]>([]);
     const [upvoteRestaurant, setUpvoteRestaurant] = useState<RestaurantList[]>([]);
+    const userId = "6704a9cf53819846d322fc1d";
 
 
     useEffect(() => {
-        const showArea = async () => {
-            const data = await fetchShowArea();
-            setRegion(data);
+        const typeList = async () => {
+            const data = await fetchTypeCount(userId);
+            setType(data);
         };
-        showArea();
+        typeList();
     }, []);
 
     useEffect(() => {
@@ -68,10 +69,10 @@ const DashBoard = () => {
 
 
 
-    const areaData = {
-        labels: region.map(item => item.area),
+    const typeData = {
+        labels: type.map(item => item.nickname),
         datasets: [{
-            data: region.map(item => item.total),
+            data: type.map(item => item.count),
             backgroundColor: ["#F46119", "#ed6d2b", "#f37f48", "#ea966d", "#EAB5A0FF"],
             borderColor: ["#fff", "#fff", "#fff", "#fff", "#fff"],
             borderWidth: 1,
@@ -113,18 +114,6 @@ const DashBoard = () => {
             },
         ],
     };
-
-    const role = localStorage.getItem('role');
-
-    if (role !== 'ADMIN') {
-        return (
-            <div className="unauthorized text-center mt-5">
-                <h2>권한이 없습니다</h2>
-                <p>You do not have permission to view this content.</p>
-            </div>
-        );
-    }
-
 
     return (
         <>
@@ -175,10 +164,10 @@ const DashBoard = () => {
             <div className={styles.row}>
                 <div className={styles.col}>
                     <div className={styles.card}>
-                        <div className={styles.cardHeader}>음식점 많은 지역 랭킹</div>
+                        <div className={styles.cardHeader}>내가 선호하는 음식점 타입</div>
                         <div className={styles.cardBody}>
                             <div className={styles.chartContainer}>
-                                <Doughnut data={areaData} options={{
+                                <Doughnut data={typeData} options={{
                                     responsive: true,
                                     maintainAspectRatio: false,
                                     plugins: {
@@ -200,16 +189,7 @@ const DashBoard = () => {
                         </div>
                     </div>
                 </div>
-                <div className={styles.col}>
-                    <div className={styles.card}>
-                        <div className={styles.cardHeader}>월별 영수증 리뷰 사용 횟수</div>
-                        <div className={styles.cardBody}>
-                            <div className={styles.chartContainer}>
-                                <Line data={lineData} options={{responsive: true}}/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </>
     );

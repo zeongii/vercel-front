@@ -1,21 +1,21 @@
 "use client";
 import React, {useEffect, useState} from "react";
-import {fetchInsertOpinion} from "src/app/service/opinion/opinion.serivce";
+import {fetchInsertOpinion} from "@/app/service/opinion/opinion.serivce";
 import Image from 'next/image'
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import {fetchShowArea, fetchShowCount} from "src/app/service/admin/admin.service";
-import {Area, CountItem, RestaurantList, UserPostModel} from "src/app/model/dash.model";
-import {OpinionModel} from "src/app/model/opinion.model";
+import {fetchShowArea, fetchShowCount} from "@/app/service/admin/admin.service";
+import {Area, CountItem, RestaurantList, UserPostModel} from "@/app/model/dash.model";
+import {OpinionModel} from "@/app/model/opinion.model";
 import {ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip} from "chart.js";
-import styles from "src/css/mypage.module.css";
+import styles from "@/css/mypage.module.css";
 import {Bar, Doughnut} from "react-chartjs-2";
-import MyCalendar from "src/app/(page)/user/calendar/[id]/page";
-import MyWallet from "src/app/(page)/user/wallet/[id]/page";
+import MyCalendar from "@/app/(page)/user/calendar/[id]/page";
+import MyWallet from "@/app/(page)/user/wallet/[id]/page";
 import nookies from "nookies";
 import {fetchPostList} from "@/app/service/post/post.service";
 import { useSearchContext } from "@/app/components/SearchContext";
-import { useRouter } from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale);
@@ -28,6 +28,8 @@ interface User {
 }
 
 
+
+
 export default function MyPage() {
     const [count, setCount] = useState<CountItem[]>([]);
     const [region, setRegion] = useState<Area[]>([]);
@@ -38,24 +40,18 @@ export default function MyPage() {
 
     const { searchTerm } = useSearchContext();
     const router = useRouter();
+    const pathname = usePathname();
     const [isInitialLoad, setIsInitialLoad] = useState(true);
+    const cookies = nookies.get();
+    const userId = cookies.userId;
 
-    useEffect(() => {
-        const countList = async () => {
-            const data = await fetchShowCount();
-            setCount(data);
-        };
-        countList();
-        setIsInitialLoad(false);
-    }, []);
+    const id = pathname?.split('/')[3];
+
 
 
     useEffect(() => {
-        const cookies = nookies.get();
-        const id = cookies.userId;
-        console.log(id)
 
-        if (id) {
+        if (userId) {
             // 유저 정보를 localStorage에서 가져오기
             const username = localStorage.getItem('username');
             const nickname = localStorage.getItem('nickname');
@@ -78,16 +74,20 @@ export default function MyPage() {
                 const regionData = await fetchShowArea();
                 setRegion(regionData);
 
-            //     const restaurantData = await fetchShowRankByAge(id);  // id 사용
-            //     setRestaurant(restaurantData);
-            //
-                const postData = await fetchPostList(id);  // id 사용
+                const postData = await fetchPostList(userId);  // id 사용
                 setPost(postData);
             };
-
             fetchData();
+
+            const countList = async () => {
+                const data = await fetchShowCount();
+                setCount(data);
+            };
+            countList();
+            setIsInitialLoad(false);
         }
     }, []);
+
 
     useEffect(() => {
         if (searchTerm && !isInitialLoad) {
@@ -98,8 +98,8 @@ export default function MyPage() {
 
 
     const [content, setContent] = useState("");
-    const userId = 1; // Replace this with the actual user ID
-    const currentDate = new Date().toISOString(); // Adjust format if needed
+
+    const currentDate = new Date().toISOString();
 
     const submit = async (content: string) => {
         const report: OpinionModel = {
@@ -168,6 +168,14 @@ export default function MyPage() {
 
     const totalPost = post.length;
 
+    if (!userId || id !== userId) {
+        return (
+            <div className="unauthorized text-center mt-5">
+                <h2>잘못된 접근입니다</h2>
+                <p>해당 페이지에 접근할 수 없습니다.</p>
+            </div>
+        );
+    }
 
     return (
         <>

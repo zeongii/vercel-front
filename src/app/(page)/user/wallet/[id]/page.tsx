@@ -22,7 +22,6 @@ export default function MyWallet() {
             try {
                 const resp = await fetchReceiptCost(id);
                 setCost(resp);
-                console.log(resp)
 
             } catch (error) {
                 console.error("Error fetching cost data", error);

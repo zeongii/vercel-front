@@ -68,12 +68,22 @@ const upvoteRestaurant = async (): Promise<RestaurantList[]> => {
 
 }
 
+const typeCount = async (id : string): Promise<CountItem[]> => {
+    try {
+        const resp = await strategy.GET(`${api.admin}/typeList/${id}`);
+        return resp.data;
+    } catch (error) {
+        console.error("Failed to fetch user counts");
+        throw new Error("Failed to fetch user counts");
+    }
+};
 
 
 
 
 
-export const admin = {showCount, showArea, showRankRestaurant,showRestaurant, receiptList, upvoteRestaurant}
+
+export const admin = {showCount, showArea, showRankRestaurant,showRestaurant, receiptList, upvoteRestaurant, typeCount}
 
 
 
