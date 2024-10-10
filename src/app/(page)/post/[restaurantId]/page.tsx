@@ -178,6 +178,16 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
         }
     })
 
+    // View More 
+    const handleViewMore = () => {
+        if(visible >= sortedPosts.length){
+            setVisible(2);
+        } else {
+            setVisible((prevVisible) => prevVisible + 2);
+        }
+    }
+    const visiblePosts = sortedPosts.slice(0, visible);
+
     // 댓글 버튼 
     const toggleReply = async (id: number) => {
         const { toggled, replies } = await replyService.toggle(id, replyToggles);
@@ -229,7 +239,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
         } else { // 댓글 수정 (replyId)
             setEditInput((prevInput) => ({
                 ...prevInput,
-                [id]: content,
+                [id]: content !== undefined ? content : "",
             }));
         }
     }
@@ -242,7 +252,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
         }));
         setEditInput((prevInput) => ({
             ...prevInput,
-            [replyId]: currentContent,
+            [replyId]: currentContent || "",
         }));
     };
 
@@ -309,12 +319,6 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
             }))
         }
     };
-
-    // View More 
-    const handleViewMore = () => {
-        setVisible((prevCount) => prevCount + 2);
-    }
-    const visiblePosts = posts.slice(0, visible);
 
     // 신고하기
     const postReport = async (postId: number) => {
@@ -458,7 +462,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                     </div>
                     <div className="list-review">
                         <>
-                            {sortedPosts.map((p) => (
+                            {visiblePosts.map((p) => (
                                 <div key={p.id} className="item flex max-lg:flex-col gap-y-4 w-full py-6 border-t border-line">
                                     <div className="left lg:w-1/4 w-full lg:pr-[15px]">
                                         <div className="list-img-review flex gap-2">
@@ -521,16 +525,17 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                                             <option key={index} value={reason}>{reason}</option>
                                                         ))}
                                                     </select>
-                                                    <button type="submit" className="bg-blue-500 text-white py-2 px-3 rounded hover:bg-blue-600">
-                                                        신고하기
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => setReportingPostId(null)}
-                                                        className="mt-2 bg-transparent hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded"
-                                                    >
-                                                        취소
-                                                    </button>
+                                                    <div className='flex justify-end mt-4'>
+                                                        <button type="submit" className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded">
+                                                            신고하기
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setReportingPostId(null)}
+                                                            className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded">
+                                                            취소
+                                                        </button>
+                                                    </div>
                                                 </form>
                                             </div>
                                         )}
@@ -555,15 +560,15 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="body1 mt-3">{p.content}</div>
-                                        <div className="mb-4 flex items-center">
+                                        <div className="body1 mt-3 mb-3">{p.content}</div>
+                                        <div className="flex items-center justify-start h-auto">
                                             {p.tags && p.tags.length > 0 ? (
-                                                <ul className="flex flex-wrap gap-2 items-center mt-2">
+                                                <ul className="flex flex-wrap gap-2 items-center justify-center h-full">
                                                     {p.tags.map((tag, index) => (
                                                         <li
                                                             key={index}
-                                                            style={{ marginLeft: index === 0 ? 0 : "9=8px" }}
-                                                            className="ml-2 rounded-full border border-gray-300 bg-white px-3 py-1 text-gray-600 font-semibold shadow-sm hover:bg-gray-100">
+                                                            style={{ marginLeft: index === 0 ? 0 : "8px", lineHeight: "32px" }}
+                                                            className="rounded-full border border-gray-300 bg-white px-3 py-1 text-gray-600 font-semibold shadow-sm hover:bg-gray-100">
                                                             {tag}
                                                         </li>
                                                     ))}
@@ -588,12 +593,12 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                             </div>
                                             {replyToggles[p.id] && (
                                                 <>
-                                                    <div className="mt-2 w-full">
+                                                    <div className="mt-4 w-full">
                                                         {replies[p.id] && replies[p.id].length > 0 ? (
-                                                            <ul>
+                                                            <ul className='list-none p-0 m-0'>
                                                                 {replies[p.id].map((reply, index) => (
                                                                     <li key={index} className="mb-2 border-b border-gray-200 pb-2">
-                                                                        <div className="flex items-center justify-between">
+                                                                        <div className="flex items-start justify-between">
                                                                             <div className="flex items-center">
                                                                                 <span className="inline-block rounded-full bg-gray-300 px-3 py-1 text-sm font-semibold text-gray-700">
                                                                                     {reply.nickname}
@@ -603,38 +608,40 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                                                                         <textarea
                                                                                             name="content"
                                                                                             id="content"
-                                                                                            value={editInput[reply.id] || reply.content}
+                                                                                            value={editInput[reply.id] !== undefined ? editInput[reply.id] : ""}
                                                                                             onChange={(e) => replyInputChange(reply.id, e.target.value, false)}
                                                                                             className="border rounded p-2 w-full"
                                                                                             style={{ minHeight: "50px", width: "100%" }}
                                                                                         />
                                                                                     </span>
                                                                                 ) : (
-                                                                                    <span className="ml-2" style={{ width: "auto", display: "inline-block", whiteSpace: "nowrap" }}>
+                                                                                    <span className="ml-2" style={{ width: "auto", display: "inline-block", whiteSpace: "pre-wrap", wordBreak: "break-word", overflowWrap: "break-word" }}>
                                                                                         {reply.content}
                                                                                     </span>
                                                                                 )}
                                                                             </div>
-                                                                            <div className="flex items-center">
-                                                                                <span className="text-gray-500 mr-4">{formatDate(reply.entryDate)}</span>
-                                                                                {reply.userId === currentUserId && (
-                                                                                    <div className="flex space-x-2">
-                                                                                        <button
-                                                                                            className="text-xs bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-3 border border-blue-500 hover:border-transparent rounded"
-                                                                                            onClick={() => editReply[reply.id] ? replyEditSave(reply.id, p.id) : replyEditClick(reply.id, reply.content)}
-                                                                                        >
-                                                                                            {editReply[reply.id] ? '저장' : '수정'}
-                                                                                        </button>
-                                                                                        <button
-                                                                                            className="text-xs bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-1 px-3 border border-red-500 hover:border-transparent rounded"
-                                                                                            onClick={() => reply.id && replyDelete(reply.id, p.id)}
-                                                                                        >
-                                                                                            삭제
-                                                                                        </button>
-                                                                                    </div>
-                                                                                )}
-                                                                            </div>
+                                                                            <div className="text-gray-500 text-right" style={{ minWidth: '110px', maxWidth: '120px', marginLeft: '10px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                                                                                {formatDate(reply.entryDate)}</div>
                                                                         </div>
+
+                                                                        {reply.userId === currentUserId && (
+                                                                            <div className="flex justify-end space-x-2 mt-2">
+                                                                                <button
+                                                                                    className="button-main custom-button ${editReply[reply.id] ? 'w-[50px]' : 'w-[60px]'} px-4 py-2 bg-green-500 text-white rounded"
+                                                                                    style={{ backgroundColor: editReply[reply.id] ? '#4CAF50' : '#3B82F6', marginRight: '5px', }}
+                                                                                    onClick={() => editReply[reply.id] ? replyEditSave(reply.id, p.id) : replyEditClick(reply.id, reply.content)}
+                                                                                >
+                                                                                    {editReply[reply.id] ? '저장' : '수정'}
+                                                                                </button>
+                                                                                <button
+                                                                                    className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded"
+                                                                                    style={{ marginRight: '5px' }}
+                                                                                    onClick={() => reply.id && replyDelete(reply.id, p.id)}
+                                                                                >
+                                                                                    삭제
+                                                                                </button>
+                                                                            </div>
+                                                                        )}
                                                                     </li>
                                                                 ))}
                                                             </ul>
@@ -651,7 +658,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                                             className="border rounded p-2 flex-grow" />
                                                         <button
                                                             type="submit"
-                                                            className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded mr-2">
+                                                            className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded">
                                                             등록
                                                         </button>
                                                     </form>
@@ -662,11 +669,10 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                 </div>
                             ))}
                         </>
-                        {visible < posts.length && (
-                            <div className="text-button more-review-btn text-center mt-2 underline" onClick={handleViewMore}>
-                                View More Comments
-                            </div>
-                        )}
+                        
+                        <div className="text-button more-review-btn text-center mt-2 underline" onClick={handleViewMore}>
+                            {visible >= sortedPosts.length ? "Hide Reviews" : "View More Reviews"}
+                        </div>
                     </div>
                 </div>
             </div>

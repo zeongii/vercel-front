@@ -267,7 +267,7 @@ export default function PostRegister() {
         </button>
         <button
           type="button" className="button-main custom-button px-4 py-2 bg-gray-500 text-white rounded"
-          onClick={() => router.push(`/post/${restaurantId}`)}>
+          onClick={() => router.push(`/restaurant/${restaurantId}`)}>
           뒤로가기
         </button>
       </div>
