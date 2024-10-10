@@ -71,10 +71,10 @@ export default function PostDetail() {
   return (
     <main className="product-detail default" style={{ marginTop: '10px' }}>
       <div className="heading4">
-        <span style={{ color: '#F46119', fontSize: '32px !important', fontWeight: 'bold' }}>
+        <span style={{ color: '#F46119', fontSize: 'inherit', fontWeight: 'inherit' }}>
           {nickname}
         </span>
-        <span style={{ fontSize: '32px !important', fontWeight: 'bold' }}>
+        <span style={{ fontSize: 'inherit', fontWeight: 'inherit' }}>
           님 리뷰
         </span>
       </div>

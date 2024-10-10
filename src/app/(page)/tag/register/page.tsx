@@ -7,23 +7,42 @@ import { initialTag, TagModel } from "src/app/model/tag.model";
 import { tagService } from "src/app/service/tag/tag.service";
 
 export default function TagRegister() {
-  const router = useRouter();
+  const [tags, setTags] = useState<{ [category: string]: TagModel[] }>({});
   const [tagCategory, setTagCategory] = useState<string[]>([]);
   const [formData, setFormData] = useState<TagModel>(initialTag);
+  const allTags: TagModel[] = Object.values(tags).flat();
+  const router = useRouter();
 
   useEffect(() => {
+    fetchTag();
     fetchTagCategory();
-  }, []); 
+
+  }, []);
+
+  const fetchTag = async () => {
+    const data = await tag.getAllTags();
+    setTags(data.sort((a: TagModel, b: TagModel) => a.tagCategory.localeCompare(b.tagCategory)));
+  }
 
   const fetchTagCategory = async () => {
-    const data = await tag.getCategoryNames(); 
+    const data = await tag.getCategoryNames();
     setTagCategory(data);
   }
 
+  const groupTags = allTags.reduce((acc: { [key: string]: string[] }, tag) => {
+    if (!acc[tag.tagCategory]) {
+      acc[tag.tagCategory] = [];
+    }
+    acc[tag.tagCategory].push(tag.name);
+    return acc;
+  }, {});
+
+  const maxLength = Math.max(...Object.values(groupTags).map((group) => group.length));
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    await tagService.insert(formData); 
-    router.push('/tag/tags'); 
+    await tagService.insert(formData);
+    router.push('/tag/tags');
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -35,44 +54,72 @@ export default function TagRegister() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center" style={{ marginTop: '30px' }}>
-      <h1>[태그 등록]</h1>
+    <div className="heading4" style={{ marginTop: '30px' }}>
+      <table className="w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden mt-4 text-center">
+        <thead>
+          <tr className="bg-[#F46119] text-white">
+            <th className="py-3 px-4 border-b text-sm">No</th>
+            <th className="py-3 px-4 border-b text-sm">방문목적</th>
+            <th className="py-3 px-4 border-b text-sm">분위기</th>
+            <th className="py-3 px-4 border-b text-sm">편의시설</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {Array.from({ length: maxLength } as { length: number }, (_, index: number) => (
+            <tr key={index}>
+              <td className="py-2 px-4 border-b text-sm">{index + 1}</td>
+              {Object.keys(groupTags).map((categoty) => (
+                <td key={categoty} className="py-2 px-4 border-b text-sm">
+                  {groupTags[categoty][index] || ''}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
       <form onSubmit={handleSubmit} className="space-y-4 p-4">
-      <div>
-          <label>태그 카테고리</label>
+        <div>
+          <span style={{ color: '#F46119', fontSize: 'inherit', fontWeight: 'inherit' }}>카테고리</span>
+          <span>를 선택해주세요.</span>
           <select
             name="tagCategory"
             value={formData.tagCategory}
             onChange={handleChange}
             className="border rounded p-2 w-full"
           >
-            <option value="">선택</option>
+            <option value="">목록</option>
             {tagCategory.map((category) => (
-              <option key={category} value={category}>
+              <option key={category} value={category} className="item flex items-center justify-between gap-1.5">
                 {category}
               </option>
             ))}
           </select>
         </div>
-        
+
         <div>
-          <label>태그명</label>
+          <span style={{ color: '#F46119', fontSize: 'inherit', fontWeight: 'inherit' }}>태그명</span>
+          <span>을 입력해주세요.</span>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             className="border rounded p-2 w-full"
+            style={{ borderColor: '#d3d3d3' }}
           />
         </div>
 
-        <button
-          type="submit"
-          className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded mr-2"
-        >
-          등록하기
-        </button>
+        <div className="flex justify-end mt-4">
+          <button
+            type="submit"
+            className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded"
+          >
+            등록하기
+          </button>
+        </div>
       </form>
-    </main>
+    </div>
   );
 }
