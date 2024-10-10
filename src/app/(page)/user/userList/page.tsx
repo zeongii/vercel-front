@@ -88,12 +88,12 @@ const UserTable = ({users = []}) => {
             </table>
             <div className="pagination mt-4 flex justify-between">
                 <button onClick={handlePrevious} disabled={currentPage === 1}
-                        className="bg-blue-500 text-white py-1 px-3 rounded">
+                        className="bg-[#4fc8cc] text-white py-1 px-3 rounded">
                     이전
                 </button>
                 <span>페이지 {currentPage} / {totalPages}</span>
                 <button onClick={handleNext} disabled={currentPage === totalPages}
-                        className="bg-blue-500 text-white py-1 px-3 rounded">
+                        className="bg-[#4fc8cc] text-white py-1 px-3 rounded">
                     다음
                 </button>
             </div>

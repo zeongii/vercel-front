@@ -1,5 +1,6 @@
 import {admin} from "src/app/api/admin/admin.api";
 import {Area, CountCost, CountItem, RestaurantList} from "src/app/model/dash.model";
+import {PostModel} from "@/app/model/post.model";
 
 
 export const fetchShowCount = async (): Promise<CountItem[]> => {
@@ -37,6 +38,21 @@ export const fetchTypeCount = async (id : string): Promise<CountItem[]> => {
     const data = await admin.typeCount(id);
     return data.slice(0, 5);
 };
+
+export const fetchAreaCount = async (id : string): Promise<Area[]> => {
+    const data = await admin.areaCount(id);
+    return data.slice(0, 5);
+};
+
+export const fetchCurrentPost = async(): Promise<PostModel[]> => {
+    const data = await admin.currentPost();
+    return data;
+
+}
+
+
+
+
 
 
 

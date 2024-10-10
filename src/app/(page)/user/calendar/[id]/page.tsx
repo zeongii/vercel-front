@@ -22,7 +22,7 @@ interface CalendarEvent {
 const MyCalendar: React.FC = () => {
     const [openDropdowns, setOpenDropdowns] = useState<{ [key: string]: boolean }>({});
     const [wallet, setWallet] = useState<ReceiptModel[]>([]);
-    const [filteredEvents, setFilteredEvents] = useState<CalendarEvent[]>([]); // 필터링된 이벤트 상태 추가
+    const [filteredEvents, setFilteredEvents] = useState<CalendarEvent[]>([]);
     const cookies = nookies.get();
     const id = cookies.userId;
 
@@ -62,7 +62,6 @@ const MyCalendar: React.FC = () => {
             };
         });
 
-        // 모든 이벤트 병합 (월/연도 필터링 제거)
         setFilteredEvents([...walletEvents]);
 
     }, [wallet]);
@@ -90,7 +89,7 @@ const MyCalendar: React.FC = () => {
             <FullCalendar
                 plugins={[dayGridPlugin]}
                 initialView="dayGridMonth"
-                events={filteredEvents}  // 병합된 전체 이벤트를 전달
+                events={filteredEvents}
                 eventContent={renderEventContent}
                 editable={true}
                 droppable={true}

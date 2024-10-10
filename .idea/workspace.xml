@@ -5,15 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="49786053-a601-4996-9fe6-17ac685f1975" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/app/(page)/user/dashBoard/[id]/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/next.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/admin/dash/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/admin/dash/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/(page)/admin/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/admin/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/notice/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/notice/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/(page)/user/calendar/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/calendar/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(page)/user/mypage/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/mypage/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(page)/user/wallet/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/wallet/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/user/mypage/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/mypage/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/user/userList/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/userList/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/api/admin/admin.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/admin/admin.api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/common/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/common/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/model/opinion.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/model/opinion.model.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/service/admin/admin.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/admin/admin.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -85,6 +85,7 @@
       <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\model" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\(page)\user\dashBoard\[id]" />
       <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\(page)\user\mypage\[id]" />
       <recent name="C:\Users\bitcamp\Documents\GitHub\nyamnyam-front\src\app\components" />
       <recent name="C:\Users\USER\Documents\nyamnyam\nyamnyam-front\src\app\(page)\user\wallet\[id]" />
@@ -129,7 +130,7 @@
       <workItem from="1728099778167" duration="187000" />
       <workItem from="1728110739533" duration="203000" />
       <workItem from="1728280154645" duration="61000" />
-      <workItem from="1728529597572" duration="6563000" />
+      <workItem from="1728529597572" duration="12060000" />
     </task>
     <servers />
   </component>

@@ -65,9 +65,6 @@ const DashBoard = () => {
     }, []);
 
 
-
-
-
     const areaData = {
         labels: region.map(item => item.area),
         datasets: [{
@@ -150,6 +147,8 @@ const DashBoard = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className={styles.row}>
                 <div className={styles.col}>
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>좋아요를 많이 받은 포스팅의 음식점 랭킹</div>
@@ -200,12 +199,16 @@ const DashBoard = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className={styles.row}>
                 <div className={styles.col}>
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>월별 영수증 리뷰 사용 횟수</div>
                         <div className={styles.cardBody}>
                             <div className={styles.chartContainer}>
-                                <Line data={lineData} options={{responsive: true}}/>
+                                <Line data={lineData} options={{
+                                    responsive: true,
+                                    maintainAspectRatio: false,}}/>
                             </div>
                         </div>
                     </div>

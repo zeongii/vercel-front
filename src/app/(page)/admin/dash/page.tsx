@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import Image from 'next/image'
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import {fetchShowCount} from "src/app/service/admin/admin.service";
+import {fetchCurrentPost, fetchShowCount} from "src/app/service/admin/admin.service";
 import {CountItem, ReportCountModel} from "src/app/model/dash.model";
 import {
     ArcElement,
@@ -27,6 +27,9 @@ import {ReportModel} from "src/app/model/report.model";
 import UserList from "@/app/(page)/user/userList/page";
 import { useSearchContext } from "@/app/components/SearchContext";
 import { useRouter } from "next/navigation";
+import {fetchAllUsers} from "@/app/api/user/user.api";
+import {User} from "@/app/model/user.model";
+import {PostModel} from "@/app/model/post.model";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -38,6 +41,9 @@ export default function AdminDash() {
     const [reportCountList, setReportCountList] = useState<ReportCountModel[]>([]);
     const [reportList, setReportList] = useState<ReportModel[]>([]);
     const [openIndex, setOpenIndex] = useState<number | null>(null);
+    const [user, setUser] = useState<User[]>([]);
+    const [todayPost, setTodayPost] = useState<PostModel[]>([]);
+
 
     const handleRowClick = (index: number) => {
         setOpenIndex(openIndex === index ? null : index);
@@ -45,24 +51,24 @@ export default function AdminDash() {
 
 
     useEffect(() => {
-        const countList = async () => {
-            const data = await fetchShowCount();
-            setCount(data);
+        const list = async () => {
+            const countData = await fetchShowCount();
+            setCount(countData);
+
+            const reportData = await fetchReportCountAll();
+            setReportCountList(reportData);
+
+            const listData = await fetchReportList();
+            setReportList(listData);
+
+            const userData = await fetchAllUsers();
+            setUser(userData);
+
+            const todayData = await fetchCurrentPost();
+            setTodayPost(todayData)
+
         };
-        countList();
-
-        const showCountReport = async () => {
-            const data = await fetchReportCountAll();
-            setReportCountList(data);
-        }
-        showCountReport()
-
-        const showReport = async () => {
-            const data = await fetchReportList();
-            setReportList(data);
-        }
-        showReport();
-
+        list();
 
     }, []);
 
@@ -80,12 +86,8 @@ export default function AdminDash() {
         ],
     };
 
-
-    // const countByPostId = (postId: number) => {
-    //     return reportList.reduce((acc, report:ReportModel) => {
-    //         return report.postId === postId ? acc + 1 : acc;
-    //     }, 0);
-    // };
+    const totalUser = user.length;
+    const totalTodayPost = todayPost.length;
 
     const role = localStorage.getItem('role');
 
@@ -160,6 +162,22 @@ export default function AdminDash() {
                                 className={`tab text-content w-full ${activeTab === 'user' ? 'block' : 'hidden'}`}>
                                 <div className="overview grid sm:grid-cols-3 gap-5 mt-7 ">
                                     <div
+                                        className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">
+                                        <div className="counter">
+                                            <span className="tese">Total user</span>
+                                            <h5 className="heading5 mt-1">{totalUser}</h5>
+                                        </div>
+                                        <Icon.User className='text-4xl'/>
+                                    </div>
+                                    <div
+                                        className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">
+                                        <div className="counter">
+                                            <span className="tese">Today post</span>
+                                            <h5 className="heading5 mt-1">{totalTodayPost}</h5>
+                                        </div>
+                                        <Icon.ReceiptX className='text-4xl'/>
+                                    </div>
+                                    <div
                                         className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs w-full ">
                                         <Link href="/tag/tags">
                                             <div className="counter">
@@ -168,22 +186,7 @@ export default function AdminDash() {
                                         </Link>
                                         <Icon.Tag className='text-4xl'/>
                                     </div>
-                                    <div
-                                        className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">
-                                        <div className="counter">
-                                            <span className="tese">Cancelled post</span>
-                                            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}> </Modal>
-                                        </div>
-                                        <Icon.ReceiptX className='text-4xl'/>
-                                    </div>
-                                    <div
-                                        className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">
-                                        <div className="counter">
-                                            <span className="tese">Total Number of post</span>
-                                            <h5 className="heading5 mt-1">200</h5>
-                                        </div>
-                                        <Icon.Package className='text-4xl'/>
-                                    </div>
+
                                 </div>
                                 <div className="recent_order pt-5 px-5 pb-2 mt-7 border border-line rounded-xl">
                                     <div>
