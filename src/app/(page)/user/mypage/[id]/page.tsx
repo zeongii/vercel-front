@@ -233,7 +233,7 @@ export default function MyPage() {
                                                 <h5 className="heading5 mt-1">insert</h5>
                                             </div>
                                         </Link>
-                                        <Icon.Receipt className='text-4xl'/>
+                                        <Icon.Barcode className='text-4xl'/>
                                     </div>
                                     <div
                                         className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">

@@ -217,13 +217,13 @@ export default function AdminDash() {
                                 className={`tab text-content overflow-hidden w-full h-auto p-7 mt-7 border border-line rounded-xl ${activeTab === 'post' ? 'block' : 'hidden'}`}>
 
                                 <table className="w-full bg-white rounded-lg text-center">
-                                    <thead className="bg-gray-100 border-b border-gray-300 text-center">
+                                    <thead className="bg-[#FDEBD8FF] border-b border-[#FDEBD8FF] text-center">
                                     <tr>
                                         <th scope="col"
-                                            className="py-3 text-sm font-bold uppercase text-secondary">postId
+                                            className="py-3 text-sm font-bold uppercase text-secondary">신고된 포스팅의 번호
                                         </th>
                                         <th scope="col"
-                                            className="py-3 text-sm font-bold uppercase text-secondary">postCount
+                                            className="py-3 text-sm font-bold uppercase text-secondary">신고횟수
                                         </th>
                                     </tr>
                                     </thead>
@@ -231,8 +231,8 @@ export default function AdminDash() {
                                     {reportCountList.map((r, index) => (
                                         <React.Fragment key={r.postId}>
                                             <tr
-                                                className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
-                                                onClick={() => handleRowClick(index)} // 클릭 시 드롭다운 토글
+                                                className="item duration-300 border-b border-gray-200 hover:bg-gray-10 cursor-pointer"
+                                                onClick={() => handleRowClick(index)}
                                             >
                                                 <td className="py-3">
                                                     <strong className="text-title">{r.postId}</strong>
