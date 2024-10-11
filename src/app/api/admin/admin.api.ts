@@ -1,6 +1,7 @@
 import {api} from "src/app/api/request";
 import {Area, CountCost, CountItem, RestaurantList} from "src/app/model/dash.model";
 import {strategy} from "src/app/api/api.strategy";
+import {PostModel} from "@/app/model/post.model";
 
 
 const showCount = async (): Promise<CountItem[]> => {
@@ -68,12 +69,44 @@ const upvoteRestaurant = async (): Promise<RestaurantList[]> => {
 
 }
 
+const typeCount = async (id : string): Promise<CountItem[]> => {
+    try {
+        const resp = await strategy.GET(`${api.admin}/typeList/${id}`);
+        return resp.data;
+    } catch (error) {
+        console.error("Failed to fetch user counts");
+        throw new Error("Failed to fetch user counts");
+    }
+};
+
+const areaCount = async (id : string): Promise<Area[]> => {
+    try {
+        const resp = await strategy.GET(`${api.admin}/userAreaList/${id}`);
+        return resp.data;
+    } catch (error) {
+        console.error("Failed to fetch user counts");
+        throw new Error("Failed to fetch user counts");
+    }
+};
+
+const currentPost = async (): Promise<PostModel[]> => {
+    try {
+        const resp = await strategy.GET(`${api.admin}/todayPost`);
+        return resp.data;
+    } catch (error) {
+        console.error("Failed to fetch user counts");
+        throw new Error("Failed to fetch user counts");
+    }
+};
 
 
 
 
 
-export const admin = {showCount, showArea, showRankRestaurant,showRestaurant, receiptList, upvoteRestaurant}
+
+
+
+export const admin = {showCount, showArea, showRankRestaurant,showRestaurant, receiptList, upvoteRestaurant, typeCount, areaCount, currentPost}
 
 
 

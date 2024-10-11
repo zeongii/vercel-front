@@ -30,7 +30,6 @@ import { useRouter } from "next/navigation";
 import {fetchAllUsers} from "@/app/api/user/user.api";
 import {User} from "@/app/model/user.model";
 import {PostModel} from "@/app/model/post.model";
-import MyWallet from "@/app/(page)/user/wallet/[id]/page";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -50,10 +49,6 @@ export default function AdminDash() {
         setOpenIndex(openIndex === index ? null : index);
     };
 
-
-    const { searchTerm } = useSearchContext();
-    const router = useRouter();
-    const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     useEffect(() => {
         const list = async () => {
@@ -76,12 +71,6 @@ export default function AdminDash() {
         list();
 
     }, []);
-
-    useEffect(() => {
-        if (searchTerm && !isInitialLoad) {
-            router.push(`/?search=${searchTerm}`);
-        }
-    }, [searchTerm]);
 
 
     const countData = {
@@ -281,10 +270,10 @@ export default function AdminDash() {
                                 </table>
                             </div>
                             <div
-                                className={`tab text-content overflow-auto w-full p-7 mt-7 border border-line rounded-xl ${activeTab === 'opinion' ? 'block' : 'hidden'}`}>
-                                <div><ShowOpinion/></div>
+                                className={`tab_opinion text-content w-full text-center p-7 mt-7 border border-line rounded-xl ${activeTab === 'opinion' ? 'block' : 'hidden'}`}>
+                                <h3 className="heading6">의견보기</h3>
+                                <div className="mb-10"><ShowOpinion/></div>
                             </div>
-
 
                             <div
                                 className={`tab text-content overflow-hidden w-full p-7 mt-7 border border-line rounded-xl ${activeTab === 'dash' ? 'block' : 'hidden'}`}>

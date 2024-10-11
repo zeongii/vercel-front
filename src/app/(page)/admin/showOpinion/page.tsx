@@ -26,7 +26,7 @@ export default function ShowOpinion() {
                 <div>
                     <table className="w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
                         <thead>
-                        <tr>
+                        <tr className="bg-[#FDEBD8FF]">
                             <th className="py-3 px-4 border-b">번호</th>
                             <th className="py-3 px-4 border-b">내용</th>
                         </tr>
