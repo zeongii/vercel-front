@@ -25,7 +25,6 @@ export default function TodayPost() {
 
         fetchData();
     }, []);
-    
 
     const openModal = (imageURL: string) => {
         setCurrentImg(imageURL);
@@ -87,6 +86,7 @@ export default function TodayPost() {
                                 </Modal>
 
                                 <div className="user mt-3">
+                                {/* <div className="text-title">{post?.restaurantName}</div> */}
                                     <div className="text-title">{post?.nickname || '닉네임 없음'}</div>
                                     <div className="flex items-center gap-2">
                                         <div className="text-secondary2">{post?.entryDate && formDate(post.entryDate)}</div>
