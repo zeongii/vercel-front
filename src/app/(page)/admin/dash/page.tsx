@@ -51,6 +51,10 @@ export default function AdminDash() {
     };
 
 
+    const { searchTerm } = useSearchContext();
+    const router = useRouter();
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
+
     useEffect(() => {
         const list = async () => {
             const countData = await fetchShowCount();
@@ -72,6 +76,12 @@ export default function AdminDash() {
         list();
 
     }, []);
+
+    useEffect(() => {
+        if (searchTerm && !isInitialLoad) {
+            router.push(`/?search=${searchTerm}`);
+        }
+    }, [searchTerm]);
 
 
     const countData = {

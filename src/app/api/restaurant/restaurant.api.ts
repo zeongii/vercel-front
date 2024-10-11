@@ -6,6 +6,11 @@ import {ex} from "@fullcalendar/core/internal-common";
 // restaurant/page.tsx api
 
 // (page)/restaurant/page.tsx api
+const fetchRestaurantAll = async () => {
+    const response = await strategy.GET(`${api.restaurant}/restaurants`);
+    return response.data
+}
+
  const fetchRestaurantsBySearch = async (keyword: string) => {
     const response = await strategy.GET(`${api.restaurant}/search`, { q: keyword });
     return response.data;
@@ -60,6 +65,7 @@ const searchRestaurants = async (query: string) => {
 };
 
 export const restaurant = {
+    fetchRestaurantAll,
     fetchRestaurantsBySearch,
     fetchRestaurantsByTag,
     fetchRestaurantsByCategory,
