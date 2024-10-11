@@ -10,6 +10,9 @@ export default function ShowNotice() {
     const router = useRouter();
     const {id} = useParams();
 
+
+
+
     useEffect(() => {
         const fetchNotice = async (id: number) => {
             try {
@@ -24,6 +27,17 @@ export default function ShowNotice() {
             fetchNotice(Number(id));
         }
     }, [id]);
+
+    const role = localStorage.getItem('role');
+
+    if (role !== 'ADMIN') {
+        return (
+            <div className="unauthorized text-center mt-5">
+                <h2>권한이 없습니다</h2>
+                <p>You do not have permission to view this content.</p>
+            </div>
+        );
+    }
 
     return (
         <main className="flex min-h-screen flex-col items-center p-6 bg-white-100">

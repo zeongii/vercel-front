@@ -295,12 +295,16 @@ export default function MyPage() {
                                             </thead>
                                             <tbody>
                                             {post.map(p => (
-                                                <tr key={p.postId} className="item duration-300 border-b border-line">
+                                                <tr key={p.postId}
+                                                    className="item duration-300 border-b border-line h-auto">
                                                     <Link className=" text-sm text-secondary"
                                                           href={`/restaurant/${p.restaurantId}`}>
-                                                        <th scope="row" className="py-3">
-                                                            <span
-                                                                className="tag px-4 py-1.5 rounded-full bg-orange-100 text-orange font-semibold text-sm">{p.name}</span>
+                                                        <th scope="row"
+                                                            className="py-3 whitespace-nowrap overflow-hidden text-ellipsis">
+                                                                <span
+                                                                    className="tag px-4 py-1.5 rounded-full bg-orange-100 text-orange font-semibold text-sm">
+                                                                      {p.name}
+                                                                </span>
                                                         </th>
                                                     </Link>
                                                     <td className="py-3 text-left">
