@@ -1,9 +1,6 @@
 import {admin} from "src/app/api/admin/admin.api";
 import {Area, CountCost, CountItem, RestaurantList} from "src/app/model/dash.model";
-import showRestaurant from "src/app/(page)/receipt/receiptRestaurant/[restaurantId]/page";
-import {number} from "prop-types";
-import {restaurant} from "src/app/api/restaurant/restaurant.api";
-
+import {PostModel} from "@/app/model/post.model";
 
 
 export const fetchShowCount = async (): Promise<CountItem[]> => {
@@ -21,18 +18,45 @@ export const fetchShowRestaurant = async (): Promise<RestaurantList[]> => {
     return data;
 }
 
-export const fetchRestaurantOne = async (id: number): Promise<RestaurantModel> => {
+export const fetchRestaurantOne = async (id: string): Promise<RestaurantModel> => {
     const data: RestaurantModel = await admin.showRestaurant(id);
     return data;
 }
 
-export const fetchShowRankByAge = async (id: number): Promise<RestaurantList[]> => {
-    const data: RestaurantList[] = await admin.showRankByAge(id);
-    return data;
-}
 
 export const fetchReceiptList = async (): Promise<CountCost[]> => {
     const data = await admin.receiptList();
     return data;
 }
+
+export const fetchUpvoteRestaurant = async (): Promise<RestaurantList[]> => {
+    const data = await admin.upvoteRestaurant();
+    return data;
+}
+
+export const fetchTypeCount = async (id : string): Promise<CountItem[]> => {
+    const data = await admin.typeCount(id);
+    return data.slice(0, 5);
+};
+
+export const fetchAreaCount = async (id : string): Promise<Area[]> => {
+    const data = await admin.areaCount(id);
+    return data.slice(0, 5);
+};
+
+export const fetchCurrentPost = async(): Promise<PostModel[]> => {
+    const data = await admin.currentPost();
+    return data;
+
+}
+
+
+
+
+
+
+
+
+
+
 

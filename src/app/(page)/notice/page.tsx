@@ -4,10 +4,18 @@ import { useRouter } from "next/navigation";
 import { NoticeModel } from "src/app/model/notice.model";
 import { fetchNoticeList } from "src/app/service/notice/notice.service";
 import Link from "next/link";
+import { useSearchContext } from "@/app/components/SearchContext";
+
+const PAGE_SIZE = 10; // 페이지당 표시할 공지사항 수
 
 export default function ShowNotice() {
     const [notice, setNotice] = useState<NoticeModel[]>([]);
+    const { searchTerm } = useSearchContext();
     const router = useRouter();
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
+    const role = localStorage.getItem('role') || null;
+
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         const loadNotices = async () => {
@@ -20,7 +28,14 @@ export default function ShowNotice() {
         };
 
         loadNotices(); // 함수 호출
+        setIsInitialLoad(false);
     }, []);
+
+    useEffect(() => {
+        if (searchTerm && !isInitialLoad) {
+            router.push(`/?search=${searchTerm}`);
+        }
+    }, [searchTerm]);
 
     const moveToOne = (id: number) => {
         router.push(`/notice/details/${id}`);
@@ -31,59 +46,75 @@ export default function ShowNotice() {
     };
 
     const moveDashboard = () => {
-        router.push('/admin/dashboard')
-    }
+        router.push('/admin/dashboard');
+    };
+
+    // 전체 페이지 수 계산
+    const totalPages = Math.ceil(notice.length / PAGE_SIZE);
+    // 현재 페이지에 해당하는 공지사항 목록
+    const currentNotices = notice.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
     return (
-        <main className="flex min-h-screen flex-col items-center p-6 bg-gray-100 mt-20">
+        <main className="flex min-h-screen flex-col items-center" style={{marginTop: '30px'}}>
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
-                <table className="w-full bg-white rounded-lg text-center">
-                    <thead className="bg-gray-100 border-b border-gray-300 text-center">
-                    <tr>
-                        <th scope="col" className="py-3 text-left text-sm font-bold uppercase text-secondary">번호</th>
-                        <th scope="col" className="py-3 text-left text-sm font-bold uppercase text-secondary">제목</th>
-                        <th scope="col" className="py-3 text-left text-sm font-bold uppercase text-secondary">조회수</th>
-                        <th scope="col" className="py-3 text-right text-sm font-bold uppercase text-secondary">날짜</th>
+                <table className="w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
+                    <thead>
+                    <tr className="bg-[#F46119] text-white">
+                        <th className="py-3 px-4 border-b">번호</th>
+                        <th className="py-3 px-4 border-b">제목</th>
+                        <th className="py-3 px-4 border-b">조회수</th>
+                        <th className="py-3 px-4 border-b">날짜</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {notice.map((n) => (
+                    {currentNotices.map((n) => (
                         <tr key={n.id}
-                            className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer"
+                            className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer text-center"
                             onClick={() => moveToOne(n.id)}>
-                            <td className="py-3 text-left">
+                            <td className="py-3 px-4 border-b">
                                 <strong className="text-title">{n.id}</strong>
                             </td>
-                            <td className="py-3">
-                                <Link href={`/product/default/${n.id}`} className="product flex items-center gap-3">
+                            <td className="py-3 px-4 border-b">
+                                <Link href={`/product/default/${n.id}`}>
                                     <div className="info flex flex-col">
-                                        <strong className="product_name text-button">{n.title}</strong>
-                                        <span className="product_tag caption1 text-secondary"></span>
+                                        {n.title}
                                     </div>
                                 </Link>
                             </td>
-                            <td className="py-3">{n.hits}</td>
-                            <td className="py-3 text-right">
-                                <span
-                                    className="tag px-4 py-1.5 rounded-full bg-opacity-10 bg-purple text-purple caption1 font-semibold">{n.date}</span>
-                            </td>
+                            <td className="py-3 px-4 border-b">{n.hits}</td>
+                            <td className="py-3 px-4 border-b">{n.date}</td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
+                <div className="flex justify-between mt-4 space-x-2 w-full">
+                    <button
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                        className="p-2 bg-[#eca459] rounded hover:bg-gray-400 transition duration-200 text-white text-border"
+                    >
+                        이전
+                    </button>
+                    <span>{currentPage} / {totalPages}</span>
+                    <button
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                        className="p-2 bg-[#eca459] rounded hover:bg-gray-400 transition duration-200 text-white text-border"
+                    >
+                        다음
+                    </button>
+                </div>
             </div>
 
-            <div className="flex flex-col mt-6 space-y-4">
-                <button onClick={moveToInsert}
-                        className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200">
-                    공지사항 추가하기
-                </button>
-                <button onClick={moveDashboard}
-                        className="p-2 bg-green-600 text-white rounded hover:bg-green-700 transition duration-200">
-                    관리자 페이지로 이동
-                </button>
-            </div>
+
+            {role === 'ADMIN' && (
+                <div className="flex flex-col mt-6 space-y-4 text-left">
+                    <button onClick={moveToInsert}
+                            className="p-2 bg-[#41B3A3] text-white rounded hover:bg-blue-700 transition duration-200 ">
+                        공지사항 추가하기
+                    </button>
+                </div>
+            )}
         </main>
-
     );
 }

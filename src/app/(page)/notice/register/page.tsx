@@ -28,6 +28,17 @@ export default function InsertNotice() {
         }
     };
 
+    const role = localStorage.getItem('role');
+
+    if (role !== 'ADMIN') {
+        return (
+            <div className="unauthorized text-center mt-5">
+                <h2>권한이 없습니다</h2>
+                <p>You do not have permission to view this content.</p>
+            </div>
+        );
+    }
+
     return (
         <main className="flex min-h-screen flex-col items-center p-6 bg-gray-100">
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
@@ -52,7 +63,7 @@ export default function InsertNotice() {
                             required
                         />
                     </div>
-                    <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
+                    <button type="submit" className="px-4 py-2 bg-[#41B3A3] text-white rounded hover:bg-[#178E7F]">
                         추가
                     </button>
                 </form>

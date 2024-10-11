@@ -178,7 +178,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
         }
     })
 
-    // View More 
+    // View More
     const handleViewMore = () => {
         if(visible >= sortedPosts.length){
             setVisible(2);
@@ -188,7 +188,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     }
     const visiblePosts = sortedPosts.slice(0, visible);
 
-    // 댓글 버튼 
+    // 댓글 버튼
     const toggleReply = async (id: number) => {
         const { toggled, replies } = await replyService.toggle(id, replyToggles);
 
@@ -332,7 +332,8 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
         const reportModel: ReportModel = {
             userId: currentUserId,
             postId: postId,
-            reason: selectedReason
+            reason: selectedReason,
+            entryDate: ''
         };
 
         try {
@@ -670,7 +671,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                             ))}
                         </>
                         <div className='flex justify-center'>
-                        <div className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded" onClick={handleViewMore}> 
+                        <div className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded" onClick={handleViewMore}>
                             {visible >= sortedPosts.length ? "Hide Reviews" : "View More Reviews"}
                         </div>
                         </div>
