@@ -4,12 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { tag } from "src/app/api/tag/tag.api";
-import {initialTag, TagModel } from "src/app/model/tag.model";
+import {TagModel } from "src/app/model/tag.model";
 import { tagService } from "src/app/service/tag/tag.service";
 
 export default function TagList() {
   const [tags, setTags] = useState<{[category: string]: TagModel[]}>({});
   const [selectTags, setSelectTags] = useState<string[]>([]);
+  const allTags: TagModel[] = Object.values(tags).flat(); 
   const router = useRouter();
 
   useEffect(() => {
@@ -20,8 +21,6 @@ export default function TagList() {
       const data = await tag.getAllTags(); 
       setTags(data.sort((a: TagModel, b: TagModel) => a.tagCategory.localeCompare(b.tagCategory)));
   };
-
-  const allTags: TagModel[] = Object.values(tags).flat(); // 태그 객체를 배열로 변환
 
   const handleCheck = (name: string) => {
     setSelectTags((prevSelected) =>
@@ -115,15 +114,15 @@ export default function TagList() {
             ))}
           </tbody>
         </table>
-        <div className="mt-4">
+        <div className="flex justify-end mt-4">
           <button
-            className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300"
+            className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded"
             onClick={() => router.push("/tag/register")}
           >
             등록하기
           </button>
           <button
-           className="bg-transparent hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300"
+           className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded"
             onClick={handleDelete}
           >
             삭제하기

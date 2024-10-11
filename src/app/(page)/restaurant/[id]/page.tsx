@@ -18,7 +18,7 @@ export default function Restaurant() {
     const [restaurant, setRestaurant] = useState<RestaurantModel | null>(null);
     const [loading, setLoading] = useState(true);
     const [openPopupImg, setOpenPopupImg] = useState(false);
-    
+
     const { searchTerm } = useSearchContext();
     const router = useRouter();
     const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -142,7 +142,7 @@ export default function Restaurant() {
                             <Swiper
                                 slidesPerView={1}
                                 spaceBetween={0}
-                                modules={[Thumbs, Autoplay]} 
+                                modules={[Thumbs, Autoplay]}
                                 autoplay={{ delay: 2000, disableOnInteraction: false }}
                                 className="mySwiper2 rounded-2xl overflow-hidden"
                             >
@@ -157,7 +157,7 @@ export default function Restaurant() {
                                 </SwiperSlide>
                                 <SwiperSlide>
                                     <Image
-                                        src={restaurant.subImageUrl  || '/default-image.jpg' }  
+                                        src={restaurant.subImageUrl  || '/default-image.jpg' }
                                         width={1000}
                                         height={1000}
                                         alt={restaurant.name}
@@ -204,10 +204,14 @@ export default function Restaurant() {
                             <PostList restaurantId={Number(id)} />
                         </div>
                     </div>
+                    </>
+                )}
+
+                <div style={{ borderTop: '1px solid #e0e0e0' }} className='my-15'>
+                    <PostList restaurantId={Number(id)} />
                 </div>
             </div>
         </div>
     );
+};
 
-
-}

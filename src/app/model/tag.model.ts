@@ -1,6 +1,6 @@
 export interface TagModel{
     name:string;
-    tagCategory:string;
+    tagCategory:string ;
     postTags: PostTagModel[];
 }
 
