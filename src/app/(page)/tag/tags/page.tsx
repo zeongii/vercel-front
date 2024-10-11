@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { tag } from "src/app/api/tag/tag.api";
@@ -28,10 +27,6 @@ export default function TagList() {
         ? prevSelected.filter((tagName) => tagName !== name)
         : [...prevSelected, name]
     );
-  };
-
-  const handleDetails = (name: string) => {
-    router.push(`tags/details/${name}`);
   };
 
   const handleDelete = async () => {

@@ -180,7 +180,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
 
     // View More
     const handleViewMore = () => {
-        if(visible >= sortedPosts.length){
+        if (visible >= sortedPosts.length) {
             setVisible(2);
         } else {
             setVisible((prevVisible) => prevVisible + 2);
@@ -373,6 +373,11 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                             onClick={() => router.push(`/post/register/${restaurantId}`)}
                         >
                             Write Reviews
+                        </button>
+                        <button
+                         className='button-main custom-button'
+                         onClick={() => router.push(`/post/today`)}>
+                            Today Post
                         </button>
                     </div>
                     <div className="top-overview flex justify-between py-6 max-md:flex-col gap-y-6">
@@ -671,9 +676,12 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                             ))}
                         </>
                         <div className='flex justify-center'>
-                        <div className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded" onClick={handleViewMore}>
-                            {visible >= sortedPosts.length ? "Hide Reviews" : "View More Reviews"}
-                        </div>
+                            {sortedPosts.length > 2 && (
+                                <div className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded"
+                                    onClick={handleViewMore}>
+                                    {visible >= sortedPosts.length ? "Hide Reviews" : "View More Reviews"}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
