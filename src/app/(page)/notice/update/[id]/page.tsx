@@ -67,7 +67,7 @@ export default function UpdateNotice() {
     }
 
     return (
-        <main className="flex min-h-screen flex-col items-center p-6 bg-gray-100">
+        <main className="flex min-h-screen flex-col items-center p-6">
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
                 <h2 className="text-lg font-bold mb-4">공지사항 수정</h2>
                 {notice ? (

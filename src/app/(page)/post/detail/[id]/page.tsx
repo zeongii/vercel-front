@@ -5,13 +5,16 @@ import { useEffect, useState } from "react";
 import Star from "src/app/components/Star";
 import { PostModel } from "src/app/model/post.model";
 import { postService } from "src/app/service/post/post.service";
+import nookies from "nookies";
 
 export default function PostDetail() {
   const [post, setPost] = useState<PostModel | null>(null);
   const [images, setImages] = useState<string[]>([]);
-  const { id, restaurantId } = useParams();
+  const { id } = useParams();
   const router = useRouter();
-  const currentUserId = 1; // 확인용
+
+  const cookies = nookies.get();
+  const currentUserId = cookies.userId;
 
   const role = localStorage.getItem('role');
 
@@ -20,7 +23,7 @@ export default function PostDetail() {
   }, [id]);
 
   const loadData = async () => {
-    if(!id) return; 
+    if(!id) return;
     try {
       const postId = Array.isArray(id) ? Number(id[0]) : Number(id);
       const {postData, images} = await postService.detailsPostAndImages(postId);
@@ -56,7 +59,7 @@ export default function PostDetail() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-6 bg-gray-100" style={{ marginTop: '30px' }}>
-      <h1 className="text-2xl font-bold mb-6">게시글 상세화면</h1>
+      <h1 className="text-2xl font-bold mb-6">상세게시글</h1>
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
         <div className="flex flex-col space-y-4">
           <div className="flex flex-col md:flex-row border border-[#F46119] rounded-lg p-4 shadow-lg bg-white">

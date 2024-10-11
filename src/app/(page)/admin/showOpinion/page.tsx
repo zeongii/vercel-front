@@ -22,9 +22,8 @@ export default function ShowOpinion() {
 
 
     return (
-        <main>
-            <div className={styles.cardBody}>
-                <div className={styles.chartContainer}>
+            <div>
+                <div>
                     <table className="w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
                         <thead>
                         <tr>
@@ -43,6 +42,5 @@ export default function ShowOpinion() {
                     </table>
                 </div>
             </div>
-        </main>
 )
 }
