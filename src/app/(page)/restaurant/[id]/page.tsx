@@ -133,7 +133,6 @@ export default function Restaurant() {
 
 
     return (
-        <div>
             <div className="container mx-auto px-4 py-4 bg-white shadow-lg rounded-lg">
                 <div className="product-detail default">
                     <div className="featured-product md:py-20 py-10">
@@ -204,9 +203,6 @@ export default function Restaurant() {
                             <PostList restaurantId={Number(id)} />
                         </div>
                     </div>
-                    </>
-                )}
-
                 <div style={{ borderTop: '1px solid #e0e0e0' }} className='my-15'>
                     <PostList restaurantId={Number(id)} />
                 </div>
