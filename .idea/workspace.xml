@@ -12,6 +12,7 @@
       <change beforePath="$PROJECT_DIR$/src/app/(page)/user/mypage/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/mypage/[id]/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/components/common/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/common/Header.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/restaurant/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/restaurant/[id]/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,6 +129,13 @@
       <workItem from="1728110739533" duration="203000" />
       <workItem from="1728280154645" duration="61000" />
       <workItem from="1728529597572" duration="17588000" />
+      <workItem from="1728380955440" duration="817000" />
+      <workItem from="1728519810430" duration="40000" />
+      <workItem from="1728619489876" duration="6000" />
+      <workItem from="1728619506858" duration="652000" />
+      <workItem from="1728638525159" duration="857000" />
+      <workItem from="1728643549463" duration="460000" />
+      <workItem from="1728703500768" duration="298000" />
     </task>
     <servers />
   </component>
