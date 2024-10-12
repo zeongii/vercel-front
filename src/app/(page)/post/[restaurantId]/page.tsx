@@ -375,8 +375,8 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                             Write Reviews
                         </button>
                         <button
-                         className='button-main custom-button'
-                         onClick={() => router.push(`/post/today`)}>
+                            className='button-main custom-button'
+                            onClick={() => router.push(`/post/today`)}>
                             Today Post
                         </button>
                     </div>
@@ -395,7 +395,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                     const totalTag = tagCount.reduce((sum, count) => sum + count, 0);
                                     const percent = totalTag > 0 ? (tagCount[index] / totalTag) * 100 : 0;
 
-                                    return ( // JSX 반환을 위해 return 명시
+                                    return (
                                         <div key={index} className="item flex items-center justify-between gap-1.5">
                                             <div className="flex items-center gap-1">
                                                 <div className="rounded-full border border-gray-300 bg-white px-3 py-1 text-gray-600 font-semibold shadow-sm hover:bg-gray-100 mb-1"
@@ -497,9 +497,13 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                             </div>
                                         </Modal>
                                         <div className="user mt-3">
-                                            <div className="text-title">{p.nickname}</div>
+                                            <div className="flex text-title">
+                                                <Icon.IdentificationCard size={24}  style={{marginRight: '4px'}}/>
+                                                {p.nickname}</div>
                                             <div className="flex items-center gap-2">
-                                                <div className="text-secondary2">{formatDate(p.entryDate)}</div>
+                                                <div className="flex text-secondary2">
+                                                <Icon.Calendar size={24}  style={{marginRight: '4px'}}/>
+                                                    {formatDate(p.entryDate)}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -595,7 +599,9 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                                     />
                                                     <div className="text-button">{likeCount[p.id] || 0}</div>
                                                 </button>
-                                                <button onClick={() => toggleReply(p.id)} className="reply-btn text-button text-secondary cursor-pointer hover:text-black">Reply</button>
+                                                <button onClick={() => toggleReply(p.id)} className="flex reply-btn text-button text-secondary cursor-pointer hover:text-black">
+                                                    Reply <Icon.ChatCircleDots size={24} style={{marginLeft: "4px"}}/>
+                                                    </button>
                                             </div>
                                             {replyToggles[p.id] && (
                                                 <>
