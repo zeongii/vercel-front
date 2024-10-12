@@ -25,6 +25,9 @@ import Modal from 'src/app/components/Modal';
 import { fetchReportRegister } from '@/app/service/report/report.service';
 import { PostListProps } from '@/app/model/props';
 import nookies from 'nookies';
+import {User} from "@/app/model/user.model";
+import Account from "@/app/(page)/user/account/page";
+import {getUserById} from "@/app/service/user/user.service";
 
 const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const [posts, setPosts] = useState<PostModel[]>([]);
@@ -51,6 +54,8 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const router = useRouter();
     const currentUserId = nookies.get().userId;
     const nickname = localStorage.getItem('nickname') || '';
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
 
     // 신고하기
     const reportReasons = [
@@ -139,6 +144,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const closeModal = () => {
         setIsOpen(false);
     }
+
 
     const handleDelete = async (postId: number) => {
         if (window.confirm("게시글을 삭제하시겠습니까?")) {
@@ -359,6 +365,22 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
         }
     };
 
+    const openUserModal = async (userId: string) => {
+        try {
+            const user = await getUserById(userId);
+            setSelectedUser(user);
+            setIsOpen(true);
+        } catch (error) {
+            console.error("Error fetching user:", error);
+        }
+    };
+
+    const closeUserModal = () => {
+        setSelectedUser(null);
+        setIsOpen(false);
+    }
+
+
 
     return (
         <>
@@ -492,11 +514,16 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                             </div>
                                         </Modal>
                                         <div className="user mt-3">
-                                            <div className="text-title">{p.nickname}</div>
+                                            <div className="text-title" onClick={() => openUserModal(p.userId)}>
+                                                {p.nickname}
+                                            </div>
                                             <div className="flex items-center gap-2">
                                                 <div className="text-secondary2">{formatDate(p.entryDate)}</div>
                                             </div>
                                         </div>
+                                        <Modal isOpen={isOpen} onClose={closeUserModal}>
+                                            {selectedUser && <Account user={selectedUser} />}
+                                        </Modal>
                                     </div>
                                     <div className="right lg:w-3/4 w-full lg:pl-[15px]">
                                         <div className="flex items-center justify-between">
