@@ -15,12 +15,13 @@ const toggle = async (id: number, replyToggles: { [key: number]: boolean }) => {
   return { toggled, replies: null };
 };
 
-const submit = async (postId: number, replyContent: string, currentId: string, replyToggles: { [key: number]: boolean }) => {
+const submit = async (postId: number, replyContent: string, currentId: string, nickname: string, replyToggles: { [key: number]: boolean }) => {
   const replyData: ReplyModel = {
     ...initialReply,
     postId: postId,
     content: replyContent,
     userId: currentId,
+    nickname: localStorage.getItem('nickname') || ''
   };
 
   try {
