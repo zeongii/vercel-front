@@ -245,24 +245,23 @@ export default function AdminDash() {
                                                 <>
                                                     <tr>
                                                         <td colSpan={2} className="py-3 pl-8">
-                                                            <Link href={`/post/detail/${r.postId}`}
-                                                                  className="text-border">
+                                                            <Link href={`/post/detail/${r.postId}`} className="text-border">
                                                                 <div className="bg-gray-100 p-2 rounded text-sm">
                                                                     {r.content}
                                                                 </div>
                                                             </Link>
                                                         </td>
                                                     </tr>
-                                                    {reportList.map((m) =>
-                                                        <tr>
-                                                            <td colSpan={2} className="py-3 pl-8 text-left text-sm">
-                                                                <div>* {m.reason}</div>
-                                                            </td>
-                                                        </tr>
-                                                    )}
+                                                    {reportList
+                                                        .filter(m => m.postId === r.postId) // 현재 postId에 해당하는 이유만 필터링
+                                                        .map(m => (
+                                                            <tr key={m.reason}>
+                                                                <td colSpan={2} className="py-3 pl-8 text-left text-sm">
+                                                                    <div>* {m.reason}</div>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
                                                 </>
-
-
                                             )}
                                         </React.Fragment>
                                     ))}
