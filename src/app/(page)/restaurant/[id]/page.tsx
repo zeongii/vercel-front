@@ -203,9 +203,6 @@ export default function Restaurant() {
                             <PostList restaurantId={Number(id)} />
                         </div>
                     </div>
-                <div style={{ borderTop: '1px solid #e0e0e0' }} className='my-15'>
-                    <PostList restaurantId={Number(id)} />
-                </div>
             </div>
         </div>
     );

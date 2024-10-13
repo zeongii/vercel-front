@@ -42,7 +42,7 @@ export default function FollowList() {
             <div className="flex space-x-4">
                 <div className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">
                     <button
-                        className={`py-2 px-4 ${activeTab === 0 ? 'border-b-4 border-blue-500' : ''}`}
+                        className={`py-2 px-4 ${activeTab === 0 ? 'border-b-4 border-b-green-700' : ''}`}
                         onClick={() => setActiveTab(0)}
                     >
                         팔로우
@@ -50,7 +50,7 @@ export default function FollowList() {
                 </div>
                 <div className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">
                     <button
-                        className={`py-2 px-4 ${activeTab === 1 ? 'border-b-4 border-blue-500' : ''}`}
+                        className={`py-2 px-4 ${activeTab === 1 ? 'border-b-4 border-b-green-700' : ''}`}
                         onClick={() => setActiveTab(1)}
                     >
                         팔로잉
@@ -58,7 +58,6 @@ export default function FollowList() {
                 </div>
             </div>
 
-            {/* 탭에 따라 목록 출력 */}
             <div className="mt-4">
                 {activeTab === 0 && (
                     <div>

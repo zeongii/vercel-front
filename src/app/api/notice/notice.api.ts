@@ -47,6 +47,16 @@ const updateNotice = async (notice: NoticeModel) => {
 
 }
 
-export const notice = {noticeAll, showNotice, noticeRegister, updateNotice}
+const deleteNotice = async (id :number) => {
+    try {
+        const resp = await strategy.DELETE(`${api.notice}/${id}`)
+    } catch (error) {
+        console.error("Failed to register notice:", error);
+        throw new Error("Failed to register notice");
+    }
+
+}
+
+export const notice = {noticeAll, showNotice, noticeRegister, updateNotice, deleteNotice}
 
 

@@ -2,18 +2,33 @@
 import React, { useEffect, useState } from "react";
 import { fetchAllUsers } from "@/app/api/user/user.api";
 import { User } from "@/app/model/user.model";
-import Modal from "@/app/components/Modal"; // Adjust the import path as necessary
+import Modal from "@/app/components/Modal";
 import Account from "@/app/(page)/user/account/page";
 
 const UserTable = ({ users = [] }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [sortColumn, setSortColumn] = useState('username');
+    const [sortDirection, setSortDirection] = useState('asc');
     const itemsPerPage = 10;
 
     const indexOfLastUser = currentPage * itemsPerPage;
     const indexOfFirstUser = indexOfLastUser - itemsPerPage;
-    const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+
+    const sortedUsers = [...users].sort((a, b) => {
+        const isAsc = sortDirection === 'asc';
+        if (a[sortColumn] < b[sortColumn]) {
+            return isAsc ? -1 : 1;
+        }
+        if (a[sortColumn] > b[sortColumn]) {
+            return isAsc ? 1 : -1;
+        }
+        return 0;
+    });
+
+    const currentUsers = sortedUsers.slice(indexOfFirstUser, indexOfLastUser);
     const totalPages = Math.ceil(users.length / itemsPerPage);
 
     const handleNext = () => {
@@ -49,15 +64,28 @@ const UserTable = ({ users = [] }) => {
         setSelectedUser(null);
     };
 
+    const handleSort = (column) => {
+        setSortDirection(prevDirection => prevDirection === 'asc' ? 'desc' : 'asc');
+        setSortColumn(column);
+    };
+
     return (
         <div className="list overflow-x-auto w-full mt-5">
             <table className="w-full max-[1400px]:w-[700px] max-md:w-[700px]">
                 <thead className="border-b border-line">
                 <tr>
-                    <th scope="col" className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">username</th>
-                    <th scope="col" className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">nickname</th>
-                    <th scope="col" className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">role</th>
-                    <th scope="col" className="pb-3 text-right text-sm font-bold uppercase text-secondary whitespace-nowrap">score</th>
+                    <th scope="col" className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">
+                        username
+                    </th>
+                    <th scope="col" className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">
+                        nickname
+                    </th>
+                    <th scope="col" className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap" onClick={() => handleSort('role')}>
+                        role
+                    </th>
+                    <th scope="col" className="pb-3 text-right text-sm font-bold uppercase text-secondary whitespace-nowrap" onClick={() => handleSort('score')}>
+                        score
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
