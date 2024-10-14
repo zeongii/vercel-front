@@ -394,11 +394,6 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                         >
                             Write Reviews
                         </button>
-                        <button
-                            className='button-main custom-button'
-                            onClick={() => router.push(`/post/today`)}>
-                            Today Post
-                        </button>
                     </div>
                     <div className="top-overview flex justify-between py-6 max-md:flex-col gap-y-6">
                         <div className="rating lg:w-1/4 md:w-[30%] lg:pr-[75px] md:pr-[35px]">

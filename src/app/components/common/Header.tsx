@@ -88,7 +88,7 @@ export default function Header() {
               {user ? (
                   <>
                     <div>
-                      <Link href="/tag/tags" className="action-btn">
+                      <Link href="/tag/tags" className="action-btn" style={{fontSize: '16px'}}>
                         {user.nickname || user.username}
                       </Link>
                     </div>
@@ -113,6 +113,10 @@ export default function Header() {
               </Link>
               <Link href="/notice" className="action-btn">
                 <Icon.Bell size={40} />
+                <span className="animation-ripple-delay2"></span>
+              </Link>
+              <Link href="/post/today" className='action-btn'>
+                <Icon.ClockUser size={40}/>
                 <span className="animation-ripple-delay2"></span>
               </Link>
               {user ? (

@@ -9,7 +9,7 @@ const ReplyHandler: React.FC<{ postId: number; reply: ReplyModel[]; currentId: s
     if(!isOpen) return null;
 
     const [replies, setReplies] = useState<{ [key: number]: ReplyModel[] }>({});
-    //const [replyToggles, setReplyToggles] = useState<{ [key: number]: boolean }>({});
+    const [replyToggles, setReplyToggles] = useState<{ [key: number]: boolean }>({});
     const [replyInput, setReplyInput] = useState<{ [key: number]: string }>({});
     const [editReply, setEditReply] = useState<{ [key: number]: boolean }>({});
     const [editInput, setEditInput] = useState<{ [key: number]: string }>({});
@@ -17,21 +17,21 @@ const ReplyHandler: React.FC<{ postId: number; reply: ReplyModel[]; currentId: s
     const nickname = localStorage.getItem('nickname') || '';
 
     // 댓글 버튼
-    // const toggleReply = async (id: number) => {
-    //     const { toggled, replies } = await replyService.toggle(id, replyToggles);
+    const toggleReply = async (id: number) => {
+        const { toggled, replies } = await replyService.toggle(id, replyToggles);
 
-    //     setReplyToggles((prevToggles) => ({
-    //         ...prevToggles,
-    //         [id]: toggled[id],
-    //     }));
+        setReplyToggles((prevToggles) => ({
+            ...prevToggles,
+            [id]: toggled[id],
+        }));
 
-    //     setReplies(prevReplies => ({
-    //         ...prevReplies,
-    //         [id]: replies || prevReplies[id],
-    //     }));
-    // }
+        setReplies(prevReplies => ({
+            ...prevReplies,
+            [id]: replies || prevReplies[id],
+        }));
+    }
 
-    // 댓글 작성 (서버 연결)
+    // // 댓글 작성 (서버 연결)
     // const replySubmit = async (postId: number, e: FormEvent) => {
     //     e.preventDefault();
 
@@ -125,7 +125,7 @@ const ReplyHandler: React.FC<{ postId: number; reply: ReplyModel[]; currentId: s
 
     return (
         <>
-        {/* {replyToggles[postId] && (
+        {replyToggles[postId] && (
             <>
             <div className="mt-4 w-full">
                 {replies[postId] && replies[postId].length > 0 ? (
@@ -183,7 +183,7 @@ const ReplyHandler: React.FC<{ postId: number; reply: ReplyModel[]; currentId: s
                     <p>댓글 없음</p>
                 )}
             </div>
-            <form onSubmit={(e) => replySubmit(postId, e)} className="my-4 flex space-x-4">
+            {/* <form onSubmit={(e) => replySubmit(postId, e)} className="my-4 flex space-x-4">
                 <input
                     type="text"
                     placeholder="댓글을 입력하세요."
@@ -195,9 +195,9 @@ const ReplyHandler: React.FC<{ postId: number; reply: ReplyModel[]; currentId: s
                     className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded">
                     등록
                 </button>
-            </form>
+            </form> */}
         </>
-        )} */}
+        )}
         </>
     );
 };
