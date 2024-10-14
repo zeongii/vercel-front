@@ -25,6 +25,9 @@ import Modal from 'src/app/components/Modal';
 import { fetchReportRegister } from '@/app/service/report/report.service';
 import { PostListProps } from '@/app/model/props';
 import nookies from 'nookies';
+import { getUserById } from '@/app/service/user/user.service';
+import { User } from '@/app/model/user.model';
+import Account from '../../user/account/page';
 
 const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const [posts, setPosts] = useState<PostModel[]>([]);
@@ -51,6 +54,8 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const router = useRouter();
     const currentUserId = nookies.get().userId;
     const nickname = localStorage.getItem('nickname') || '';
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [isUserOpen, setIsUserOpen] = useState(false);
 
     // 신고하기
     const reportReasons = [
@@ -359,6 +364,21 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
         }
     };
 
+    const openUserModal = async (userId: string) => {
+        try {
+            const user = await getUserById(userId);
+            setSelectedUser(user);
+            setIsUserOpen(true);
+        } catch (error) {
+            console.error("Error fetching user:", error);
+        }
+    };
+
+    const closeUserModal = () => {
+        setSelectedUser(null);
+        setIsUserOpen(false);
+    }
+
 
     return (
         <>
@@ -497,16 +517,28 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                             </div>
                                         </Modal>
                                         <div className="user mt-3">
-                                            <div className="flex text-title">
-                                                <Icon.IdentificationCard size={24}  style={{marginRight: '4px'}}/>
+                                            <div className="flex text-title" onClick={() => openUserModal(p.userId)}>
+                                                <Icon.IdentificationCard size={24} style={{ marginRight: '4px' }} />
                                                 {p.nickname}</div>
-                                            <div className="flex items-center gap-2">
-                                                <div className="flex text-secondary2">
-                                                <Icon.Calendar size={24}  style={{marginRight: '4px'}}/>
-                                                    {formatDate(p.entryDate)}</div>
-                                            </div>
                                         </div>
+                                        <div className="flex items-center gap-2">
+                                            <div className="flex text-secondary2">
+                                                <Icon.Calendar size={24} style={{ marginRight: '4px' }} />
+                                                {formatDate(p.entryDate)}</div>
+                                        </div>
+
+                                        <Modal isOpen={isUserOpen} onClose={closeUserModal}>
+                                            {selectedUser ? (
+                                                <div>
+                                                    <Account user={selectedUser} />
+                                                </div>
+                                            ) : (
+                                                <p>로딩 중...</p>
+                                            )}
+                                        </Modal>
+
                                     </div>
+
                                     <div className="right lg:w-3/4 w-full lg:pl-[15px]">
                                         <div className="flex items-center justify-between">
                                             <div className='flex items-center'>
@@ -600,8 +632,8 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                                     <div className="text-button">{likeCount[p.id] || 0}</div>
                                                 </button>
                                                 <button onClick={() => toggleReply(p.id)} className="flex reply-btn text-button text-secondary cursor-pointer hover:text-black">
-                                                    Reply <Icon.ChatCircleDots size={24} style={{marginLeft: "4px"}}/>
-                                                    </button>
+                                                    Reply <Icon.ChatCircleDots size={24} style={{ marginLeft: "4px" }} />
+                                                </button>
                                             </div>
                                             {replyToggles[p.id] && (
                                                 <>
