@@ -46,6 +46,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const [tags, setTags] = useState<string[]>([]);
     const [top5Tags, setTop5Tags] = useState<string[]>([]);
     const [isOpen, setIsOpen] = useState(false);
+    const [isUserOpen, setIsUserOpen] = useState(false);
     const [currentImg, setCurrentImg] = useState<string>('');
     const [sort, setSort] = useState<'date' | 'rating' | 'likes'>('date');
     const [visible, setVisible] = useState(2);
@@ -369,7 +370,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
         try {
             const user = await getUserById(userId);
             setSelectedUser(user);
-            setIsOpen(true);
+            setIsUserOpen(true);
         } catch (error) {
             console.error("Error fetching user:", error);
         }
@@ -377,7 +378,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
 
     const closeUserModal = () => {
         setSelectedUser(null);
-        setIsOpen(false);
+        setIsUserOpen(false);
     }
 
 
@@ -488,7 +489,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                             {visiblePosts.map((p) => (
                                 <div key={p.id} className="item flex max-lg:flex-col gap-y-4 w-full py-6 border-t border-line">
                                     <div className="left lg:w-1/4 w-full lg:pr-[15px]">
-                                        <div className="list-img-review flex gap-2">
+                                        <div className="flex gap-2">
                                             {images[p.id] && images[p.id].length > 0 ? (
                                                 images[p.id].map((url, index) => (
                                                     <img
@@ -517,7 +518,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                             <div className="text-title" onClick={() => openUserModal(p.userId)}>
                                                 {p.nickname}
                                             </div>
-                                            <Modal isOpen={isOpen} onClose={closeUserModal}>
+                                            <Modal isOpen={isUserOpen} onClose={closeUserModal}>
                                                 {selectedUser && <Account user={selectedUser} />}
                                             </Modal>
                                             <div className="flex items-center gap-2">
