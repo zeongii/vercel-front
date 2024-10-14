@@ -6,12 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="49786053-a601-4996-9fe6-17ac685f1975" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(page)/notice/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/notice/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(page)/restaurant/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/restaurant/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(page)/user/calendar/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/calendar/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/receipt/insertReceipt/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/receipt/insertReceipt/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(page)/user/account/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/account/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/(page)/user/userList/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(page)/user/userList/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/api/notice/notice.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/notice/notice.api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/service/notice/notice.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/service/notice/notice.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/model/user.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/model/user.model.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +134,8 @@
       <workItem from="1728643549463" duration="460000" />
       <workItem from="1728703500768" duration="298000" />
       <workItem from="1728739600443" duration="814000" />
-      <workItem from="1728806892738" duration="1687000" />
+      <workItem from="1728806892738" duration="4754000" />
+      <workItem from="1728883228374" duration="1274000" />
     </task>
     <servers />
   </component>

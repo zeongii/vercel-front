@@ -14,6 +14,7 @@ interface Users {
     nickname: string;
     username: string;
     role: string;
+    score: string;
 }
 
 export default function Account( user : AccountProps) {
@@ -27,12 +28,14 @@ export default function Account( user : AccountProps) {
             const username = localStorage.getItem('username');
             const nickname = localStorage.getItem('nickname');
             const role = localStorage.getItem('role');
+            const score = localStorage.getItem('score')
 
-            if (username && nickname && role) {
+            if (username && nickname && role && score) {
                 const storedUser = {
                     username,
                     nickname,
                     role,
+                    score
                 };
                 setUsers(storedUser);
             }
@@ -51,12 +54,13 @@ export default function Account( user : AccountProps) {
                             className='md:w-[140px] w-[120px] md:h-[140px] h-[120px] rounded-full'
                         />
                     </div>
-                    <div className="name heading6 mt-4 text-center">{user?.user.nickname}</div>
-                    <div className="mail heading6 font-normal normal-case text-secondary text-center mt-1"></div>
+                    <div className="name heading6 mt-4 text-left">{user?.user.nickname}</div>
+                    <div
+                        className="mail heading6 font-normal normal-case text-secondary mt-1 text-sm text-left">냠냠온도: {user?.user.score}</div>
                 </div>
                 <div className="menu-tab w-full max-w-none lg:mt-10 mt-6">
                     <div className="item flex items-center gap-3 w-full px-5 py-4 rounded-lg">
-                        <strong className="heading6">Role: {user?.user.role}</strong>
+                        <h5 className="heading6"></h5>
                     </div>
                 </div>
                 {users?.role === 'ADMIN' ? (

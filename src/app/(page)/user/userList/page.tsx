@@ -90,8 +90,8 @@ const UserTable = ({ users = [] }) => {
                 </thead>
                 <tbody>
                 {currentUsers.map((u) => (
-                    <tr className="item duration-300 border-b border-line" key={u.username}>
-                        <th scope="row" className="py-3 text-left" onClick={() => openModal(u)}>
+                    <tr className="item duration-300 border-b border-line" key={u.username} onClick={() => openModal(u)}>
+                        <th scope="row" className="py-3 text-left">
                             <strong className="text-title cursor-pointer">{u.username}</strong>
                         </th>
                         <td className="py-3 cursor-pointer">
