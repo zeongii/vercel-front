@@ -516,27 +516,21 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                                     className='rounded-lg' />
                                             </div>
                                         </Modal>
+
                                         <div className="user mt-3">
                                             <div className="flex text-title" onClick={() => openUserModal(p.userId)}>
-                                                <Icon.IdentificationCard size={24} style={{ marginRight: '4px' }} />
-                                                {p.nickname}</div>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="flex text-secondary2">
-                                                <Icon.Calendar size={24} style={{ marginRight: '4px' }} />
+                                            <Icon.IdentificationCard size={24} style={{ marginRight: '4px' }} />
+                                                {p.nickname}
+                                            </div>
+                                            <Modal isOpen={isUserOpen} onClose={closeUserModal}>
+                                                {selectedUser && <Account user={selectedUser} />}
+                                            </Modal>
+                                            <div className="flex items-center gap-2">
+                                                <div className="flex text-secondary2"><Icon.Calendar size={24} style={{ marginRight: '4px' }} />
                                                 {formatDate(p.entryDate)}</div>
+                                            </div>
                                         </div>
-
-                                        <Modal isOpen={isUserOpen} onClose={closeUserModal}>
-                                            {selectedUser ? (
-                                                <div>
-                                                    <Account user={selectedUser} />
-                                                </div>
-                                            ) : (
-                                                <p>로딩 중...</p>
-                                            )}
-                                        </Modal>
-
+                                        
                                     </div>
 
                                     <div className="right lg:w-3/4 w-full lg:pl-[15px]">

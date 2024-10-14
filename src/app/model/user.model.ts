@@ -10,4 +10,5 @@ export interface User {
     enabled: boolean;
     role: string;
     imgId: string | null;
+    score: number;
 }
