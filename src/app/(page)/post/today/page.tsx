@@ -10,11 +10,22 @@ import { fetchRestaurantService } from "@/app/service/restaurant/restaurant.serv
 import Link from "next/link";
 import { ForkKnife } from "@phosphor-icons/react/dist/ssr";
 import Star from "@/app/components/Star";
+import { ReplyModel } from "@/app/model/reply.model";
+import { replyService } from "@/app/service/reply/reply.service";
+import nookies from 'nookies';
+import { upvoteService } from "@/app/service/upvote/upvote.service";
+import ReplyHandler from "../[restaurantId]/reply/page";
+import { useMutation } from "@tanstack/react-query";
 
 export default function TodayPost() {
     const [todayPosts, setTodayPosts] = useState<PostModel[]>([]);
     const [currentImg, setCurrentImg] = useState<string>('');
+    const [replyToggles, setReplyToggles] = useState<{ [key: number]: boolean }>({});
+    const [replies, setReplies] = useState<{ [key: number]: ReplyModel[] }>({});
+    const [likedPost, setLikedPosts] = useState<number[]>([]);
+    const [likeCount, setLikeCounts] = useState<{ [key: number]: number }>({});
     const [isOpen, setIsOpen] = useState(false);
+    const currentUserId = nookies.get().userId;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -34,6 +45,35 @@ export default function TodayPost() {
         };
         fetchData();
     }, []);
+
+    // 댓글 버튼
+    const toggleReply = async (id: number) => {
+        const { toggled, replies } = await replyService.toggle(id, replyToggles);
+    
+        setReplyToggles(toggled); 
+        setReplies((prevReplies) => ({
+            ...prevReplies,
+            [id]: replies || prevReplies[id],
+        }));
+    };
+
+    // 좋아요 & 취소 & count
+    const handleLike = async (postId: number, postUserId: string) => {
+        if (postUserId === currentUserId) {
+            window.alert("본인의 리뷰에는 좋아요를 누를 수 없어요.");
+            return;
+        }
+
+        const result = await upvoteService.toggle(postId, currentUserId, likedPost);
+
+        if (result) {
+            setLikedPosts(result.likedPost);
+            setLikeCounts((prevCounts) => ({
+                ...prevCounts,
+                [postId]: (prevCounts[postId] || 0) + result.likeCountDelta,
+            }))
+        }
+    };
 
     const openModal = (imageURL: string) => {
         setCurrentImg(imageURL);
@@ -159,6 +199,30 @@ export default function TodayPost() {
                                             <p>태그 없음</p>
                                         )}
                                     </div>
+                                    <div className="action mt-1">
+                                            <div className="flex items-center gap-4">
+                                                <button
+                                                    onClick={() => handleLike(post?.id, post?.userId)}
+                                                    className="like-btn flex items-center gap-1 cursor-pointer">
+                                                    <Icon.Heart
+                                                        size={18}
+                                                        color={likeCount[post?.id] > 0 ? "#FF0000" : "#9FA09C"}
+                                                        weight="fill"
+                                                    />
+                                                    <div className="text-button">{likeCount[post?.id] || 0}</div>
+                                                </button>
+                                                <button onClick={() => toggleReply(post?.id)} className="flex reply-btn text-button text-secondary cursor-pointer hover:text-black">
+                                                    Reply <Icon.ChatCircleDots size={24} style={{ marginLeft: "4px" }} />
+                                                </button>
+                                            </div>
+                                            <ReplyHandler
+                                                postId={post?.id}
+                                                initialReplies={replies[post?.id]}
+                                                currentId={currentUserId}
+                                                isOpen={replyToggles[post?.id]}
+                                            />
+                                        </div>
+
                                 </div>
                             </div>
                         </div>

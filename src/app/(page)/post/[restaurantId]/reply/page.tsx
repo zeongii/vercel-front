@@ -2,53 +2,47 @@
 import { ReplyModel } from '@/app/model/reply.model';
 import { replyService } from '@/app/service/reply/reply.service';
 import nookies from 'nookies';
-import { FormEvent, useState } from 'react';
-import { ToggleButton } from 'react-bootstrap';
+import { FormEvent, useEffect, useState } from 'react';
 
-const ReplyHandler: React.FC<{ postId: number; reply: ReplyModel[]; currentId: string; isOpen: boolean;}> = ({ postId, reply, currentId, isOpen }) => {
+const ReplyHandler: React.FC<{ postId: number; initialReplies: ReplyModel[]; currentId: string; isOpen: boolean;}> = ({ postId, initialReplies, currentId, isOpen }) => {
     if(!isOpen) return null;
 
-    const [replies, setReplies] = useState<{ [key: number]: ReplyModel[] }>({});
-    const [replyToggles, setReplyToggles] = useState<{ [key: number]: boolean }>({});
+    const [localReplies, setLocalReplies] = useState<{ [key: number]:  ReplyModel[] }>({});
     const [replyInput, setReplyInput] = useState<{ [key: number]: string }>({});
     const [editReply, setEditReply] = useState<{ [key: number]: boolean }>({});
     const [editInput, setEditInput] = useState<{ [key: number]: string }>({});
     const currentUserId = nookies.get().userId;
     const nickname = localStorage.getItem('nickname') || '';
 
-    // 댓글 버튼
-    const toggleReply = async (id: number) => {
-        const { toggled, replies } = await replyService.toggle(id, replyToggles);
+    useEffect(() => {
+        setLocalReplies({[postId]: initialReplies});
+    }, [initialReplies, postId]);
 
-        setReplyToggles((prevToggles) => ({
-            ...prevToggles,
-            [id]: toggled[id],
-        }));
+    // 댓글 작성 (서버 연결)
+    const replySubmit = async (postId: number, e: FormEvent) => {
+        e.preventDefault();
 
-        setReplies(prevReplies => ({
-            ...prevReplies,
-            [id]: replies || prevReplies[id],
-        }));
-    }
+        const replyContent = replyInput[postId];
+        if (!replyContent) {
+            alert('댓글을 입력하세요.');
+            return;
+        }
+        const result = await replyService.submit(postId, replyContent, currentUserId, nickname);
 
-    // // 댓글 작성 (서버 연결)
-    // const replySubmit = async (postId: number, e: FormEvent) => {
-    //     e.preventDefault();
+        if (result && result.success) {
+            const { newReply } = result;
 
-    //     const replyContent = replyInput[postId];
-    //     if (!replyContent) {
-    //         alert('댓글을 입력하세요.');
-    //         return;
-    //     }
-    //     const result = await replyService.submit(postId, replyContent, currentUserId, nickname, ToggleButton);
+            setLocalReplies((prevReplies) => ({
+                ...prevReplies,
+                [postId]: [...(prevReplies[postId] || []), newReply]
+            }));
 
-    //     if (result && result.success) {
-    //         const { newReply } = result;
-
-    //         setReplies([...replies, newReply])
-    //         setReplyInput('');
-    //     }
-    // };
+            setReplyInput((prevInput)=>({
+                ...prevInput,
+                [postId]: ''
+            }));
+        }
+    };
 
     // 댓글 작성 & 수정 
     const replyInputChange = (id: number, content: string, isEdit: boolean) => {
@@ -81,11 +75,11 @@ const ReplyHandler: React.FC<{ postId: number; reply: ReplyModel[]; currentId: s
     const replyEditSave = async (replyId: number, postId: number) => {
         const updateReply = await replyService.editSave(replyId, postId, editInput[replyId], currentUserId);
         if (updateReply) {
-            setReplies((prevReplies) => ({
+            setLocalReplies((prevReplies) => ({
                 ...prevReplies,
                 [postId]: prevReplies[postId]?.map((reply) =>
                     reply.id === replyId ? updateReply : reply
-                ),
+                )
             }));
 
             setEditReply((prevEditReply) => ({
@@ -101,10 +95,10 @@ const ReplyHandler: React.FC<{ postId: number; reply: ReplyModel[]; currentId: s
     const replyDelete = async (replyId: number, postId: number) => {
         if (!window.confirm("댓글을 삭제하시겠습니까?")) return;
 
-        const updatedReplies = await replyService.remove(replyId, postId, replies);
+        const updatedReplies = await replyService.remove(replyId, postId, localReplies[postId]);
 
         if (updatedReplies) {
-            setReplies(prevReplies => ({
+            setLocalReplies((prevReplies) => ({
                 ...prevReplies,
                 [postId]: updatedReplies
             }));
@@ -125,12 +119,10 @@ const ReplyHandler: React.FC<{ postId: number; reply: ReplyModel[]; currentId: s
 
     return (
         <>
-        {replyToggles[postId] && (
-            <>
             <div className="mt-4 w-full">
-                {replies[postId] && replies[postId].length > 0 ? (
+                {localReplies[postId] && localReplies[postId].length > 0 ? (
                     <ul className='list-none p-0 m-0'>
-                        {replies[postId].map((reply, index) => (
+                        {localReplies[postId].map((reply, index) => (
                             <li key={index} className="mb-2 border-b border-gray-200 pb-2">
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-center">
@@ -183,7 +175,7 @@ const ReplyHandler: React.FC<{ postId: number; reply: ReplyModel[]; currentId: s
                     <p>댓글 없음</p>
                 )}
             </div>
-            {/* <form onSubmit={(e) => replySubmit(postId, e)} className="my-4 flex space-x-4">
+            <form onSubmit={(e) => replySubmit(postId, e)} className="my-4 flex space-x-4">
                 <input
                     type="text"
                     placeholder="댓글을 입력하세요."
@@ -195,9 +187,7 @@ const ReplyHandler: React.FC<{ postId: number; reply: ReplyModel[]; currentId: s
                     className="button-main custom-button mr-2 px-4 py-2 bg-green-500 text-white rounded">
                     등록
                 </button>
-            </form> */}
-        </>
-        )}
+            </form>
         </>
     );
 };
