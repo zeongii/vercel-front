@@ -69,6 +69,7 @@ const UserTable = ({ users = [] }) => {
         setSortColumn(column);
     };
 
+
     return (
         <div className="list overflow-x-auto w-full mt-5">
             <table className="w-full max-[1400px]:w-[700px] max-md:w-[700px]">

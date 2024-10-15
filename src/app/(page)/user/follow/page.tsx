@@ -5,14 +5,19 @@ import { fetchUserById } from "@/app/api/user/user.api";
 import { fetchShowFollower, fetchShowFollowing } from "@/app/service/follow/follow.service";
 import { User } from "@/app/model/user.model";
 import { FollowModel } from "@/app/model/follow.model";
+import Account from "@/app/(page)/user/account/page";
+import Modal from "@/app/components/Modal";
+import {follow} from "@/app/api/follow/follow.api";
 
 export default function FollowList() {
     const [activeTab, setActiveTab] = useState(0);
     const cookies = nookies.get();
     const userId = cookies.userId;
     const [user, setUser] = useState<User | null>(null);
-    const [follower, setFollower] = useState<FollowModel[]>([]); // 팔로워 목록 상태
-    const [following, setFollowing] = useState<FollowModel[]>([]); // 팔로잉 목록 상태
+    const [follower, setFollower] = useState<FollowModel[]>([]);
+    const [following, setFollowing] = useState<FollowModel[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -27,14 +32,22 @@ export default function FollowList() {
             if (user?.nickname) {
                 const followerData = await fetchShowFollower(user.nickname);
                 const followingData = await fetchShowFollowing(user.nickname);
-                setFollower(followerData);
-                setFollowing(followingData);
-                console.log(followerData)
-                console.log(followingData)
+                setFollower(followerData)
+                setFollowing(followingData)
             }
         };
         fetchFollowData();
     }, [user]);
+
+    const openModal = (user) => {
+        setSelectedUser(user);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedUser(null);
+    };
 
     return (
         <>
@@ -88,6 +101,9 @@ export default function FollowList() {
                     </div>
                 )}
             </div>
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
+                {selectedUser && <Account user={selectedUser} />}
+            </Modal>
         </>
     );
 }

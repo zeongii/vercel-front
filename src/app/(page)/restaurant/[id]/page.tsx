@@ -137,33 +137,32 @@ export default function Restaurant() {
                 <div className="product-detail default">
                     <div className="featured-product md:py-20 py-10">
                         <div className="container flex flex-col md:flex-row justify-between gap-y-6">
-                            <div className="list-img md:w-1/2 md:pr-[45px] w-full">
-                            <Swiper
-                                slidesPerView={1}
-                                spaceBetween={0}
-                                modules={[Thumbs, Autoplay]}
-                                autoplay={{ delay: 2000, disableOnInteraction: false }}
-                                className="mySwiper2 rounded-2xl overflow-hidden"
-                            >
-                                <SwiperSlide onClick={() => setOpenPopupImg(true)}>
-                                    <Image
-                                        src={restaurant.thumbnailImageUrl  || '/default-image.jpg'}
-                                        width={1000}
-                                        height={1000}
-                                        alt={restaurant.name}
-                                        className="w-full aspect-[3/4] object-cover"
-                                    />
-                                </SwiperSlide>
-                                <SwiperSlide>
-                                    <Image
-                                        src={restaurant.subImageUrl  || '/default-image.jpg' }
-                                        width={1000}
-                                        height={1000}
-                                        alt={restaurant.name}
-                                        className="w-full aspect-[3/4] object-cover"
-                                    />
-                                </SwiperSlide>
-                            </Swiper>
+                            <div className="list-img md:w-1/2 md:pr-[45px] w-full overflow-hidden">
+                                <Swiper
+                                    modules={[Thumbs, Autoplay]}
+                                    autoplay={{delay: 2000, disableOnInteraction: false}}
+                                    className="mySwiper2 rounded-2xl overflow-hidden"
+                                >
+                                    <SwiperSlide onClick={() => setOpenPopupImg(true)} className="overflow-hidden">
+                                        <Image
+                                            src={restaurant.thumbnailImageUrl || '/default-image.jpg'}
+                                            width={800}
+                                            height={800}
+                                            alt={restaurant.name}
+                                            className="w-full aspect-[3/4] object-cover"
+                                        />
+                                    </SwiperSlide>
+                                    <SwiperSlide className="overflow-hidden">
+                                        <Image
+                                            src={restaurant.subImageUrl || '/default-image.jpg'}
+                                            width={800}
+                                            height={800}
+                                            alt={restaurant.name}
+                                            className="w-full aspect-[3/4] object-cover"
+                                        />
+                                    </SwiperSlide>
+                                </Swiper>
+
                             </div>
                             <div className="product-infor md:w-1/2 w-full lg:pl-[15px] md:pl-2">
                                 <div className="caption2 text-secondary font-semibold uppercase">{restaurant.type}</div>

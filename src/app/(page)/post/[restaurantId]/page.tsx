@@ -515,14 +515,18 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                             </div>
                                         </Modal>
                                         <div className="user mt-3">
-                                            <div className="text-title" onClick={() => openUserModal(p.userId)}>
+                                            <div className="flex text-title" onClick={() => openUserModal(p.userId)}>
+                                                <Icon.IdentificationCard size={24} style={{ marginRight: '4px' }} />
                                                 {p.nickname}
                                             </div>
                                             <Modal isOpen={isUserOpen} onClose={closeUserModal}>
                                                 {selectedUser && <Account user={selectedUser} />}
                                             </Modal>
                                             <div className="flex items-center gap-2">
-                                                <div className="text-secondary2">{formatDate(p.entryDate)}</div>
+                                                <div className="flex text-secondary2">
+                                                    <Icon.Calendar size={24} style={{ marginRight: '4px' }} />
+                                                    {formatDate(p.entryDate)}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
