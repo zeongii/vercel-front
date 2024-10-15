@@ -1,12 +1,13 @@
 "use client";
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from "next/image";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import {User} from "@/app/model/user.model";
+import { User } from "@/app/model/user.model";
 import nookies from "nookies";
 import Link from "next/link";
-import {fetchDeleteFollow, fetchIsFollow, fetchRegisterFollow} from "@/app/service/follow/follow.service";
-import {FollowModel} from "@/app/model/follow.model";
+import { fetchDeleteFollow, fetchIsFollow, fetchRegisterFollow } from "@/app/service/follow/follow.service";
+import { FollowModel } from "@/app/model/follow.model";
+import { insertChatRoom } from '@/app/service/chatRoom/chatRoom.api';
 
 interface AccountProps {
     user: User;
@@ -61,7 +62,7 @@ export default function Account(user: AccountProps) {
 
     const handleFollow = async () => {
         const followModel: FollowModel = {
-            id : 0,
+            id: 0,
             follower: user?.user.nickname,
             following: nickname,
         };
@@ -87,6 +88,32 @@ export default function Account(user: AccountProps) {
             console.error('Failed to unfollow:', error);
         }
     };
+
+    const handleCreateChatRoom = async (e: React.FormEvent) => {
+        e.preventDefault(); // 페이지 새로고침 방지
+    
+        // ChatRoom 객체 생성
+        const newChatRoom: any = {
+          name:  "님과의 채팅방", // 입력된 채팅방 이름
+          participants: [nickname, user.user.nickname], // 초기 참가자 목록에 입력된 참가자 추가
+        };
+    
+        // 참가자 목록 체크
+        const participantsList = newChatRoom.participants.length > 0
+          ? newChatRoom.participants.join(", ")
+          : "참가자가 없습니다"; // 참가자가 없을 경우 기본 메시지
+    
+        const result = await insertChatRoom(newChatRoom);
+    
+        if (result.status === 200) {
+          alert("채팅방이 성공적으로 생성되었습니다.");
+          const storedUser = localStorage.getItem('user');
+          if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            
+          }
+        }
+      };
 
 
     return (
@@ -116,7 +143,7 @@ export default function Account(user: AccountProps) {
                     user.user.id === userId ? (
                         <Link href="/user/follow" passHref>
                             <button type="submit"
-                                    className="px-4 py-2 bg-[#41B3A3] text-white rounded hover:bg-[#178E7F]">
+                                className="px-4 py-2 bg-[#41B3A3] text-white rounded hover:bg-[#178E7F]">
                                 팔로우
                             </button>
                         </Link>
@@ -128,11 +155,14 @@ export default function Account(user: AccountProps) {
                         </button>
                     ) : (
                         <button onClick={handleFollow}
-                                className="px-4 py-2 bg-[#41B3A3] text-white rounded hover:bg-[#178E7F]">
+                            className="px-4 py-2 bg-[#41B3A3] text-white rounded hover:bg-[#178E7F]">
                             팔로우하기
                         </button>
                     )
                 }
+                <button className="px-4 py-2 ml-4 bg-[#3A9181] text-white rounded hover:bg-[#2C7365]">
+                    채팅하기
+                </button>
             </div>
         </div>
     );
