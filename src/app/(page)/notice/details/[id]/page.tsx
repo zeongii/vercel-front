@@ -10,6 +10,9 @@ export default function ShowNotice() {
     const router = useRouter();
     const {id} = useParams();
 
+
+
+
     useEffect(() => {
         const fetchNotice = async (id: number) => {
             try {
@@ -24,6 +27,8 @@ export default function ShowNotice() {
             fetchNotice(Number(id));
         }
     }, [id]);
+
+    const role = localStorage.getItem('role');
 
     return (
         <main className="flex min-h-screen flex-col items-center p-6 bg-white-100">
@@ -59,7 +64,7 @@ export default function ShowNotice() {
 
                     )}
                 </table>
-                {notice && (
+                {role === 'ADMIN' && (
                     <div className="mt-4">
                         <button
                             onClick={() => router.push(`/notice/update/${id}`)}

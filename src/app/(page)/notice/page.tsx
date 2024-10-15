@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { NoticeModel } from "src/app/model/notice.model";
-import { fetchNoticeList } from "src/app/service/notice/notice.service";
+import {fetchNoticeList, fetchDeleteNotice} from "src/app/service/notice/notice.service"; // 삭제 API 추가
 import Link from "next/link";
 import { useSearchContext } from "@/app/components/SearchContext";
 
@@ -16,6 +16,7 @@ export default function ShowNotice() {
     const role = localStorage.getItem('role') || null;
 
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedNoticeIds, setSelectedNoticeIds] = useState<number[]>([]); // 선택된 공지사항 ID 배열 상태
 
     useEffect(() => {
         const loadNotices = async () => {
@@ -54,13 +55,37 @@ export default function ShowNotice() {
     // 현재 페이지에 해당하는 공지사항 목록
     const currentNotices = notice.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
+    // 공지사항 삭제 함수
+    const handleDelete = async () => {
+        if (selectedNoticeIds.length > 0) {
+            try {
+                await Promise.all(selectedNoticeIds.map(id => fetchDeleteNotice(id))); // 선택된 공지사항 삭제 API 호출
+                setNotice(prevNotices => prevNotices.filter(n => !selectedNoticeIds.includes(n.id))); // 상태 업데이트
+                setSelectedNoticeIds([]); // 선택 초기화
+            } catch (error) {
+                console.error("공지사항 삭제 중 오류가 발생했습니다:", error);
+            }
+        }
+    };
+
+    // 체크박스 상태 관리
+    const handleCheckboxChange = (id: number) => {
+        setSelectedNoticeIds(prevIds => {
+            if (prevIds.includes(id)) {
+                return prevIds.filter(prevId => prevId !== id); // 체크 해제
+            } else {
+                return [...prevIds, id]; // 체크
+            }
+        });
+    };
+
     return (
-        <main className="flex min-h-screen flex-col items-center" style={{marginTop: '30px'}}>
+        <main className="flex min-h-screen flex-col items-center" style={{ marginTop: '30px' }}>
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
                 <table className="w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
                     <thead>
                     <tr className="bg-[#F46119] text-white">
-                        <th className="py-3 px-4 border-b">번호</th>
+                        <th className="py-3 px-4 border-b"></th>
                         <th className="py-3 px-4 border-b">제목</th>
                         <th className="py-3 px-4 border-b">조회수</th>
                         <th className="py-3 px-4 border-b">날짜</th>
@@ -70,9 +95,20 @@ export default function ShowNotice() {
                     {currentNotices.map((n) => (
                         <tr key={n.id}
                             className="item duration-300 border-b border-gray-200 hover:bg-gray-50 cursor-pointer text-center"
-                            onClick={() => moveToOne(n.id)}>
+                            onClick={() => moveToOne(n.id)}
+                        >
                             <td className="py-3 px-4 border-b">
-                                <strong className="text-title">{n.id}</strong>
+                                {role === 'ADMIN' && (
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedNoticeIds.includes(n.id)}
+                                        onChange={(e) => {
+                                            e.stopPropagation();
+                                            handleCheckboxChange(n.id);
+                                        }}
+                                        onClick={(e) => e.stopPropagation()}
+                                    />
+                                )}
                             </td>
                             <td className="py-3 px-4 border-b">
                                 <Link href={`/product/default/${n.id}`}>
@@ -86,7 +122,19 @@ export default function ShowNotice() {
                         </tr>
                     ))}
                     </tbody>
+
                 </table>
+                {role === 'ADMIN' && (
+                <div className="flex mt-4">
+                    <button
+                        onClick={handleDelete}
+                        disabled={selectedNoticeIds.length === 0}
+                        className="p-2 bg-red-500 rounded hover:bg-red-400 transition duration-200 text-white"
+                    >
+                        삭제하기
+                    </button>
+                </div>
+                    )}
                 <div className="flex justify-between mt-4 space-x-2 w-full">
                     <button
                         onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -105,7 +153,6 @@ export default function ShowNotice() {
                     </button>
                 </div>
             </div>
-
 
             {role === 'ADMIN' && (
                 <div className="flex flex-col mt-6 space-y-4 text-left">

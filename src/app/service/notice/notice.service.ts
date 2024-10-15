@@ -37,6 +37,17 @@ export const fetchNoticeUpdate = async (noticemodel : NoticeModel): Promise<Noti
    }
 }
 
+export const fetchDeleteNotice = async (id : number) => {
+   try {
+      const data = await notice.deleteNotice(id);
+
+      return data;
+   } catch (error) {
+      console.error("Failed to create notice:", error);
+      throw error;
+   }
+}
+
 
 
 

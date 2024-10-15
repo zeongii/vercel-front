@@ -2,8 +2,11 @@ import { User } from "src/app/model/user.model";
 const token =localStorage.getItem('token')
 export const fetchUserExists = async (id: string): Promise<boolean> => {
     const response = await fetch(`http://localhost:8081/api/user/existsById?id=${id}`,{
-
-    });
+        method: "GET",
+        headers: {
+            'Authorization': token ? `Bearer ${token}` : '', // JWT 토큰을 Bearer 형식으로 추가
+            "Content-Type": "application/json",
+        },});
     if (!response.ok) {
         throw new Error('Failed to fetch user existence');
     }
@@ -11,7 +14,12 @@ export const fetchUserExists = async (id: string): Promise<boolean> => {
 };
 
 export const fetchUserById = async (id: string): Promise<User> => {
-    const response = await fetch(`http://localhost:8081/api/user/findById?id=${id}`);
+    const response = await fetch(`http://localhost:8081/api/user/findById?id=${id}`,{
+        method: "GET",
+        headers: {
+            'Authorization': token ? `Bearer ${token}` : '', // JWT 토큰을 Bearer 형식으로 추가
+            "Content-Type": "application/json",
+        },});
     if (!response.ok) {
         throw new Error('Failed to fetch user by ID');
     }
@@ -22,7 +30,7 @@ export const fetchAllUsers = async (): Promise<User[]> => {
     const response = await fetch(`http://localhost:8081/api/user/findAll`,{
         method: "GET",
         headers: {
-            'Authorization': token ? `Bearer ${token}` : '', // JWT 토큰을 Bearer 형식으로 추가
+            'Authorization': token ? `Bearer ${token}` : '',
             "Content-Type": "application/json",
         },
     });

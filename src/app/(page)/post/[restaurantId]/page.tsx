@@ -25,9 +25,9 @@ import Modal from 'src/app/components/Modal';
 import { fetchReportRegister } from '@/app/service/report/report.service';
 import { PostListProps } from '@/app/model/props';
 import nookies from 'nookies';
-import { getUserById } from '@/app/service/user/user.service';
-import { User } from '@/app/model/user.model';
-import Account from '../../user/account/page';
+import {User} from "@/app/model/user.model";
+import Account from "@/app/(page)/user/account/page";
+import {getUserById} from "@/app/service/user/user.service";
 import ReplyHandler from './reply/page';
 
 const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
@@ -44,6 +44,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const [tags, setTags] = useState<string[]>([]);
     const [top5Tags, setTop5Tags] = useState<string[]>([]);
     const [isOpen, setIsOpen] = useState(false);
+    const [isUserOpen, setIsUserOpen] = useState(false);
     const [currentImg, setCurrentImg] = useState<string>('');
     const [sort, setSort] = useState<'date' | 'rating' | 'likes'>('date');
     const [visible, setVisible] = useState(2);
@@ -53,7 +54,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     const currentUserId = nookies.get().userId;
     const nickname = localStorage.getItem('nickname') || '';
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
-    const [isUserOpen, setIsUserOpen] = useState(false);
+
 
     // 신고하기
     const reportReasons = [
@@ -183,7 +184,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
 
     // View More
     const handleViewMore = () => {
-        if (visible >= sortedPosts.length) {
+        if(visible >= sortedPosts.length){
             setVisible(2);
         } else {
             setVisible((prevVisible) => prevVisible + 2);
@@ -194,8 +195,8 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
     // 댓글 버튼
     const toggleReply = async (id: number) => {
         const { toggled, replies } = await replyService.toggle(id, replyToggles);
-    
-        setReplyToggles(toggled); 
+
+        setReplyToggles(toggled);
         setReplies((prevReplies) => ({
             ...prevReplies,
             [id]: replies || prevReplies[id],
@@ -285,6 +286,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
         setSelectedUser(null);
         setIsUserOpen(false);
     }
+
 
 
     return (
@@ -393,7 +395,7 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                             {visiblePosts.map((p) => (
                                 <div key={p.id} className="item flex max-lg:flex-col gap-y-4 w-full py-6 border-t border-line">
                                     <div className="left lg:w-1/4 w-full lg:pr-[15px]">
-                                        <div className="list-img-review flex gap-2">
+                                        <div className="flex gap-2">
                                             {images[p.id] && images[p.id].length > 0 ? (
                                                 images[p.id].map((url, index) => (
                                                     <img
@@ -418,23 +420,22 @@ const PostList: React.FC<PostListProps> = ({ restaurantId }) => {
                                                     className='rounded-lg' />
                                             </div>
                                         </Modal>
-
                                         <div className="user mt-3">
                                             <div className="flex text-title" onClick={() => openUserModal(p.userId)}>
-                                            <Icon.IdentificationCard size={24} style={{ marginRight: '4px' }} />
+                                                <Icon.IdentificationCard size={24} style={{ marginRight: '4px' }} />
                                                 {p.nickname}
                                             </div>
                                             <Modal isOpen={isUserOpen} onClose={closeUserModal}>
                                                 {selectedUser && <Account user={selectedUser} />}
                                             </Modal>
                                             <div className="flex items-center gap-2">
-                                                <div className="flex text-secondary2"><Icon.Calendar size={24} style={{ marginRight: '4px' }} />
-                                                {formatDate(p.entryDate)}</div>
+                                                <div className="flex text-secondary2">
+                                                    <Icon.Calendar size={24} style={{ marginRight: '4px' }} />
+                                                    {formatDate(p.entryDate)}
+                                                </div>
                                             </div>
                                         </div>
-                                        
                                     </div>
-
                                     <div className="right lg:w-3/4 w-full lg:pl-[15px]">
                                         <div className="flex items-center justify-between">
                                             <div className='flex items-center'>

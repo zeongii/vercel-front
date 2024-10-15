@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -38,7 +38,7 @@ const MyCalendar: React.FC = () => {
             try {
                 const updatedData = await fetchReceiptWallet(id);
                 setWallet(updatedData);
-                console.log(updatedData)
+                console.log(updatedData);
             } catch (error) {
                 console.error("Error fetching wallet data:", error);
             }
@@ -46,7 +46,6 @@ const MyCalendar: React.FC = () => {
 
         loadWalletData();
     }, [id]);
-
 
     useEffect(() => {
         const walletEvents: CalendarEvent[] = wallet.map((item) => {
@@ -63,7 +62,6 @@ const MyCalendar: React.FC = () => {
         });
 
         setFilteredEvents([...walletEvents]);
-
     }, [wallet]);
 
     const renderEventContent = (eventInfo: EventContentArg) => {
@@ -76,7 +74,7 @@ const MyCalendar: React.FC = () => {
                     <span style={{ fontSize: '0.8rem' }}>{eventInfo.event.title}</span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                    {todos.map((todoItem: string, index: number) => (
+                    {openDropdowns[eventId] && todos.map((todoItem: string, index: number) => (
                         <Dropdown.Item key={index}>{todoItem}</Dropdown.Item>
                     ))}
                 </Dropdown.Menu>
