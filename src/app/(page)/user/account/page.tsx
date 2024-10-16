@@ -8,6 +8,7 @@ import Link from "next/link";
 import { fetchDeleteFollow, fetchIsFollow, fetchRegisterFollow } from "@/app/service/follow/follow.service";
 import { FollowModel } from "@/app/model/follow.model";
 import { insertChatRoom } from '@/app/service/chatRoom/chatRoom.api';
+import { useRouter } from 'next/navigation';
 
 interface AccountProps {
     user: User;
@@ -26,7 +27,7 @@ export default function Account(user: AccountProps) {
     const cookie = nookies.get();
     const userId = cookie.userId;
     const nickname = localStorage.getItem('nickname');
-
+    const router = useRouter();
 
     useEffect(() => {
 
@@ -91,29 +92,34 @@ export default function Account(user: AccountProps) {
 
     const handleCreateChatRoom = async (e: React.FormEvent) => {
         e.preventDefault(); // 페이지 새로고침 방지
-    
+
         // ChatRoom 객체 생성
         const newChatRoom: any = {
-          name:  "님과의 채팅방", // 입력된 채팅방 이름
-          participants: [nickname, user.user.nickname], // 초기 참가자 목록에 입력된 참가자 추가
+            name: "님과의 채팅방", // 입력된 채팅방 이름
+            participants: [nickname, user.user.nickname], // 초기 참가자 목록에 입력된 참가자 추가
         };
-    
+
         // 참가자 목록 체크
         const participantsList = newChatRoom.participants.length > 0
-          ? newChatRoom.participants.join(", ")
-          : "참가자가 없습니다"; // 참가자가 없을 경우 기본 메시지
-    
+            ? newChatRoom.participants.join(", ")
+            : "참가자가 없습니다"; // 참가자가 없을 경우 기본 메시지
+
         const result = await insertChatRoom(newChatRoom);
-    
+
         if (result.status === 200) {
-          alert("채팅방이 성공적으로 생성되었습니다.");
-          const storedUser = localStorage.getItem('user');
-          if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            
-          }
+            alert("채팅방이 성공적으로 생성되었습니다.");
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                const parsedUser = JSON.parse(storedUser);
+
+            }
+            // 채팅방 정보를 URL 쿼리 파라미터로 전달
+            const createdChatRoom = result.data; // 생성된 채팅방 정보 (예: { _id: '...', name: '...', participants: [...] })
+            router.push(`/chatRoom?id=${createdChatRoom._id}&name=${encodeURIComponent(createdChatRoom.name)}`); // 생성된 채팅방의 ID와 이름을 쿼리로 전달
         }
-      };
+
+          
+    };
 
 
     return (
@@ -160,9 +166,13 @@ export default function Account(user: AccountProps) {
                         </button>
                     )
                 }
-                <button className="px-4 py-2 ml-4 bg-[#3A9181] text-white rounded hover:bg-[#2C7365]">
+                <button
+                    className="px-4 py-2 ml-4 bg-[#3A9181] text-white rounded hover:bg-[#2C7365]"
+                    onClick={handleCreateChatRoom} // 버튼 클릭 시 함수 실행
+                >
                     채팅하기
                 </button>
+
             </div>
         </div>
     );
