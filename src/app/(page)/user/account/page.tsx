@@ -54,8 +54,6 @@ export default function Account(user: AccountProps) {
             };
 
             checkFollowStatus();
-
-
         }
 
 
@@ -105,17 +103,13 @@ export default function Account(user: AccountProps) {
             : "참가자가 없습니다"; // 참가자가 없을 경우 기본 메시지
 
         const result = await insertChatRoom(newChatRoom);
-
+        console.log(result);
         if (result.status === 200) {
             alert("채팅방이 성공적으로 생성되었습니다.");
-            const storedUser = localStorage.getItem('user');
-            if (storedUser) {
-                const parsedUser = JSON.parse(storedUser);
-
-            }
-            // 채팅방 정보를 URL 쿼리 파라미터로 전달
-            const createdChatRoom = result.data; // 생성된 채팅방 정보 (예: { _id: '...', name: '...', participants: [...] })
-            router.push(`/chatRoom?id=${createdChatRoom._id}&name=${encodeURIComponent(createdChatRoom.name)}`); // 생성된 채팅방의 ID와 이름을 쿼리로 전달
+             // 채팅방 정보를 URL 쿼리 파라미터로 전달
+             const createdChatRoom = result.data; // 생성된 채팅방 정보 (예: { _id: '...', name: '...', participants: [...] })
+             console.log(createdChatRoom); 
+             router.push(`/chatRoom?id=${createdChatRoom.id}`); // 생성된 채팅방의 ID와 이름을 쿼리로 전달           
         }
 
           
