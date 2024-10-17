@@ -1,41 +1,59 @@
 "use client";
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from "next/image";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import {User} from "@/app/model/user.model";
+import { User } from "@/app/model/user.model";
 import nookies from "nookies";
 import Link from "next/link";
-import {fetchDeleteFollow, fetchIsFollow, fetchRegisterFollow} from "@/app/service/follow/follow.service";
-import {FollowModel} from "@/app/model/follow.model";
+import { fetchDeleteFollow, fetchIsFollow, fetchRegisterFollow } from "@/app/service/follow/follow.service";
+import { FollowModel } from "@/app/model/follow.model";
+import { insertChatRoom } from '@/app/service/chatRoom/chatRoom.api';
+import { useRouter } from 'next/navigation';
 
 interface AccountProps {
     user: User;
 }
 
+interface Users {
+    nickname: string;
+    username: string;
+    role: string;
+    score: string;
+}
 
-export default function Account(user: Partial<AccountProps>) {
-    const [users, setUsers] = useState<User | null>(null);
+export default function Account(user: AccountProps) {
+    const [users, setUsers] = useState<Users | null>(null);
     const [isFollowing, setIsFollowing] = useState<boolean>(false);
     const cookie = nookies.get();
     const userId = cookie.userId;
-    const [nickname, setNickname] = useState<string | null>(null);
-
+    const nickname = localStorage.getItem('nickname');
+    const router = useRouter();
 
     useEffect(() => {
 
         if (userId) {
+            const username = localStorage.getItem('username');
+            const nickname = localStorage.getItem('nickname');
+            const role = localStorage.getItem('role');
+            const score = localStorage.getItem('score')
 
-                setUsers(users);
+            if (username && nickname && role && score) {
+                const storedUser = {
+                    username,
+                    nickname,
+                    role,
+                    score
+                };
+                setUsers(storedUser);
+            }
 
             const checkFollowStatus = async () => {
-                const followingUser = users.nickname;
+                const followingUser = user?.user.nickname;
                 const result = await fetchIsFollow(followingUser, nickname);
                 setIsFollowing(result);
             };
 
             checkFollowStatus();
-
-
         }
 
 
@@ -43,8 +61,8 @@ export default function Account(user: Partial<AccountProps>) {
 
     const handleFollow = async () => {
         const followModel: FollowModel = {
-            id : 0,
-            follower: users.nickname,
+            id: 0,
+            follower: user?.user.nickname,
             following: nickname,
         };
 
@@ -58,7 +76,7 @@ export default function Account(user: Partial<AccountProps>) {
 
     const handleUnfollow = async () => {
 
-        const follower = users.nickname
+        const follower = user?.user.nickname
         const following = nickname
 
 
@@ -68,6 +86,33 @@ export default function Account(user: Partial<AccountProps>) {
         } catch (error) {
             console.error('Failed to unfollow:', error);
         }
+    };
+
+    const handleCreateChatRoom = async (e: React.FormEvent) => {
+        e.preventDefault(); // 페이지 새로고침 방지
+
+        // ChatRoom 객체 생성
+        const newChatRoom: any = {
+            name: "님과의 채팅방", // 입력된 채팅방 이름
+            participants: [nickname, user.user.nickname], // 초기 참가자 목록에 입력된 참가자 추가
+        };
+
+        // 참가자 목록 체크
+        const participantsList = newChatRoom.participants.length > 0
+            ? newChatRoom.participants.join(", ")
+            : "참가자가 없습니다"; // 참가자가 없을 경우 기본 메시지
+
+        const result = await insertChatRoom(newChatRoom);
+        console.log(result);
+        if (result.status === 200) {
+            alert("채팅방이 성공적으로 생성되었습니다.");
+             // 채팅방 정보를 URL 쿼리 파라미터로 전달
+             const createdChatRoom = result.data; // 생성된 채팅방 정보 (예: { _id: '...', name: '...', participants: [...] })
+             console.log(createdChatRoom); 
+             router.push(`/chatRoom?id=${createdChatRoom.id}`); // 생성된 채팅방의 ID와 이름을 쿼리로 전달           
+        }
+
+          
     };
 
 
@@ -84,9 +129,9 @@ export default function Account(user: Partial<AccountProps>) {
                             className='md:w-[140px] w-[120px] md:h-[140px] h-[120px] rounded-full'
                         />
                     </div>
-                    <div className="name heading6 mt-4 text-left">{users.nickname}</div>
+                    <div className="name heading6 mt-4 text-left">{user?.user.nickname}</div>
                     <div className="mail heading6 font-normal normal-case text-secondary mt-1 text-sm text-left">
-                        냠냠온도: {users.score}
+                        냠냠온도: {user?.user.score}
                     </div>
                 </div>
                 <div className="menu-tab w-full max-w-none lg:mt-10 mt-6">
@@ -95,10 +140,10 @@ export default function Account(user: Partial<AccountProps>) {
                     </div>
                 </div>
                 {
-                    users.id === userId ? (
+                    user.user.id === userId ? (
                         <Link href="/user/follow" passHref>
                             <button type="submit"
-                                    className="px-4 py-2 bg-[#41B3A3] text-white rounded hover:bg-[#178E7F]">
+                                className="px-4 py-2 bg-[#41B3A3] text-white rounded hover:bg-[#178E7F]">
                                 팔로우
                             </button>
                         </Link>
@@ -110,11 +155,18 @@ export default function Account(user: Partial<AccountProps>) {
                         </button>
                     ) : (
                         <button onClick={handleFollow}
-                                className="px-4 py-2 bg-[#41B3A3] text-white rounded hover:bg-[#178E7F]">
+                            className="px-4 py-2 bg-[#41B3A3] text-white rounded hover:bg-[#178E7F]">
                             팔로우하기
                         </button>
                     )
                 }
+                <button
+                    className="px-4 py-2 ml-4 bg-[#3A9181] text-white rounded hover:bg-[#2C7365]"
+                    onClick={handleCreateChatRoom} // 버튼 클릭 시 함수 실행
+                >
+                    채팅하기
+                </button>
+
             </div>
         </div>
     );

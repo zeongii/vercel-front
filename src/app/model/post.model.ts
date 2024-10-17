@@ -15,6 +15,7 @@ export interface PostModel {
   restaurantId?: number;
   userId: string;
   nickname: string;
+  restaurantName?: string
 }
 
 export const initialPost: PostModel = {

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { tag } from "src/app/api/tag/tag.api";
@@ -33,10 +32,6 @@ export default function TagList() {
         ? prevSelected.filter((tagName) => tagName !== name)
         : [...prevSelected, name]
     );
-  };
-
-  const handleDetails = (name: string) => {
-    router.push(`tags/details/${name}`);
   };
 
   const handleDelete = async () => {
@@ -80,7 +75,7 @@ export default function TagList() {
 
   return (
     <main className="flex min-h-screen flex-col items-center" style={{ marginTop: '30px' }}>
-      <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
+      <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6 text-center">
         <table className="w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
           <thead>
             <tr className="bg-[#F46119] text-white">
@@ -102,18 +97,7 @@ export default function TagList() {
                 <td className="py-3 px-4 border-b">
                   <span>{t.tagCategory}</span>
                 </td>
-                <td className="py-3 px-4 border-b">
-                  <Link
-                    href={`/tag/details/${t.name}`}
-                    className="text-[#F46119] hover:underline"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDetails(t.name);
-                    }}
-                  >
-                    {t.name}
-                  </Link>
-                </td>
+                <td className="py-3 px-4 border-b">{t.name}</td>
               </tr>
             ))}
           </tbody>
