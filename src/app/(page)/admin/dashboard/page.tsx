@@ -30,39 +30,31 @@ const DashBoard = () => {
     const [restaurant, setRestaurant] = useState<RestaurantList[]>([]);
     const [countRestaurant, setCountRestaurant] = useState<CountCost[]>([]);
     const [upvoteRestaurant, setUpvoteRestaurant] = useState<RestaurantList[]>([]);
+    const [role, setRole] = useState<string | null>(null);
 
 
     useEffect(() => {
-        const showArea = async () => {
-            const data = await fetchShowArea();
-            setRegion(data);
-        };
-        showArea();
-    }, []);
+        const list = async () => {
+            const regionData = await fetchShowArea();
+            setRegion(regionData);
 
-    useEffect(() => {
-        const showRestaurant = async () => {
-            const data = await fetchShowRestaurant();
-            setRestaurant(data);
-        };
-        showRestaurant();
-    }, []);
+            const restaurantData = await fetchShowRestaurant();
+            setRestaurant(restaurantData);
 
-    useEffect(() => {
-        const countRestaurant = async () => {
-            const data = await fetchReceiptList();
-            setCountRestaurant(data);
-        };
-        countRestaurant();
-    }, []);
+            const countCosts = await fetchReceiptList();
+            setCountRestaurant(countCosts);
 
-    useEffect(() => {
-        const restaurant = async () => {
             const data = await fetchUpvoteRestaurant();
             setUpvoteRestaurant(data);
+
+
+            const storedRole = localStorage.getItem('role');
+            setRole(storedRole);
+
         };
-        restaurant();
+        list();
     }, []);
+
 
 
     const areaData = {
@@ -111,7 +103,6 @@ const DashBoard = () => {
         ],
     };
 
-    const role = localStorage.getItem('role');
 
     if (role !== 'ADMIN') {
         return (

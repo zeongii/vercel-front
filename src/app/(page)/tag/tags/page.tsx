@@ -12,9 +12,14 @@ export default function TagList() {
   const [selectTags, setSelectTags] = useState<string[]>([]);
   const allTags: TagModel[] = Object.values(tags).flat(); 
   const router = useRouter();
+  const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTag();
+
+    const storedRole = localStorage.getItem('role');
+    setRole(storedRole);
+
   }, []);
 
   const fetchTag = async () => {
@@ -61,7 +66,6 @@ export default function TagList() {
     }
   };
 
-  const role = localStorage.getItem('role');
 
   if (role !== 'ADMIN') {
     return (

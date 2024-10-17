@@ -37,12 +37,13 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, 
 export default function AdminDash() {
     const [count, setCount] = useState<CountItem[]>([]);
     const [activeTab, setActiveTab] = useState<string | undefined>('user')
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [reportCountList, setReportCountList] = useState<ReportCountModel[]>([]);
     const [reportList, setReportList] = useState<ReportModel[]>([]);
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     const [user, setUser] = useState<User[]>([]);
     const [todayPost, setTodayPost] = useState<PostModel[]>([]);
+    const [role, setRole] = useState<string | null>(null);
+
 
 
     const handleRowClick = (index: number) => {
@@ -65,11 +66,14 @@ export default function AdminDash() {
             setUser(userData);
 
             const todayData = await fetchCurrentPost();
-            setTodayPost(todayData)
+            setTodayPost(todayData);
+
+            const storedRole = localStorage.getItem('role');
+            setRole(storedRole);
 
         };
-        list();
 
+        list();
     }, []);
 
 
@@ -89,7 +93,7 @@ export default function AdminDash() {
     const totalUser = user.length;
     const totalTodayPost = todayPost.length;
 
-    const role = localStorage.getItem('role');
+
 
     if (role !== 'ADMIN') {
         return (

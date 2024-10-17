@@ -12,41 +12,23 @@ interface AccountProps {
     user: User;
 }
 
-interface Users {
-    nickname: string;
-    username: string;
-    role: string;
-    score: string;
-}
 
-export default function Account(user: AccountProps) {
-    const [users, setUsers] = useState<Users | null>(null);
+export default function Account(user: Partial<AccountProps>) {
+    const [users, setUsers] = useState<User | null>(null);
     const [isFollowing, setIsFollowing] = useState<boolean>(false);
     const cookie = nookies.get();
     const userId = cookie.userId;
-    const nickname = localStorage.getItem('nickname');
+    const [nickname, setNickname] = useState<string | null>(null);
 
 
     useEffect(() => {
 
         if (userId) {
-            const username = localStorage.getItem('username');
-            const nickname = localStorage.getItem('nickname');
-            const role = localStorage.getItem('role');
-            const score = localStorage.getItem('score')
 
-            if (username && nickname && role && score) {
-                const storedUser = {
-                    username,
-                    nickname,
-                    role,
-                    score
-                };
-                setUsers(storedUser);
-            }
+                setUsers(users);
 
             const checkFollowStatus = async () => {
-                const followingUser = user?.user.nickname;
+                const followingUser = users.nickname;
                 const result = await fetchIsFollow(followingUser, nickname);
                 setIsFollowing(result);
             };
@@ -62,7 +44,7 @@ export default function Account(user: AccountProps) {
     const handleFollow = async () => {
         const followModel: FollowModel = {
             id : 0,
-            follower: user?.user.nickname,
+            follower: users.nickname,
             following: nickname,
         };
 
@@ -76,7 +58,7 @@ export default function Account(user: AccountProps) {
 
     const handleUnfollow = async () => {
 
-        const follower = user?.user.nickname
+        const follower = users.nickname
         const following = nickname
 
 
@@ -102,9 +84,9 @@ export default function Account(user: AccountProps) {
                             className='md:w-[140px] w-[120px] md:h-[140px] h-[120px] rounded-full'
                         />
                     </div>
-                    <div className="name heading6 mt-4 text-left">{user?.user.nickname}</div>
+                    <div className="name heading6 mt-4 text-left">{users.nickname}</div>
                     <div className="mail heading6 font-normal normal-case text-secondary mt-1 text-sm text-left">
-                        냠냠온도: {user?.user.score}
+                        냠냠온도: {users.score}
                     </div>
                 </div>
                 <div className="menu-tab w-full max-w-none lg:mt-10 mt-6">
@@ -113,7 +95,7 @@ export default function Account(user: AccountProps) {
                     </div>
                 </div>
                 {
-                    user.user.id === userId ? (
+                    users.id === userId ? (
                         <Link href="/user/follow" passHref>
                             <button type="submit"
                                     className="px-4 py-2 bg-[#41B3A3] text-white rounded hover:bg-[#178E7F]">
