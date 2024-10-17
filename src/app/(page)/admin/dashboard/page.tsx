@@ -48,12 +48,16 @@ const DashBoard = () => {
             setUpvoteRestaurant(data);
 
 
-            const storedRole = localStorage.getItem('role');
-            setRole(storedRole);
 
         };
         list();
     }, []);
+
+    if (typeof window !== 'undefined') {
+        const role = localStorage.getItem('role');
+        setRole(role)
+
+    }
 
 
 

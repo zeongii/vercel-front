@@ -19,14 +19,11 @@ import {
 } from "chart.js";
 import styles from "src/css/mypage.module.css";
 import {Bar} from "react-chartjs-2";
-import Modal from "src/app/components/Modal";
 import ShowOpinion from "src/app/(page)/admin/showOpinion/page";
 import DashBoard from "src/app/(page)/admin/dashboard/page";
 import {fetchReportCountAll, fetchReportList} from "src/app/service/report/report.service";
 import {ReportModel} from "src/app/model/report.model";
 import UserList from "@/app/(page)/user/userList/page";
-import { useSearchContext } from "@/app/components/SearchContext";
-import { useRouter } from "next/navigation";
 import {fetchAllUsers} from "@/app/api/user/user.api";
 import {User} from "@/app/model/user.model";
 import {PostModel} from "@/app/model/post.model";
@@ -69,12 +66,17 @@ export default function AdminDash() {
             setTodayPost(todayData);
 
             const storedRole = localStorage.getItem('role');
-            setRole(storedRole);
+            if (storedRole) {
+
+
+                setRole(storedRole);
+            }
 
         };
 
         list();
     }, []);
+
 
 
     const countData = {

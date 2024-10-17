@@ -37,11 +37,11 @@ export default function Home() {
     useEffect(() => {
         if (token) {
             const decoded: DecodedToken = jwtDecode<DecodedToken>(token);
-            nookies.set(null, 'userId', decoded.sub, { path: '/' });
+            nookies.set(null, 'token', token, { path: '/' });
 
             // 클라이언트 사이드에서만 localStorage 접근
             if (typeof window !== 'undefined') {
-                localStorage.setItem('token', token);
+                localStorage.setItem('userId', decoded.sub);
                 localStorage.setItem('nickname', decoded.nickname);
                 localStorage.setItem('username', decoded.username);
                 localStorage.setItem('role', decoded.role);
