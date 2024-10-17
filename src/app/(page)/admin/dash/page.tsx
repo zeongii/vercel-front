@@ -67,8 +67,6 @@ export default function AdminDash() {
 
             const storedRole = localStorage.getItem('role');
             if (storedRole) {
-
-
                 setRole(storedRole);
             }
 
