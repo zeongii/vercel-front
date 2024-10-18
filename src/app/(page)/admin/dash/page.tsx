@@ -100,8 +100,6 @@ export default function AdminDash() {
         <>
             {user.role !== 'ADMIN' ? (
                 <div className="unauthorized text-center mt-5">
-                    <h2>권한이 없습니다</h2>
-                    <p>You do not have permission to view this content.</p>
                 </div>
                 ) : (
             <div className="profile-block md:py-20 py-10 md:px-8 px-4 mt-10">
