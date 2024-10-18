@@ -91,17 +91,6 @@ export default function AdminDash() {
     const totalTodayPost = todayPost.length;
 
 
-
-    if (user.role !== 'ADMIN') {
-        return (
-            <div className="unauthorized text-center mt-5">
-                <h2>권한이 없습니다</h2>
-                <p>You do not have permission to view this content.</p>
-            </div>
-        );
-    }
-
-
     const handleRowClick = (index: number) => {
         setOpenIndex(openIndex === index ? null : index);
     };
@@ -109,7 +98,12 @@ export default function AdminDash() {
 
     return (
         <>
-
+            {user.role !== 'ADMIN' ? (
+                <div className="unauthorized text-center mt-5">
+                    <h2>권한이 없습니다</h2>
+                    <p>You do not have permission to view this content.</p>
+                </div>
+                ) : (
             <div className="profile-block md:py-20 py-10 md:px-8 px-4 mt-10">
                 <div className="container">
                     <div className="content-main flex gap-y-8 max-md:flex-col w-full">
@@ -290,6 +284,7 @@ export default function AdminDash() {
                     </div>
                 </div>
             </div>
+            )}
         </>
     )
 

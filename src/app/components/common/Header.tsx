@@ -7,40 +7,26 @@ import { useModalWishlistContext } from 'src/app/context/ModalWishlistContext';
 import { useRouter } from 'next/navigation';
 import nookies from "nookies";
 import { useSearchContext } from '../SearchContext';
+import {fetchUserById} from "@/app/api/user/user.api";
+import {User} from "@/app/model/user.model";
 
-
-interface User {
-  nickname: string;
-  username: string;
-  role: string;
-  token: string;
-  userId: string;
-}
 
 export default function Header() {
   const { openModalWishlist } = useModalWishlistContext();
   const { setSearchTerm } = useSearchContext(); 
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
+  const cookies = nookies.get();
+  const userId = cookies.userId;
+
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const username = localStorage.getItem('username');
-    const nickname = localStorage.getItem('nickname');
-    const role = localStorage.getItem('role') || null;
-    const cookies = nookies.get(); // nookies를 사용하여 쿠키에서 userId 가져오기
-    const userId = cookies.userId; // 쿠키에서 userId 가져오기
-
-    if (token && username && nickname && role && userId) {
-      const storedUser: User = {
-        token,
-        username,
-        nickname,
-        role,
-        userId,
-      };
-      setUser(storedUser);
+    const fetchData = async () => {
+      const myInfo = await fetchUserById(userId);
+      setUser(myInfo);
     }
+    fetchData()
+
   }, []);
 
   const handleLogout = () => {
@@ -120,7 +106,7 @@ export default function Header() {
                 <span className="animation-ripple-delay2"></span>
               </Link>
               {user ? (
-              <Link href={`/user/mypage/${user?.userId}`} className="profile">
+              <Link href={`/user/mypage/${userId}`} className="profile">
                 <img src="/assets/img/profile.png" alt="profile" />
               </Link>
                   ) : null}
