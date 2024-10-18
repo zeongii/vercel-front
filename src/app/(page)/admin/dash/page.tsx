@@ -24,9 +24,10 @@ import DashBoard from "src/app/(page)/admin/dashboard/page";
 import {fetchReportCountAll, fetchReportList} from "src/app/service/report/report.service";
 import {ReportModel} from "src/app/model/report.model";
 import UserList from "@/app/(page)/user/userList/page";
-import {fetchAllUsers} from "@/app/api/user/user.api";
+import {fetchAllUsers, fetchUserById} from "@/app/api/user/user.api";
 import {User} from "@/app/model/user.model";
 import {PostModel} from "@/app/model/post.model";
+import nookies from "nookies";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -37,19 +38,17 @@ export default function AdminDash() {
     const [reportCountList, setReportCountList] = useState<ReportCountModel[]>([]);
     const [reportList, setReportList] = useState<ReportModel[]>([]);
     const [openIndex, setOpenIndex] = useState<number | null>(null);
-    const [user, setUser] = useState<User[]>([]);
+    const [userList, setUserList] = useState<User[]>([]);
     const [todayPost, setTodayPost] = useState<PostModel[]>([]);
-    const [role, setRole] = useState<string | null>(null);
+    const [user, setUser] = useState<User | null>(null);
 
 
-
-    const handleRowClick = (index: number) => {
-        setOpenIndex(openIndex === index ? null : index);
-    };
+    const cookie = nookies.get();
+    const userId = cookie.userId;
 
 
     useEffect(() => {
-        const list = async () => {
+        const fetchData = async () => {
             const countData = await fetchShowCount();
             setCount(countData);
 
@@ -60,20 +59,18 @@ export default function AdminDash() {
             setReportList(listData);
 
             const userData = await fetchAllUsers();
-            setUser(userData);
+            setUserList(userData);
 
             const todayData = await fetchCurrentPost();
             setTodayPost(todayData);
 
-            const storedRole = localStorage.getItem('role');
-            if (storedRole) {
-                setRole(storedRole);
-            }
+            const myInfo = await fetchUserById(userId);
+            setUser(myInfo);
 
         };
 
-        list();
-    }, []);
+        fetchData();
+    }, [userId]);
 
 
 
@@ -90,12 +87,12 @@ export default function AdminDash() {
         ],
     };
 
-    const totalUser = user.length;
+    const totalUser = userList.length;
     const totalTodayPost = todayPost.length;
 
 
 
-    if (role !== 'ADMIN') {
+    if (user.role !== 'ADMIN') {
         return (
             <div className="unauthorized text-center mt-5">
                 <h2>권한이 없습니다</h2>
@@ -103,6 +100,12 @@ export default function AdminDash() {
             </div>
         );
     }
+
+
+    const handleRowClick = (index: number) => {
+        setOpenIndex(openIndex === index ? null : index);
+    };
+
 
     return (
         <>
