@@ -132,7 +132,7 @@ const UserTable = ({ users = [] }) => {
             </div>
 
             <Modal isOpen={isModalOpen} onClose={closeModal}>
-                {selectedUser && <Account user={selectedUser} />}
+                {selectedUser && <Account selectUser={selectedUser} />}
             </Modal>
         </div>
     );
