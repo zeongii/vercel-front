@@ -98,7 +98,7 @@ export default function AdminDash() {
 
     return (
         <>
-            {user.role !== 'ADMIN' ? (
+            {user?.role !== 'ADMIN' ? (
                 <div className="unauthorized text-center mt-5">
                 </div>
                 ) : (
