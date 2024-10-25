@@ -1,7 +1,7 @@
 # 안녕하세요, nyamnyam Project 입니다 👋
 
 > nyamnyam은 사용자의 취향에 맞춰 맛집을 추천해주는 플랫폼입니다.  
-> https://www.eunseo.nyamnyam.kr
+> https://www.nyamnyam.kr
 
 
 ## 📚 Skills & Tools
