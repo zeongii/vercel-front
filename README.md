@@ -29,7 +29,7 @@
 ## 💻 Projects
 
 ### 주요 기능
-카테고리 태그 맛집 추천, 리뷰 시스템, 실시간 채팅(이모티콘 지원), 영수증 OCR ,follow, Notice, OAuth 및 JWT를 통 로그인, 크롤링, 위시리스트 
+카테고리 태그 맛집 추천, 리뷰 시스템, 실시간 채팅(이모티콘 지원), 영수증 OCR ,follow, Notice, OAuth 및 JWT를 통한 로그인, 크롤링, 위시리스트 
 
 ### minikube 자동화 배포 구현 
 Kubenetes, Jenkins, GitHub, DockerHub를 연동한 CI/CD 파이프라인을 구축하고, NCloud에 자동화된 빌드 및 배포 환경을 설정하여 서비스 배포를 구현했습니다.  
