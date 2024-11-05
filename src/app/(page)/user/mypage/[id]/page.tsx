@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { fetchInsertOpinion } from "@/app/service/opinion/opinion.service";
 import Image from 'next/image';
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
@@ -19,10 +18,12 @@ import { useSearchContext } from "@/app/components/SearchContext";
 import { usePathname, useRouter } from "next/navigation";
 import UserDash from "@/app/(page)/user/dashBoard/[id]/page";
 import { FollowModel } from "@/app/model/follow.model";
-import { fetchUserById, removeUserById } from "@/app/api/user/user.api";
+import { fetchUserById} from "@/app/api/user/user.api";
 import { User } from "@/app/model/user.model";
 import FollowList from "@/app/(page)/user/follow/page";
-import EditProfile from "@/app/(page)/user/editProfile/page";
+import {fetchInsertOpinion} from "@/app/service/opinion/opinion.serivce";
+import {removeUserById} from "@/app/service/user/user.service";
+import EditProfile from "@/app/(page)/user/update/page";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, CategoryScale, LinearScale);
 
@@ -34,7 +35,6 @@ export default function MyPage() {
     const [user, setUser] = useState<User | null>(null);
     const [follower, setFollower] = useState<FollowModel[]>([]);
     const [following, setFollowing] = useState<FollowModel[]>([]);
-    const [content, setContent] = useState("");
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     const { searchTerm } = useSearchContext();
@@ -43,7 +43,6 @@ export default function MyPage() {
     const cookies = nookies.get();
     const userId = cookies.userId;
     const id = pathname?.split('/')[3];
-    const currentDate = new Date().toISOString();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -85,7 +84,6 @@ export default function MyPage() {
     }, [user]);
 
 
-    const totalFollower = follower.length;
 
     useEffect(() => {
         if (searchTerm && !isInitialLoad) {

@@ -2,14 +2,15 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { modifyUser, uploadThumbnailApi } from "@/app/service/user.service";
 import { User } from "@/app/model/user.model";
+import {uploadThumbnailApi} from "@/app/api/user/user.api";
+import {modifyUser} from "@/app/service/user/user.service";
 
 interface EditProfileProps {
     user: User;
 }
 
-export default function EditProfile({ user }: EditProfileProps) {
+export default ({user}: Partial<EditProfileProps>) => {
     const router = useRouter();
     const [username, setUsername] = useState(user.username);
     const [password, setPassword] = useState('');
