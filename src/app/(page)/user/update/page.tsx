@@ -5,25 +5,27 @@ import { useRouter } from 'next/navigation';
 import { User } from "@/app/model/user.model";
 import {uploadThumbnailApi} from "@/app/api/user/user.api";
 import {modifyUser} from "@/app/service/user/user.service";
-
 interface EditProfileProps {
-    user: User;
+    user?: User;
 }
 
 export default ({user}: Partial<EditProfileProps>) => {
     const router = useRouter();
-    const [username, setUsername] = useState(user.username);
+
+    // user가 없는 경우 기본값을 설정합니다.
+    const [username, setUsername] = useState(user?.username || '');
     const [password, setPassword] = useState('');
-    const [nickname, setNickname] = useState(user.nickname);
-    const [name, setName] = useState(user.name);
-    const [age, setAge] = useState<number | string>(user.age);
-    const [tel, setTel] = useState(user.tel);
-    const [gender, setGender] = useState(user.gender);
+    const [nickname, setNickname] = useState(user?.nickname || '');
+    const [name, setName] = useState(user?.name || '');
+    const [age, setAge] = useState<number | string>(user?.age || '');
+    const [tel, setTel] = useState(user?.tel || '');
+    const [gender, setGender] = useState(user?.gender || '');
     const [thumbnail, setThumbnail] = useState<File | null>(null);
 
     const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        // 에러 체크
         const errors = [];
         if (!username) errors.push("Username은 필수 입력입니다.");
         if (!nickname) errors.push("Nickname은 필수 입력입니다.");
@@ -43,7 +45,7 @@ export default ({user}: Partial<EditProfileProps>) => {
         const updatedUser: User = {
             ...user,
             username,
-            password: password || user.password,
+            password: password || user?.password || '',
             nickname,
             name,
             age: typeof age === 'string' ? parseInt(age) : age,
@@ -54,7 +56,7 @@ export default ({user}: Partial<EditProfileProps>) => {
         if (thumbnail) {
             try {
                 const imgIds = await uploadThumbnailApi([thumbnail]);
-                updatedUser.imgId = imgIds.length > 0 ? imgIds[0].toString() : user.imgId;
+                updatedUser.imgId = imgIds.length > 0 ? imgIds[0].toString() : user?.imgId;
             } catch (error) {
                 console.error('썸네일 업로드 실패:', error);
             }
