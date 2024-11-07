@@ -2,20 +2,14 @@
 
 import axios from "axios";
 
-export const instance = axios.create({
-    baseURL: "https://abc.nyamnyam.kr",
-    headers: {
-        "Content-Type": "application/json",
-    },
-    withCredentials: true,
+export const instance  = axios.create ({
+    baseURL : "https://abc.nyamnyam.kr",
+    withCredentials: true
 });
 
-export const instance1 = axios.create({
-    baseURL: "https://abc.nyamnyam.kr",
-    headers: {
-        "Content-Type": "application/json",
-    },
-    withCredentials: true,
+export const instance1  = axios.create ({
+    baseURL : "https://abc.nyamnyam.kr",
+    withCredentials: true
 });
 
 // JWT 토큰 헤더에 포함하기(리덕스 axios instance 설정)
